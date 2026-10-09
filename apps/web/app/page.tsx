@@ -28,6 +28,31 @@ export default function Home() {
         <main id="top" className="wrap">
           {/* HERO */}
           <section className="hero" data-anim="hero">
+            {/* sprinkled hand-drawn game doodles */}
+            <div className="sprinkles" aria-hidden="true">
+              <svg className="doodle ink sprinkle s-pad" viewBox="0 0 84 52">
+                <path pathLength={1} strokeWidth="2" d="M22 8 C 10 8, 4 22, 4 34 C 4 46, 14 50, 20 42 C 24 36, 28 34, 42 34 C 56 34, 60 36, 64 42 C 70 50, 80 46, 80 34 C 80 22, 74 8, 62 8 C 52 8, 50 12, 42 12 C 34 12, 32 8, 22 8" />
+                <path pathLength={1} strokeWidth="2" d="M20 18 L 20 30 M14 24 L 26 24" />
+                <path pathLength={1} strokeWidth="2" d="M60 19 C 62 19, 62 22, 60 22 C 58 22, 58 19, 60 19 M66 25 C 68 25, 68 28, 66 28 C 64 28, 64 25, 66 25" />
+              </svg>
+              <svg className="doodle blu sprinkle s-star" viewBox="0 0 40 40">
+                <path pathLength={1} strokeWidth="2" d="M20 4 L 24 15 L 36 16 L 27 24 L 30 36 L 20 29 L 10 36 L 13 24 L 4 16 L 16 15 Z" />
+              </svg>
+              <svg className="doodle ink sprinkle s-splash" viewBox="0 0 40 40">
+                <path pathLength={1} strokeWidth="2" d="M20 4 L 20 12 M20 28 L 20 36 M4 20 L 12 20 M28 20 L 36 20 M8 8 L 13 13 M27 27 L 32 32 M32 8 L 27 13 M8 32 L 13 27" />
+              </svg>
+              <svg className="doodle blu sprinkle s-heart" viewBox="0 0 36 32">
+                <path pathLength={1} strokeWidth="2" d="M6 4 L 12 4 L 12 8 L 16 8 L 16 4 L 22 4 M22 4 L 28 4 L 28 8 L 32 8 L 32 16 L 28 16 L 28 20 L 24 20 L 24 24 L 20 24 L 20 28 L 16 28 L 16 24 L 12 24 L 12 20 L 8 20 L 8 16 L 4 16 L 4 8 L 6 8 L 6 4" />
+              </svg>
+              <svg className="doodle ink sprinkle s-bubble" viewBox="0 0 52 44">
+                <path pathLength={1} strokeWidth="2" d="M8 6 C 22 3, 38 3, 46 7 C 50 12, 50 24, 46 28 C 38 31, 26 31, 18 30 L 9 38 L 11 29 C 5 27, 3 20, 4 13 C 4 9, 5 7, 8 6" />
+                <path pathLength={1} strokeWidth="2.4" d="M27 11 L 27 19 M27 23 L 27 24" />
+              </svg>
+              <svg className="doodle blu sprinkle s-coin" viewBox="0 0 36 36">
+                <path pathLength={1} strokeWidth="2" d="M18 4 C 27 4, 32 10, 32 18 C 32 27, 26 32, 18 32 C 9 32, 4 26, 4 18 C 4 10, 10 4, 19 4" />
+                <path pathLength={1} strokeWidth="2" d="M18 11 L 18 25" />
+              </svg>
+            </div>
             <div>
               <p className="eyebrow a-fade">
                 Player-feedback triage for game teams

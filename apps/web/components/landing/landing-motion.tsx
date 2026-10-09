@@ -152,7 +152,7 @@ function fade(r: Element, start = 0) {
 const runs: Record<string, (r: Element) => void> = {
   hero(r) {
     animate(q(r, ".lines .ln"), {
-      clipPath: ["inset(0% 0% 100% 0%)", "inset(0% 0% 0% 0%)"],
+      clipPath: ["inset(-20% -12% 100% -12%)", "inset(-20% -12% -30% -12%)"],
       translateY: ["0.4em", 0],
       opacity: [0, 1],
       duration: 1400,
@@ -165,6 +165,7 @@ const runs: Record<string, (r: Element) => void> = {
       },
     });
     doodle(q(r, ".ul svg"), 1500);
+    doodle(q(r, ".sprinkle"), 900);
     animate(q(r, ".eyebrow"), { opacity: [0, 1], duration: 800, ease: "outQuart" });
     animate(q(r, ".sub, .ctas"), {
       opacity: [0, 1],
