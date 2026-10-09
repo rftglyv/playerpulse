@@ -59,7 +59,7 @@ export function DonutChart({
     );
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex h-full flex-col items-center justify-center gap-5">
       <ChartContainer
         config={config}
         className="aspect-square h-36 w-36 shrink-0"
@@ -122,11 +122,11 @@ export function DonutChart({
           </Pie>
         </PieChart>
       </ChartContainer>
-      <ul className="w-full min-w-0 space-y-1.5">
+      <ul className="mx-auto w-full max-w-64 min-w-0 space-y-2">
         {items.map((i, idx) => (
           <li
             key={i.key}
-            className="grid grid-cols-[0.5rem_minmax(0,1fr)_auto] items-start gap-2 text-sm"
+            className="grid grid-cols-[0.5rem_minmax(0,1fr)_auto] items-center gap-2.5 text-sm"
           >
             <span
               className="size-2 rounded-[2px]"
