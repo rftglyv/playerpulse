@@ -1,28 +1,14 @@
-# Dokploy: deploy as a Compose app; set OPENROUTER_API_KEY and POSTGRES_PASSWORD in its env panel.
+# Dokploy: deploy as a Compose app. Postgres is hosted separately (backups).
+# Set in Dokploy's env panel: DATABASE_URL, OPENROUTER_API_KEY, optional OPENROUTER_MODEL, WEB_PORT.
 services:
-  postgres:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: playerpulse
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
-      POSTGRES_DB: playerpulse
-    volumes: [pgdata:/var/lib/postgresql/data]
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U playerpulse"]
-      interval: 5s
-      retries: 10
-
   api:
     build: { context: ., dockerfile: apps/api/Dockerfile }
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgres://playerpulse:${POSTGRES_PASSWORD}@postgres:5432/playerpulse
+      DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-anthropic/claude-sonnet-5.5}
     volumes: [llmcache:/app/.cache/llm]
-    depends_on:
-      postgres: { condition: service_healthy }
 
   web:
     build:
@@ -35,5 +21,4 @@ services:
       api: { condition: service_healthy }
 
 volumes:
-  pgdata:
   llmcache:
