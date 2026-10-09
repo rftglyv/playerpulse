@@ -39,7 +39,7 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" tooltip="PlayerPulse" render={<Link href="/" />}>
               <span className="flex size-8 shrink-0 items-center justify-center">
-                <BrandMark size={26} />
+                <BrandMark height={22} />
               </span>
               <span className="grid min-w-0 flex-1 text-left leading-tight">
                 <span className="truncate font-serif text-[19px] font-semibold tracking-[-0.01em]">PlayerPulse</span>

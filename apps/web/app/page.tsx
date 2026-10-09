@@ -9,7 +9,7 @@ export default function Home() {
       <header className="hdr" id="hdr">
         <div className="hdr-in">
           <a className="logo" href="#top">
-            <BrandMark size={28} />
+            <BrandMark />
             PlayerPulse
           </a>
           <nav className="nav" aria-label="Main">
