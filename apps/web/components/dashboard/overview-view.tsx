@@ -5,6 +5,18 @@ import { ArrowRightIcon } from "lucide-react";
 import type { RunResult } from "@/lib/api";
 import { fmt, LANGUAGE_NAMES, langLabel } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Empty, EmptyDescription } from "@/components/ui/empty";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
 import { CATEGORY_LABEL, CategoryBadge, whereLabel } from "./issues-view";
 import { CHANNEL_LABEL, ChannelIcon } from "./voices-view";
 import { DonutChart } from "./charts/donut-chart";
@@ -24,25 +36,13 @@ function Panel({
   className?: string;
 }) {
   return (
-    <section
-      data-card
-      className={cn(
-        "rounded-[10px] border border-border bg-card p-5",
-        className,
-      )}
-    >
-      <div className="mb-4 flex items-baseline justify-between gap-3">
-        <h3 className="text-base font-semibold tracking-tight">
-          {title}
-        </h3>
-        {note && (
-          <span className="text-xs text-muted-foreground">
-            {note}
-          </span>
-        )}
-      </div>
-      {children}
-    </section>
+    <Card data-card className={cn("gap-4 py-5 [--card-spacing:--spacing(5)]", className)}>
+      <CardHeader className="flex items-baseline justify-between gap-3">
+        <CardTitle className="text-base font-semibold tracking-tight">{title}</CardTitle>
+        {note && <CardDescription className="text-xs">{note}</CardDescription>}
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
   );
 }
 
@@ -60,15 +60,11 @@ function Kpi({
   caption?: React.ReactNode;
 }) {
   return (
-    <div className="relative flex min-w-0 flex-col justify-between gap-3 px-5 py-4">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0 text-xs text-muted-foreground">
-          {label}
-        </div>
-        {chart && <div className="shrink-0">{chart}</div>}
-      </div>
-      <div>
-        <div
+    <CardHeader className="relative min-w-0 content-between gap-3 px-5 py-4">
+      <CardDescription className="min-w-0 text-xs">{label}</CardDescription>
+      {chart && <CardAction className="shrink-0">{chart}</CardAction>}
+      <div className="col-span-full">
+        <CardTitle
           className={cn(
             "font-serif text-[clamp(1.7rem,3vw,2.3rem)] leading-none font-semibold tracking-[-0.02em] tabular-nums lining-nums",
             tone === "loss" && "text-loss",
@@ -77,14 +73,14 @@ function Kpi({
           )}
         >
           {value}
-        </div>
+        </CardTitle>
         {caption && (
-          <div className="mt-2 inline-flex max-w-full items-center gap-1 truncate rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
+          <Badge variant="secondary" className="mt-2 max-w-full justify-start truncate text-[11px] font-normal text-muted-foreground">
             {caption}
-          </div>
+          </Badge>
         )}
       </div>
-    </div>
+    </CardHeader>
   );
 }
 
@@ -209,9 +205,9 @@ export function OverviewView({
 
   return (
     <div className="space-y-5">
-      <div
+      <Card
         data-card
-        className="grid grid-cols-2 divide-border overflow-hidden rounded-[10px] border border-border bg-card sm:grid-cols-3 lg:grid-cols-5 lg:divide-x"
+        className="grid grid-cols-2 gap-0 divide-border py-0 sm:grid-cols-3 lg:grid-cols-5 lg:divide-x"
       >
         <Kpi
           label="messages analysed"
@@ -290,7 +286,7 @@ export function OverviewView({
               : undefined
           }
         />
-      </div>
+      </Card>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel
@@ -298,9 +294,11 @@ export function OverviewView({
           note={`completion rate · ${result.previous_patch} vs ${result.current_patch}`}
         >
           {funnel.length === 0 ? (
-            <p className="rounded-lg border border-dashed border-border px-3 py-10 text-center text-xs text-muted-foreground">
-              Community-only run: no telemetry, so there is no funnel to draw.
-            </p>
+            <Empty className="border border-dashed py-10">
+              <EmptyDescription className="text-xs">
+                Community-only run: no telemetry, so there is no funnel to draw.
+              </EmptyDescription>
+            </Empty>
           ) : (
             <LevelFunnelChart
               data={funnel}
@@ -315,9 +313,9 @@ export function OverviewView({
           note={`${signal.length} non-noise messages per day`}
         >
           {timeline.length === 0 ? (
-            <p className="py-10 text-center text-xs text-muted-foreground">
-              No timestamps in this run.
-            </p>
+            <Empty className="py-10">
+              <EmptyDescription className="text-xs">No timestamps in this run.</EmptyDescription>
+            </Empty>
           ) : (
             <ReportsTimelineChart
               data={timeline}
@@ -385,32 +383,32 @@ export function OverviewView({
               No verified issues in this run.
             </p>
           ) : (
-            <ol className="space-y-3">
+            <ItemGroup className="gap-1">
               {top.map((i, idx) => (
-                <li key={idx}>
-                  <Link
-                    href={issuesHref}
-                    className="group grid w-full grid-cols-[1.5rem_minmax(0,1fr)_auto] items-start gap-2 text-left"
-                  >
-                    <span className="text-xs tabular-nums text-muted-foreground">
-                      #{i.priority ?? idx + 1}
-                    </span>
-                    <span className="min-w-0">
-                      <span className="line-clamp-2 text-sm font-medium group-hover:underline">
-                        {i.ticket?.title ?? i.title}
-                      </span>
-                      <span className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <CategoryBadge category={i.category} />{" "}
-                        {whereLabel(i, result.unit)}
-                      </span>
-                    </span>
-                    <span className="font-mono text-sm text-loss tabular-nums">
-                      {fmt.int(i.players_lost_estimate)}
-                    </span>
-                  </Link>
-                </li>
+                <Item
+                  key={idx}
+                  size="xs"
+                  className="group -mx-2.5 flex-nowrap items-start"
+                  render={<Link href={issuesHref} />}
+                >
+                  <ItemMedia className="w-6 justify-start text-xs tabular-nums text-muted-foreground">
+                    #{i.priority ?? idx + 1}
+                  </ItemMedia>
+                  <ItemContent className="min-w-0">
+                    <ItemTitle className="line-clamp-2 w-auto group-hover:underline">
+                      {i.ticket?.title ?? i.title}
+                    </ItemTitle>
+                    <ItemDescription className="flex items-center gap-1.5 text-xs">
+                      <CategoryBadge category={i.category} />{" "}
+                      {whereLabel(i, result.unit)}
+                    </ItemDescription>
+                  </ItemContent>
+                  <ItemActions className="font-mono text-sm text-loss tabular-nums">
+                    {fmt.int(i.players_lost_estimate)}
+                  </ItemActions>
+                </Item>
               ))}
-            </ol>
+            </ItemGroup>
           )}
           <Link
             href={issuesHref}

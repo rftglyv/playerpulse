@@ -2,31 +2,39 @@
 
 import { AlertTriangleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function EmptyState({ title, body, action }: { title: string; body?: string; action?: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-start gap-2 rounded-[10px] border border-dashed border-border px-6 py-10">
-      <p className="text-lg font-semibold tracking-tight">{title}</p>
-      {body && <p className="max-w-prose text-sm text-muted-foreground">{body}</p>}
-      {action && <div className="pt-2">{action}</div>}
-    </div>
+    <Empty className="border border-dashed">
+      <EmptyHeader>
+        <EmptyTitle className="text-lg font-semibold tracking-tight">{title}</EmptyTitle>
+        {body && <EmptyDescription className="max-w-prose">{body}</EmptyDescription>}
+      </EmptyHeader>
+      {action && <EmptyContent>{action}</EmptyContent>}
+    </Empty>
   );
 }
 
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <div className="flex flex-col items-start gap-3 rounded-xl bg-destructive/10 px-6 py-6 text-sm">
-      <div className="flex items-center gap-2 font-medium text-destructive">
-        <AlertTriangleIcon className="size-4" /> Something went wrong
-      </div>
-      <p className="max-w-prose text-foreground/80">{message}</p>
+    <Empty className="border border-destructive/30 bg-destructive/5">
+      <EmptyHeader>
+        <EmptyMedia variant="icon" className="bg-destructive/10 text-destructive">
+          <AlertTriangleIcon />
+        </EmptyMedia>
+        <EmptyTitle className="text-destructive">Something went wrong</EmptyTitle>
+        <EmptyDescription className="max-w-prose text-foreground/80">{message}</EmptyDescription>
+      </EmptyHeader>
       {onRetry && (
-        <Button variant="outline" size="sm" onClick={onRetry}>
-          Try again
-        </Button>
+        <EmptyContent>
+          <Button variant="outline" size="sm" onClick={onRetry}>
+            Try again
+          </Button>
+        </EmptyContent>
       )}
-    </div>
+    </Empty>
   );
 }
 

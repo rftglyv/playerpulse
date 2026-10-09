@@ -1,17 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { CheckIcon, CopyIcon, LayoutGridIcon, ListIcon, SearchIcon } from "lucide-react";
+import { CheckIcon, CopyIcon, InboxIcon, LayoutGridIcon, ListIcon, SearchIcon, SearchXIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { Separator } from "@/components/ui/separator";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Issue, RunResult } from "@/lib/api";
 import { fmt, langLabel } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { ChartLegendInline, TelemetryChart } from "./telemetry-chart";
-import { EmptyState } from "./states";
 import { Stamp } from "./case-file";
 
 export const CATEGORY_LABEL: Record<string, string> = {
@@ -58,11 +62,38 @@ export function LanguageChips({ languages }: { languages: string[] }) {
   return (
     <div className="flex flex-wrap gap-1">
       {languages.map((l) => (
-        <span key={l} className="rounded-[5px] border border-dashed border-border px-1.5 py-0.5 text-[11px] text-muted-foreground">
+        <Badge
+          key={l}
+          variant="outline"
+          className="rounded-[5px] border-dashed px-1.5 text-[11px] font-normal text-muted-foreground"
+        >
           {langLabel(l)}
-        </span>
+        </Badge>
       ))}
     </div>
+  );
+}
+
+/** Empty state for dashboard views (left-aligned, dashed, like the case-file cards). */
+export function ViewEmpty({
+  title,
+  body,
+  icon: Icon = InboxIcon,
+}: {
+  title: string;
+  body?: string;
+  icon?: React.ComponentType<{ className?: string }>;
+}) {
+  return (
+    <Empty className="items-start rounded-[10px] border border-dashed border-border px-6 py-10 text-left">
+      <EmptyHeader className="max-w-prose items-start">
+        <EmptyMedia variant="icon">
+          <Icon />
+        </EmptyMedia>
+        <EmptyTitle className="text-lg font-semibold">{title}</EmptyTitle>
+        {body && <EmptyDescription>{body}</EmptyDescription>}
+      </EmptyHeader>
+    </Empty>
   );
 }
 
@@ -143,14 +174,18 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
   const t = issue.ticket;
   const steps = t?.repro_steps ?? issue.repro_steps ?? [];
   return (
-    <article data-card className="relative overflow-hidden rounded-[10px] border border-border bg-card">
+    <Card data-card className="relative gap-0 rounded-[10px] py-0">
       <Stamp tone="loss">VERIFIED · #{issue.priority ?? "–"}</Stamp>
-      <header className="grid gap-5 p-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+      <CardHeader className="gap-5 p-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
         <div className="min-w-0 space-y-2.5">
-          <div className="pr-36 text-xs text-muted-foreground">{whereLabel(issue, result.unit)}</div>
-          <h3 className="max-w-[34ch] pr-28 text-xl leading-tight font-semibold tracking-tight text-balance sm:pr-0">
+          <CardDescription className="pr-36 text-xs">{whereLabel(issue, result.unit)}</CardDescription>
+          <CardTitle
+            role="heading"
+            aria-level={3}
+            className="max-w-[34ch] pr-28 text-xl leading-tight font-semibold tracking-tight text-balance sm:pr-0"
+          >
             {t?.title ?? issue.title}
-          </h3>
+          </CardTitle>
           <div className="flex flex-wrap items-center gap-1.5">
             <CategoryBadge category={issue.category} />
             <SeverityBadge severity={t?.severity} />
@@ -170,9 +205,10 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
             </div>
           </div>
         </div>
-      </header>
+      </CardHeader>
 
-      <div className="grid gap-6 border-t border-border p-6 lg:grid-cols-2">
+      <Separator />
+      <CardContent className="grid gap-6 p-6 lg:grid-cols-2">
         <section className="space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">Telemetry</h4>
@@ -206,10 +242,12 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
             </div>
           )}
         </section>
-      </div>
+      </CardContent>
 
       {t?.evidence && t.evidence.length > 0 && (
-        <div className="border-t border-border p-6">
+        <>
+          <Separator />
+          <CardContent className="p-6">
           <h4 className="mb-3 text-xs font-medium tracking-wide text-muted-foreground uppercase">What players said</h4>
           <div className="grid gap-3 md:grid-cols-2">
             {t.evidence.map((e) => (
@@ -221,13 +259,14 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
               </figure>
             ))}
           </div>
-        </div>
+          </CardContent>
+        </>
       )}
 
-      <footer className="flex justify-end border-t border-border px-6 py-3">
+      <CardFooter className="justify-end bg-transparent px-6 py-3">
         <CopyButton issue={issue} result={result} />
-      </footer>
-    </article>
+      </CardFooter>
+    </Card>
   );
 }
 
@@ -277,40 +316,53 @@ export function IssuesView({ result }: { result: RunResult }) {
     <div className="space-y-5">
       {all.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative min-w-48 flex-1">
-            <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
-            <Input
+          <InputGroup className="min-w-48 flex-1">
+            <InputGroupInput
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search issues"
               aria-label="Search issues"
-              className="h-8 pl-8"
             />
-          </div>
+            <InputGroupAddon>
+              <SearchIcon className="size-3.5" />
+            </InputGroupAddon>
+          </InputGroup>
           <FilterSelect items={catItems} value={category} onChange={setCategory} label="Category" />
           <FilterSelect items={sevItems} value={severity} onChange={setSeverity} label="Severity" />
           <FilterSelect items={lvlItems} value={level} onChange={setLevel} label={result.unit} />
-          <div className="flex rounded-lg bg-muted p-[3px]" role="group" aria-label="View">
+          <ToggleGroup
+            aria-label="View"
+            size="sm"
+            spacing={0}
+            className="h-9 bg-muted p-[3px] *:h-[30px]"
+            value={[view]}
+            onValueChange={(v) => {
+              const next = v[0];
+              if (next === "cards" || next === "table") setView(next);
+            }}
+          >
             {(
               [
                 ["cards", LayoutGridIcon, "Card view"],
                 ["table", ListIcon, "Table view"],
               ] as const
             ).map(([v, Icon, label]) => (
-              <button
-                key={v}
-                onClick={() => setView(v)}
-                aria-label={label}
-                aria-pressed={view === v}
-                className={cn(
-                  "rounded-md px-2 py-1 text-muted-foreground",
-                  view === v && "bg-background text-foreground shadow-sm",
-                )}
-              >
-                <Icon className="size-4" />
-              </button>
+              <Tooltip key={v}>
+                <TooltipTrigger
+                  render={
+                    <ToggleGroupItem
+                      value={v}
+                      aria-label={label}
+                      className="rounded-md! px-2 text-muted-foreground aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-sm"
+                    />
+                  }
+                >
+                  <Icon className="size-4" />
+                </TooltipTrigger>
+                <TooltipContent>{label}</TooltipContent>
+              </Tooltip>
             ))}
-          </div>
+          </ToggleGroup>
         </div>
       )}
       {filtered && (
@@ -319,9 +371,9 @@ export function IssuesView({ result }: { result: RunResult }) {
         </p>
       )}
       {all.length === 0 ? (
-        <EmptyState title="No verified issues in this run" body="Nothing players reported was confirmed as a real problem." />
+        <ViewEmpty title="No verified issues in this run" body="Nothing players reported was confirmed as a real problem." />
       ) : issues.length === 0 ? (
-        <EmptyState title="No issues match these filters" />
+        <ViewEmpty title="No issues match these filters" icon={SearchXIcon} />
       ) : view === "table" ? (
         <IssuesTable issues={issues} result={result} />
       ) : (
@@ -347,7 +399,7 @@ function FilterSelect({
 }) {
   return (
     <Select items={items} value={value} onValueChange={(v) => v && onChange(v as string)}>
-      <SelectTrigger size="sm" className="min-w-36" aria-label={label}>
+      <SelectTrigger className="min-w-36" aria-label={label}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent alignItemWithTrigger={false}>
@@ -363,7 +415,7 @@ function FilterSelect({
 
 function IssuesTable({ issues, result }: { issues: Issue[]; result: RunResult }) {
   return (
-    <div data-card className="overflow-hidden rounded-[10px] border border-border bg-card">
+    <Card data-card className="gap-0 rounded-[10px] py-0">
       <Table>
         <TableHeader>
           <TableRow>
@@ -395,6 +447,6 @@ function IssuesTable({ issues, result }: { issues: Issue[]; result: RunResult })
           ))}
         </TableBody>
       </Table>
-    </div>
+    </Card>
   );
 }

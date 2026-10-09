@@ -1,10 +1,12 @@
 "use client";
 
+import { EyeIcon, GavelIcon } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import type { Issue, RunResult } from "@/lib/api";
 import { fmt } from "@/lib/api";
-import { CategoryBadge, LanguageChips, whereLabel } from "./issues-view";
+import { CategoryBadge, LanguageChips, ViewEmpty, whereLabel } from "./issues-view";
 import { ChartLegendInline, TelemetryChart } from "./telemetry-chart";
-import { EmptyState } from "./states";
 import { Stamp } from "./case-file";
 
 function headline(issue: Issue, unit: string) {
@@ -21,16 +23,20 @@ function headline(issue: Issue, unit: string) {
 
 function VerdictCard({ issue, result, tone }: { issue: Issue; result: RunResult; tone: "proof" | "watch" }) {
   return (
-    <article
+    <Card
       data-card
-      className="relative grid gap-6 overflow-hidden rounded-[10px] border border-border bg-card p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]"
+      className="relative grid gap-6 rounded-[10px] p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]"
     >
       <Stamp tone={tone}>{tone === "proof" ? "DISMISSED" : "WATCH"}</Stamp>
-      <div className="space-y-3">
-        <div className="pr-32 text-xs text-muted-foreground lg:pr-0">{whereLabel(issue, result.unit)}</div>
-        <h3 className="pr-24 text-xl leading-tight font-semibold tracking-tight text-balance lg:pr-0">
+      <CardHeader className="flex flex-col gap-3 px-0">
+        <CardDescription className="pr-32 text-xs lg:pr-0">{whereLabel(issue, result.unit)}</CardDescription>
+        <CardTitle
+          role="heading"
+          aria-level={3}
+          className="pr-24 text-xl leading-tight font-semibold tracking-tight text-balance lg:pr-0"
+        >
           {headline(issue, result.unit)}
-        </h3>
+        </CardTitle>
         <div className="flex flex-wrap items-center gap-1.5">
           <CategoryBadge category={issue.category} />
         </div>
@@ -45,12 +51,12 @@ function VerdictCard({ issue, result, tone }: { issue: Issue; result: RunResult;
           </p>
         )}
         <LanguageChips languages={issue.languages} />
-      </div>
-      <div className="space-y-3 lg:pt-10">
+      </CardHeader>
+      <CardContent className="space-y-3 px-0 lg:pt-10">
         <ChartLegendInline tone={tone} />
         <TelemetryChart telemetry={issue.telemetry} tone={tone} />
-      </div>
-    </article>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -61,7 +67,8 @@ export function DismissedView({ result }: { result: RunResult }) {
     <div className="space-y-10">
       <section className="space-y-4">
         {dismissed.length === 0 ? (
-          <EmptyState
+          <ViewEmpty
+            icon={GavelIcon}
             title="Nothing dismissed"
             body={
               result.telemetry
@@ -74,12 +81,15 @@ export function DismissedView({ result }: { result: RunResult }) {
         )}
       </section>
       <section className="space-y-4">
-        <div className="border-b border-border pb-3">
-          <h2 className="text-xl font-semibold tracking-tight">Watch list</h2>
-          <p className="text-sm text-muted-foreground">Signals that aren&apos;t strong enough to act on yet.</p>
+        <div className="space-y-3">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight">Watch list</h2>
+            <p className="text-sm text-muted-foreground">Signals that aren&apos;t strong enough to act on yet.</p>
+          </div>
+          <Separator />
         </div>
         {watch.length === 0 ? (
-          <EmptyState title="Watch list is empty" />
+          <ViewEmpty icon={EyeIcon} title="Watch list is empty" />
         ) : (
           watch.map((i, idx) => <VerdictCard key={idx} issue={i} result={result} tone="watch" />)
         )}

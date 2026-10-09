@@ -2,17 +2,19 @@
 
 import { animate, stagger } from "animejs";
 import { useEffect, useRef } from "react";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 /** Rotated mono stamp, as on the landing "case files". */
 export function Stamp({ tone, children, className }: { tone: "loss" | "proof" | "watch"; children: React.ReactNode; className?: string }) {
   return (
-    <span
+    <Badge
+      variant="outline"
       data-stamp
       aria-hidden
       style={{ transform: "rotate(-6deg)" }}
       className={cn(
-        "pointer-events-none absolute top-5 right-5 rounded-[3px] border-[1.5px] border-current bg-white/88 px-2.5 py-1.5 text-[11px] font-semibold tracking-[0.12em] whitespace-nowrap",
+        "pointer-events-none absolute top-5 right-5 h-auto rounded-[3px] border-[1.5px] border-current bg-white/88 px-2.5 py-1.5 text-[11px] font-semibold tracking-[0.12em] whitespace-nowrap transition-none",
         tone === "loss" && "text-loss",
         tone === "proof" && "text-proof",
         tone === "watch" && "text-watch",
@@ -20,7 +22,7 @@ export function Stamp({ tone, children, className }: { tone: "loss" | "proof" | 
       )}
     >
       {children}
-    </span>
+    </Badge>
   );
 }
 

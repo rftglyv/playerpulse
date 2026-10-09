@@ -8,26 +8,39 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Issue, RunResult, TelemetryRow } from "@/lib/api";
 import { fmt } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { CompletionLollipop } from "./charts/completion-lollipop";
-import { EmptyState } from "./states";
 
 const VERDICT_ORDER: Issue["status"][] = ["reported", "watch", "dismissed"];
 
 function Verdict({ status }: { status: string }) {
   return (
-    <span
+    <Badge
+      variant="outline"
       className={cn(
-        "inline-block rounded-[3px] border-[1.5px] border-current px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.1em] uppercase",
+        "rounded-[3px] border-[1.5px] border-current px-1.5 text-[10px] font-semibold tracking-[0.1em] uppercase",
         status === "reported" && "text-loss",
         status === "dismissed" && "text-proof",
         status === "watch" && "text-watch",
       )}
     >
       {status}
-    </span>
+    </Badge>
   );
 }
 
@@ -63,10 +76,14 @@ export function PatchCompareView({ result }: { result: RunResult }) {
 
   if (levels.length === 0)
     return (
-      <EmptyState
-        title="No levels in this run"
-        body="The game info for this run doesn't list any levels."
-      />
+      <Empty className="border border-border">
+        <EmptyHeader>
+          <EmptyTitle>No levels in this run</EmptyTitle>
+          <EmptyDescription>
+            The game info for this run doesn&apos;t list any levels.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     );
 
   const row = (lvl: number, patch: string): TelemetryRow | undefined =>
@@ -80,10 +97,7 @@ export function PatchCompareView({ result }: { result: RunResult }) {
           are shown.
         </p>
       )}
-      <div
-        data-card
-        className="overflow-hidden rounded-[10px] border border-border bg-card"
-      >
+      <Card data-card className="gap-0 py-0">
         <Table>
           <TableHeader>
             <TableRow>
@@ -99,7 +113,20 @@ export function PatchCompareView({ result }: { result: RunResult }) {
               <TableHead className="text-right">Δ pts</TableHead>
               <TableHead>Deaths / player</TableHead>
               <TableHead>Restarts / player</TableHead>
-              <TableHead>Error reports / player</TableHead>
+              <TableHead>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <span className="cursor-help underline decoration-dotted underline-offset-4" />
+                    }
+                  >
+                    Error reports / player
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Error reports per 1,000 players started
+                  </TooltipContent>
+                </Tooltip>
+              </TableHead>
               <TableHead className="text-right">Reports</TableHead>
               <TableHead className="pr-5">Verdict</TableHead>
             </TableRow>
@@ -179,7 +206,7 @@ export function PatchCompareView({ result }: { result: RunResult }) {
                       cur={c?.restarts_per_player}
                     />
                   </TableCell>
-                  <TableCell title="Error reports per 1,000 players started">
+                  <TableCell>
                     <Ratio prev={errRatio(p)} cur={errRatio(c)} />
                     {p && c && (
                       <span className="ml-1 font-mono text-[10px] text-muted-foreground">
@@ -202,7 +229,7 @@ export function PatchCompareView({ result }: { result: RunResult }) {
             })}
           </TableBody>
         </Table>
-      </div>
+      </Card>
       <p className="text-xs text-muted-foreground">
         Δ in red = completion dropped by 5 points or more. Reports = non-noise
         player messages about the {result.unit}.
