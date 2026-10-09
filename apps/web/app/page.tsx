@@ -70,9 +70,8 @@ export default function Home() {
                 </span>
               </h1>
               <p className="sub a-fade">
-                It reads Discord, Steam reviews and in-game feedback in Azerbaijani, Russian and
-                English, then checks every complaint against your gameplay telemetry.{" "}
-                <b>You get the real bugs, ranked, with evidence and repro steps.</b>
+                It reads Discord, Steam and in-game feedback, in any mix of languages, and checks it
+                against your telemetry. <b>You get the real bugs, ranked, with evidence and repro steps.</b>
               </p>
               <div className="ctas a-fade">
                 <Link className="btn btn-p" href="/dashboard">
