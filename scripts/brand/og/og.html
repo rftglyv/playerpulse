@@ -1,0 +1,93 @@
+<!doctype html>
+<!-- PlayerPulse OG image template. Variant via #home | #dashboard | #auth. Rendered by render.sh at 1200x630. -->
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@500;600;700;800&display=block" rel="stylesheet">
+<style>
+:root{--bg:#231F20;--ink:#0B0A0A;--y:#FFDE59;--c:#FF6D4D;--g:#53C283;--p:#737AE6;--l:#E9EAFB}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1200px;height:630px;overflow:hidden;background:var(--bg);color:#fff;font-family:Manrope,sans-serif}
+.v{display:none;position:absolute;inset:0;padding:60px}
+body[data-v="home"] #home,body[data-v="dashboard"] #dashboard,body[data-v="auth"] #auth{display:block}
+.grid{position:absolute;inset:0;background-image:radial-gradient(rgba(233,234,251,.09) 1.5px,transparent 1.5px);background-size:28px 28px}
+.brand{position:absolute;left:60px;top:56px;display:flex;align-items:center;gap:14px;font-weight:800;font-size:30px;letter-spacing:-.5px}
+.brand img{height:46px}
+.tag{position:absolute;right:60px;top:66px;font-size:17px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--l);opacity:.75}
+h1{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;line-height:1.02;letter-spacing:.5px}
+.hl{background:var(--y);color:var(--bg);padding:0 14px;margin:0 -4px;display:inline-block;transform:rotate(-1.5deg)}
+.sub{font-size:27px;font-weight:600;color:var(--l);line-height:1.35}
+.sub b{color:#fff;font-weight:800}
+.strip{position:absolute;left:60px;right:60px;bottom:60px;display:flex;gap:12px}
+.chip{border:2px solid rgba(233,234,251,.25);border-radius:999px;padding:10px 20px;font-size:21px;font-weight:700;white-space:nowrap}
+.chip i{font-style:normal;color:var(--g)}
+.note{font-size:17px;color:var(--l);opacity:.6;align-self:center;font-weight:600}
+.blob{position:absolute;border-radius:50%}
+.px{position:absolute;width:18px;height:18px}
+body[data-v="dashboard"] .px{display:none}
+/* home */
+#home h1{position:absolute;left:60px;top:142px;font-size:104px;width:1080px}
+#home .sub{position:absolute;left:60px;top:390px;width:1000px}
+/* dashboard */
+#dashboard h1{position:absolute;left:60px;top:140px;font-size:84px;width:560px}
+.card{position:absolute;right:60px;top:150px;width:500px;background:var(--l);color:var(--bg);border-radius:22px;padding:30px 32px;transform:rotate(1.5deg);box-shadow:14px 14px 0 var(--p)}
+.card .rank{font-family:Anton;font-size:64px;line-height:1;color:var(--c)}
+.card .t{font-size:30px;font-weight:800;margin-top:8px}
+.card .d{font-size:22px;font-weight:600;opacity:.75;margin-top:4px}
+.card .n{margin-top:22px;display:flex;align-items:baseline;gap:10px}
+.card .n b{font-family:Anton;font-weight:400;font-size:56px}
+.card .n span{font-size:22px;font-weight:700}
+.bar{height:12px;border-radius:6px;background:rgba(35,31,32,.12);margin-top:14px;overflow:hidden}.bar i{display:block;height:100%;width:82%;background:var(--c)}
+.stamp{position:absolute;right:20px;top:24px;border:4px solid var(--g);color:var(--g);font-family:Anton;font-size:30px;letter-spacing:2px;padding:4px 14px;border-radius:8px;transform:rotate(-10deg)}
+#dashboard .sub{position:absolute;left:60px;bottom:60px;width:560px;font-size:24px}
+/* auth */
+#auth .center{position:absolute;inset:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#auth .center img{height:120px;margin-bottom:28px}
+#auth h1{font-size:100px}
+#auth .sub{margin-top:22px}
+</style></head>
+<body>
+<div class="grid"></div>
+<div class="blob" style="width:420px;height:420px;right:-140px;bottom:-200px;background:var(--p);opacity:.35"></div>
+<div class="px" style="right:60px;top:110px;background:var(--y)"></div>
+<div class="px" style="right:84px;top:134px;background:var(--c)"></div>
+<div class="px" style="right:60px;top:158px;background:var(--g)"></div>
+
+<section class="v" id="home">
+  <div class="brand"><img src="../../../apps/web/public/brand/mark-tight.svg" alt="">PlayerPulse</div>
+  <div class="tag">AI Game QA</div>
+  <h1>Player complaints in.<br><span class="hl">Real bugs</span> out.</h1>
+  <p class="sub">AI game QA: <b>player feedback × telemetry</b> → verified, prioritised issues</p>
+  <div class="strip">
+    <span class="chip"><i>5/5</i> planted issues found</span>
+    <span class="chip"><i>0</i> false alarms</span>
+    <span class="chip"><i>100%</i> message accuracy</span>
+    <span class="note">synthetic test pack</span>
+  </div>
+</section>
+
+<section class="v" id="dashboard">
+  <div class="brand"><img src="../../../apps/web/public/brand/mark-tight.svg" alt="">PlayerPulse</div>
+  <h1>Your issues, ranked by <span class="hl">players lost.</span></h1>
+  <p class="sub">Player feedback × telemetry, verified before it reaches your board.</p>
+  <div class="card">
+    <div class="stamp">VERIFIED</div>
+    <div class="rank">#1</div>
+    <div class="t">Twin Bridges · level 4</div>
+    <div class="d">Players fall through the ledge</div>
+    <div class="n"><b>2,946</b><span>players lost</span></div>
+    <div class="bar"><i></i></div>
+  </div>
+</section>
+
+<section class="v" id="auth">
+  <div class="center">
+    <img src="../../../apps/web/public/brand/mark-tight.svg" alt="">
+    <h1>Sign in to <span class="hl">PlayerPulse</span></h1>
+    <p class="sub">Player complaints in. Real bugs out.</p>
+  </div>
+</section>
+<script>
+const v=(location.hash.slice(1)||new URLSearchParams(location.search).get('v')||'home');
+document.body.dataset.v=v;
+</script>
+</body></html>
