@@ -29,6 +29,7 @@ import { MessagesView, ReviewView } from "./messages-view";
 import { NewRunButton } from "./new-run-dialog";
 import { CardsSkeleton, EmptyState, ErrorState } from "./states";
 import { TasksView } from "./tasks-view";
+import { Reveal } from "./case-file";
 
 type Section = "issues" | "dismissed" | "tasks" | "review" | "messages";
 
@@ -128,13 +129,15 @@ export function Dashboard() {
         <Sidebar collapsible="icon">
           <SidebarHeader className="px-4 py-4">
             <Link href="/" className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
-              <span className="size-2.5 shrink-0 rounded-full bg-loss" />
-              <span className="font-semibold tracking-tight group-data-[collapsible=icon]:hidden">PlayerPulse</span>
+              <span className="size-2 shrink-0 rounded-full bg-watch shadow-[0_0_0_3px_rgba(255,178,36,0.16)]" />
+              <span className="font-serif text-[19px] font-semibold tracking-[-0.01em] group-data-[collapsible=icon]:hidden">
+                PlayerPulse
+              </span>
             </Link>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>{result ? result.game : "Run"}</SidebarGroupLabel>
+              <SidebarGroupLabel className="font-mono">{result ? result.game : "Run"}</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {SECTIONS.map((s) => (
@@ -147,24 +150,24 @@ export function Dashboard() {
                         <s.icon />
                         <span>{s.label}</span>
                       </SidebarMenuButton>
-                      {c[s.id] != null && <SidebarMenuBadge className="tabular-nums">{c[s.id]}</SidebarMenuBadge>}
+                      {c[s.id] != null && <SidebarMenuBadge className="font-mono tabular-nums">{c[s.id]}</SidebarMenuBadge>}
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
-          <SidebarFooter className="px-4 pb-4 text-xs leading-relaxed text-muted-foreground group-data-[collapsible=icon]:hidden">
+          <SidebarFooter className="px-4 pb-4 font-serif text-sm leading-relaxed text-muted-foreground italic group-data-[collapsible=icon]:hidden">
             Telemetry knows where. Players know why.
           </SidebarFooter>
         </Sidebar>
 
         <SidebarInset className="min-h-svh">
-          <header className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-border bg-background/95 px-4 py-3 backdrop-blur sm:px-6">
+          <header className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-foreground/9 bg-card/70 px-4 py-3 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.7)] backdrop-blur-xl backdrop-saturate-[1.4] sm:px-6">
             <SidebarTrigger />
             <div className="min-w-0 flex-1">
-              <h1 className="truncate text-base font-semibold">{current.label}</h1>
-              <p className="truncate text-xs text-muted-foreground">{current.blurb}</p>
+              <h1 className="truncate font-serif text-[22px] leading-tight font-medium tracking-[-0.02em]">{current.label}</h1>
+              <p className="truncate font-mono text-[11.5px] text-muted-foreground">{current.blurb}</p>
             </div>
             {runs && runs.length > 0 && (
               <Select items={runItems} value={runId} onValueChange={(v) => v && setRunId(v as string)}>
@@ -183,7 +186,9 @@ export function Dashboard() {
             <NewRunButton onCreated={(id) => loadRuns(id)} />
           </header>
 
-          <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6">{body}</div>
+          <Reveal deps={[section, run]} className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
+            {body}
+          </Reveal>
 
           <RunFooter run={run} result={result} />
         </SidebarInset>
@@ -210,7 +215,7 @@ function RunFooter({ run, result }: { run: RunDetail | null; result: RunResult |
     ["Cached calls", m ? `${fmt.int(m.cache_hits)} of ${fmt.int(m.llm_calls)}` : "–"],
   ];
   return (
-    <footer className="flex flex-wrap gap-x-6 gap-y-1 border-t border-border px-4 py-3 text-xs sm:px-6">
+    <footer className="flex flex-wrap gap-x-6 gap-y-1 border-t border-border px-4 py-3 font-mono text-[11.5px] sm:px-6">
       <InboxIcon className="hidden size-3.5 self-center text-muted-foreground sm:block" />
       {items.map(([k, v]) => (
         <span key={k}>

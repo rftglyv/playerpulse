@@ -29,7 +29,7 @@ export function TelemetryChart({
 }) {
   if (!telemetry) {
     return (
-      <p className="rounded-lg bg-muted/50 px-3 py-4 text-sm text-muted-foreground">
+      <p className="rounded-lg border border-dashed border-border px-3 py-4 font-mono text-xs text-muted-foreground">
         No telemetry for this level in this run. Verdict is based on player reports only.
       </p>
     );
@@ -45,7 +45,7 @@ export function TelemetryChart({
   const curColor = tone === "proof" ? "var(--proof)" : tone === "watch" ? "var(--watch)" : "var(--loss)";
 
   return (
-    <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
+    <div className="space-y-3">
       <ChartContainer
         config={{ ...config, cur: { ...config.cur, color: curColor } }}
         className="aspect-auto h-36 w-full"
@@ -58,7 +58,7 @@ export function TelemetryChart({
             tickLine={false}
             axisLine={false}
             width={108}
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 11, fontFamily: "var(--font-plex-mono), ui-monospace, monospace" }}
           />
           <ChartTooltip
             cursor={false}
@@ -79,18 +79,18 @@ export function TelemetryChart({
           <Bar dataKey="cur" fill="var(--color-cur)" radius={3} isAnimationActive={false} />
         </BarChart>
       </ChartContainer>
-      <dl className="grid grid-cols-2 gap-x-5 gap-y-1.5 text-xs sm:grid-cols-1">
+      <dl className="border-t border-border text-sm">
         {METRICS.map((m) => {
           const p = Number(prev[m.key]) || 0;
           const c = Number(cur[m.key]) || 0;
           const worse = m.higherIsWorse ? c > p * 1.15 : c < p * 0.85;
           return (
-            <div key={m.key} className="flex items-baseline justify-between gap-3">
+            <div key={m.key} className="flex items-baseline justify-between gap-3 border-b border-border py-2">
               <dt className="text-muted-foreground">{m.label}</dt>
-              <dd className="tabular-nums">
+              <dd className="text-right font-mono text-[13px] tabular-nums">
                 <span className="text-muted-foreground">{m.format(p)}</span>
                 <span className="px-1 text-muted-foreground">→</span>
-                <span className={cn("font-medium", worse && "text-loss")}>{m.format(c)}</span>
+                <span className={cn(worse ? "text-loss" : "text-foreground")}>{m.format(c)}</span>
               </dd>
             </div>
           );
@@ -102,7 +102,7 @@ export function TelemetryChart({
 
 export function ChartLegendInline({ tone = "loss" }: { tone?: "loss" | "proof" | "watch" }) {
   return (
-    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+    <div className="flex items-center gap-4 font-mono text-[11px] text-muted-foreground">
       <span className="flex items-center gap-1.5">
         <span className="size-2 rounded-[2px] bg-chart-1" /> {"Previous patch"}
       </span>

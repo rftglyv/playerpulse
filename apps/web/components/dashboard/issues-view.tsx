@@ -9,6 +9,7 @@ import { fmt, langLabel } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { ChartLegendInline, TelemetryChart } from "./telemetry-chart";
 import { EmptyState } from "./states";
+import { Stamp } from "./case-file";
 
 export const CATEGORY_LABEL: Record<string, string> = {
   bug: "Bug",
@@ -22,6 +23,7 @@ export function CategoryBadge({ category }: { category: string }) {
     <Badge
       variant="outline"
       className={cn(
+        "font-mono text-[11px]",
         category === "bug" && "border-loss/40 text-loss",
         category === "balance" && "border-watch/40 text-watch",
         category === "skill_issue" && "border-proof/40 text-proof",
@@ -37,7 +39,7 @@ export function SeverityBadge({ severity }: { severity?: string | null }) {
   return (
     <Badge
       className={cn(
-        "capitalize",
+        "font-mono text-[11px] capitalize",
         severity === "blocker" && "bg-loss text-background",
         severity === "major" && "bg-loss/20 text-loss",
         severity === "minor" && "bg-muted text-foreground",
@@ -53,7 +55,7 @@ export function LanguageChips({ languages }: { languages: string[] }) {
   return (
     <div className="flex flex-wrap gap-1">
       {languages.map((l) => (
-        <span key={l} className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">
+        <span key={l} className="rounded-[5px] border border-dashed border-border px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">
           {langLabel(l)}
         </span>
       ))}
@@ -138,43 +140,45 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
   const t = issue.ticket;
   const steps = t?.repro_steps ?? issue.repro_steps ?? [];
   return (
-    <article className="rounded-xl bg-card ring-1 ring-foreground/8">
-      <header className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex min-w-0 gap-4">
-          <span className="font-mono text-2xl font-semibold tabular-nums text-muted-foreground">
-            #{issue.priority ?? "–"}
-          </span>
-          <div className="min-w-0 space-y-2">
-            <h3 className="text-lg font-semibold leading-snug text-balance">{t?.title ?? issue.title}</h3>
-            <div className="flex flex-wrap items-center gap-1.5">
-              <CategoryBadge category={issue.category} />
-              <SeverityBadge severity={t?.severity} />
-              <span className="text-sm text-muted-foreground">{whereLabel(issue, result.unit)}</span>
-            </div>
+    <article data-card className="relative overflow-hidden rounded-[10px] border border-border bg-card">
+      <Stamp tone="loss">VERIFIED · #{issue.priority ?? "–"}</Stamp>
+      <header className="grid gap-5 p-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+        <div className="min-w-0 space-y-2.5">
+          <div className="pr-36 font-mono text-xs text-muted-foreground">{whereLabel(issue, result.unit)}</div>
+          <h3 className="max-w-[34ch] pr-28 font-serif text-[22px] leading-tight font-medium tracking-[-0.01em] text-balance sm:pr-0">
+            {t?.title ?? issue.title}
+          </h3>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <CategoryBadge category={issue.category} />
+            <SeverityBadge severity={t?.severity} />
           </div>
         </div>
-        <div className="flex shrink-0 gap-6 sm:text-right">
+        <div className="flex shrink-0 items-end gap-8 sm:text-right">
           <div>
-            <div className="text-3xl font-semibold tabular-nums text-loss">{fmt.int(issue.players_lost_estimate)}</div>
-            <div className="text-xs text-muted-foreground">players lost</div>
+            <div className="font-serif text-[clamp(2.4rem,4.5vw,3.2rem)] leading-none font-semibold tracking-[-0.02em] text-loss tabular-nums lining-nums">
+              {fmt.int(issue.players_lost_estimate)}
+            </div>
+            <div className="mt-1.5 text-xs text-muted-foreground">players lost</div>
           </div>
           <div>
-            <div className="text-3xl font-semibold tabular-nums">{issue.message_ids.length}</div>
-            <div className="text-xs text-muted-foreground">reports · {issue.distinct_players} players</div>
+            <div className="font-mono text-2xl leading-none tabular-nums">{issue.message_ids.length}</div>
+            <div className="mt-1.5 font-mono text-[11px] text-muted-foreground">
+              reports · {issue.distinct_players} players
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="grid gap-6 border-t border-border p-5 lg:grid-cols-2">
+      <div className="grid gap-6 border-t border-border p-6 lg:grid-cols-2">
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium">Telemetry</h4>
+            <h4 className="font-mono text-xs tracking-wide text-muted-foreground uppercase">Telemetry</h4>
             <ChartLegendInline />
           </div>
           <TelemetryChart telemetry={issue.telemetry} />
           {issue.telemetry_evidence && <p className="text-sm text-muted-foreground">{issue.telemetry_evidence}</p>}
           <div className="flex items-center gap-2 pt-1">
-            <span className="text-xs text-muted-foreground">Reported in</span>
+            <span className="font-mono text-[11px] text-muted-foreground">Reported in</span>
             <LanguageChips languages={issue.languages} />
           </div>
         </section>
@@ -182,14 +186,14 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
           {t?.summary && <p className="leading-relaxed">{t.summary}</p>}
           {t?.suspected_cause && (
             <div>
-              <h4 className="mb-1 font-medium">Suspected cause</h4>
+              <h4 className="mb-1.5 font-mono text-xs tracking-wide text-muted-foreground uppercase">Suspected cause</h4>
               <p className="leading-relaxed text-muted-foreground">{t.suspected_cause}</p>
             </div>
           )}
           {steps.length > 0 && (
             <div>
-              <h4 className="mb-1 font-medium">
-                Repro steps <span className="font-normal text-muted-foreground">inferred from player reports</span>
+              <h4 className="mb-1.5 font-mono text-xs tracking-wide text-muted-foreground uppercase">
+                Repro steps <span className="normal-case tracking-normal text-muted-foreground/70">· inferred from player reports</span>
               </h4>
               <ol className="list-decimal space-y-1 pl-5 text-muted-foreground marker:tabular-nums">
                 {steps.map((s, i) => (
@@ -202,12 +206,12 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
       </div>
 
       {t?.evidence && t.evidence.length > 0 && (
-        <div className="border-t border-border p-5">
-          <h4 className="mb-3 text-sm font-medium">What players said</h4>
+        <div className="border-t border-border p-6">
+          <h4 className="mb-3 font-mono text-xs tracking-wide text-muted-foreground uppercase">What players said</h4>
           <div className="grid gap-3 md:grid-cols-2">
             {t.evidence.map((e) => (
-              <figure key={e.id} className="rounded-lg bg-muted/40 p-3 text-sm">
-                <blockquote className="leading-relaxed">“{e.text}”</blockquote>
+              <figure key={e.id} className="border-l-2 border-border py-1 pl-3 text-sm">
+                <blockquote className="font-serif text-[15px] leading-relaxed italic">“{e.text}”</blockquote>
                 {e.english && e.english !== e.text && (
                   <figcaption className="mt-1.5 leading-relaxed text-muted-foreground">{e.english}</figcaption>
                 )}
@@ -217,7 +221,7 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
         </div>
       )}
 
-      <footer className="flex justify-end border-t border-border px-5 py-3">
+      <footer className="flex justify-end border-t border-border px-6 py-3">
         <CopyButton issue={issue} result={result} />
       </footer>
     </article>
@@ -235,7 +239,7 @@ export function IssuesView({ result }: { result: RunResult }) {
       ) : (
         issues.map((i, idx) => <IssueCard key={`${i.title}-${idx}`} issue={i} result={result} />)
       )}
-      <p className="text-sm text-muted-foreground">
+      <p className="font-mono text-xs text-muted-foreground">
         Priority = players who started the level on the new patch × drop in completion rate
       </p>
     </div>
