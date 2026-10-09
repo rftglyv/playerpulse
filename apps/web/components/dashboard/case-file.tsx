@@ -12,7 +12,7 @@ export function Stamp({ tone, children, className }: { tone: "loss" | "proof" | 
       aria-hidden
       style={{ transform: "rotate(-6deg)" }}
       className={cn(
-        "pointer-events-none absolute top-5 right-5 rounded-[3px] border-[1.5px] border-current bg-background/40 px-2.5 py-1.5 font-mono text-[11px] font-medium tracking-[0.12em] whitespace-nowrap",
+        "pointer-events-none absolute top-5 right-5 rounded-[3px] border-[1.5px] border-current bg-white/88 px-2.5 py-1.5 font-mono text-[11px] font-medium tracking-[0.12em] whitespace-nowrap",
         tone === "loss" && "text-loss",
         tone === "proof" && "text-proof",
         tone === "watch" && "text-watch",

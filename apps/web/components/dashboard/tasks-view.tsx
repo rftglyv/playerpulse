@@ -28,7 +28,7 @@ function PTagChip({ tag }: { tag: string }) {
       className={cn(
         "inline-flex h-5 min-w-8 items-center justify-center rounded-md px-1.5 font-mono text-xs font-semibold",
         tag === "P0" && "bg-loss text-background",
-        tag === "P1" && "bg-watch/20 text-watch",
+        tag === "P1" && "bg-watch/10 text-watch",
         tag !== "P0" && tag !== "P1" && "bg-muted text-muted-foreground",
       )}
     >

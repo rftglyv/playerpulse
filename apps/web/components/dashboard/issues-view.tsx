@@ -41,7 +41,7 @@ export function SeverityBadge({ severity }: { severity?: string | null }) {
       className={cn(
         "font-mono text-[11px] capitalize",
         severity === "blocker" && "bg-loss text-background",
-        severity === "major" && "bg-loss/20 text-loss",
+        severity === "major" && "bg-loss/10 text-loss",
         severity === "minor" && "bg-muted text-foreground",
         severity === "cosmetic" && "bg-muted text-muted-foreground",
       )}

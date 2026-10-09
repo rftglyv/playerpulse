@@ -36,8 +36,90 @@ function draw(paths: SVGPathElement[], delay: number) {
     const len = p.getTotalLength();
     p.style.strokeDasharray = String(len);
     p.style.strokeDashoffset = String(len);
-    animate(p, { strokeDashoffset: [len, 0], duration: 1500, delay: delay + i * 140, ease: "outQuart" });
+    animate(p, {
+      strokeDashoffset: [len, 0],
+      duration: 1500,
+      delay: delay + i * 140,
+      ease: "outQuart",
+      onComplete: () => {
+        p.style.strokeDasharray = "";
+      },
+    });
   });
+}
+
+/** Hand-drawn doodles: paths use pathLength="1". */
+function doodle(svgs: Element[], delay: number) {
+  svgs.forEach((s, j) => {
+    Array.from(s.querySelectorAll<SVGPathElement>("path")).forEach((p, i) => {
+      p.style.strokeDasharray = "1";
+      p.style.strokeDashoffset = "1";
+      animate(p, { strokeDashoffset: [1, 0], duration: 700, delay: delay + j * 300 + i * 180, ease: "inOutQuad" });
+    });
+  });
+}
+
+/* ---------- 1-bit ordered dither (Bayer 8x8), tiny canvases scaled up with pixelated rendering ---------- */
+const BAYER = [
+  0, 32, 8, 40, 2, 34, 10, 42, 48, 16, 56, 24, 50, 18, 58, 26, 12, 44, 4, 36, 14, 46, 6, 38, 60, 28, 52, 20, 62, 30, 54,
+  22, 3, 35, 11, 43, 1, 33, 9, 41, 51, 19, 59, 27, 49, 17, 57, 25, 15, 47, 7, 39, 13, 45, 5, 37, 63, 31, 55, 23, 61, 29,
+  53, 21,
+];
+
+type DitherKind = { px: number; col: [number, number, number]; f: (u: number, v: number) => number };
+
+const DITHER: Record<string, DitherKind> = {
+  horizon: {
+    px: 3,
+    col: [0x25, 0x63, 0xeb],
+    f: (u, v) => {
+      const w = 0.06 * Math.sin(u * 9.5) + 0.04 * Math.sin(u * 23 + 1.3);
+      return Math.max(0, Math.pow(v, 1.8) * 0.5 + w * v);
+    },
+  },
+  fade: {
+    px: 3,
+    col: [0x0a, 0x0a, 0x0a],
+    f: (u, v) => Math.pow(1 - v, 2.4) * 0.32 * (0.75 + 0.25 * Math.cos(u * 6.3)),
+  },
+  cliff: {
+    px: 2,
+    col: [0x25, 0x63, 0xeb],
+    f: (u, v) => {
+      const x = u * 320;
+      const y = v * 64;
+      const ly = x < 150 ? 14 : x < 170 ? 14 + (x - 150) * 1.6 : 46;
+      if (y < ly + 2 || y > 52 || (x > 176 && y > 44)) return 0;
+      const t = (y - ly) / (52 - ly);
+      return 0.55 * (1 - t) + 0.06;
+    },
+  },
+};
+
+function paintDither(c: HTMLCanvasElement) {
+  const k = DITHER[c.dataset.dither ?? ""];
+  if (!k) return;
+  const r = c.getBoundingClientRect();
+  if (!r.width || !r.height) return;
+  const W = Math.ceil(r.width / k.px);
+  const H = Math.ceil(r.height / k.px);
+  c.width = W;
+  c.height = H;
+  const ctx = c.getContext("2d");
+  if (!ctx) return;
+  const img = ctx.createImageData(W, H);
+  const d = img.data;
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < W; x++) {
+      if (k.f(x / W, y / H) * 64 > BAYER[(y & 7) * 8 + (x & 7)] + 0.5) {
+        const i = (y * W + x) * 4;
+        d[i] = k.col[0];
+        d[i + 1] = k.col[1];
+        d[i + 2] = k.col[2];
+        d[i + 3] = 255;
+      }
+    }
+  ctx.putImageData(img, 0, 0);
 }
 
 function stamp(els: HTMLElement[], start: number) {
@@ -67,7 +149,13 @@ const runs: Record<string, (r: Element) => void> = {
       duration: 1400,
       delay: stagger(180, { start: 120 }),
       ease: ex,
+      onComplete: () => {
+        q(r, ".lines .ln").forEach((l) => {
+          l.style.clipPath = "none";
+        });
+      },
     });
+    doodle(q(r, ".ul svg"), 1500);
     animate(q(r, ".eyebrow"), { opacity: [0, 1], duration: 800, ease: "outQuart" });
     animate(q(r, ".sub, .ctas"), {
       opacity: [0, 1],
@@ -92,8 +180,10 @@ const runs: Record<string, (r: Element) => void> = {
       ease: "outBack",
     });
     animate(q(r, ".a-resolve"), { opacity: [0, 1], duration: 800, delay: 1650, ease: "outQuart" });
+    animate(q(r, ".trace canvas"), { opacity: [0, 1], duration: 900, delay: 2300, ease: "outQuart" });
     q(r, "[data-count]").forEach((el) => countUp(el, 1750, 1900));
     draw(Array.from(r.querySelectorAll<SVGPathElement>(".trace .draw")), 1800);
+    doodle(q(r, ".circ svg"), 3300);
     stamp(q(r, ".stamp"), 2500);
   },
   how(r) {
@@ -124,9 +214,13 @@ const runs: Record<string, (r: Element) => void> = {
     });
     q(r, "[data-count]").forEach((el) => countUp(el, 700, 1900));
     stamp(q(r, ".stamp"), 1100);
+    doodle(q(r, ".bridge"), 1300);
+    doodle(q(r, ".x svg"), 1700);
+    doodle(q(r, ".arrow"), 2100);
   },
   results(r) {
     fade(r);
+    animate(q(r, ".res-band"), { opacity: [0, 1], duration: 1200, ease: "outQuart" });
     animate(q(r, ".a-score"), {
       opacity: [0, 1],
       translateY: [12, 0],
@@ -157,7 +251,7 @@ function run(r: HTMLElement) {
 }
 
 /**
- * Landing-page motion: frosted header on scroll, section entrance sequences
+ * Landing-page motion: frosted header on scroll, Bayer-dither canvases (repainted on resize / fonts ready), section entrance sequences
  * (anime.js v4) triggered by IntersectionObserver, and a "Replay animation" button.
  * Content is fully visible without JS; from-values are only set inside animate().
  */
@@ -171,10 +265,24 @@ export function LandingMotion() {
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
+    const canvases = Array.from(document.querySelectorAll<HTMLCanvasElement>(".lp canvas.dither"));
+    const paintAll = () => canvases.forEach(paintDither);
+    paintAll();
+    let rt: ReturnType<typeof setTimeout> | undefined;
+    const onResize = () => {
+      clearTimeout(rt);
+      rt = setTimeout(paintAll, 120);
+    };
+    window.addEventListener("resize", onResize);
+    document.fonts?.ready.then(paintAll);
+    const cleanupBase = () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      clearTimeout(rt);
+    };
+
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      return () => window.removeEventListener("scroll", onScroll);
-    }
+    if (reduce) return cleanupBase;
 
     const secs = Array.from(document.querySelectorAll<HTMLElement>(".lp [data-anim]"));
     const io = new IntersectionObserver(
@@ -201,7 +309,7 @@ export function LandingMotion() {
     setCanAnimate(true);
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      cleanupBase();
       io.disconnect();
     };
   }, []);
