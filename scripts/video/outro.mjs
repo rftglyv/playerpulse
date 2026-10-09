@@ -1,6 +1,6 @@
 // Render the animated outro (OG card style) to a frame-perfect 60 fps MP4.
 //
-//   node scripts/video/outro.mjs [out.mp4] [seconds]
+//   node scripts/video/outro.mjs [out.mp4] [seconds] [page.html]   (outro.html = OG card, team.html = deck last slide)
 //
 // Seeks the anime.js timeline to exactly n/60 s for every frame, so timing is deterministic.
 import { spawn, execFileSync } from "node:child_process";
@@ -8,7 +8,7 @@ import { mkdtempSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
-const [out = "outro.mp4", secs = "6"] = process.argv.slice(2);
+const [out = "outro.mp4", secs = "6", pageName = "outro.html"] = process.argv.slice(2);
 const W = 1920, H = 1080, FPS = 60, FRAMES = Math.round(Number(secs) * FPS);
 const here = new URL(".", import.meta.url).pathname;
 const root = resolve(here, "../..");
@@ -19,7 +19,7 @@ const mark = readFileSync(join(root, "apps/web/public/brand/mark.svg"), "utf8").
 const animeJs = join(root, "apps/web/node_modules/animejs/dist/bundles/anime.umd.min.js");
 const work = mkdtempSync(join(tmpdir(), "pp-outro-"));
 const page = join(work, "outro.html");
-writeFileSync(page, readFileSync(join(here, "outro.html"), "utf8").replace("__MARK__", mark).replace("__ANIME__", "file://" + animeJs));
+writeFileSync(page, readFileSync(join(here, pageName), "utf8").replace("__MARK__", mark).replace("__ANIME__", "file://" + animeJs).replaceAll("__ASSETS__", "file://" + join(here, "assets")));
 
 const chrome = spawn("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", ["--headless=new", "--disable-gpu", "--hide-scrollbars", "--remote-debugging-port=9398", `--window-size=${W},${H}`, `--user-data-dir=${join(work, "prof")}`, "--allow-file-access-from-files", "about:blank"], { stdio: "ignore" });
 await new Promise((r) => setTimeout(r, 1500));
