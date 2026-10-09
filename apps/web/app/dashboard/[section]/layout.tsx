@@ -5,6 +5,10 @@ import { SECTION_IDS } from "@/components/dashboard/sections";
 
 export const metadata: Metadata = { title: "Dashboard · PlayerPulse" };
 
+// The auth gate in app/dashboard/layout.tsx renders the login card instead of this segment when there is
+// no session, so instant-navigation validation would always report it as "dropped". That is by design.
+export const instant = false;
+
 export function generateStaticParams() {
   return SECTION_IDS.map((section) => ({ section }));
 }
