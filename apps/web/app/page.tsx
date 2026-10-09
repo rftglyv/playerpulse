@@ -8,7 +8,6 @@ export default function Home() {
       <header className="hdr" id="hdr">
         <div className="hdr-in">
           <a className="logo" href="#top">
-            <i />
             PlayerPulse
           </a>
           <nav className="nav" aria-label="Main">
@@ -31,19 +30,13 @@ export default function Home() {
           <section className="hero" data-anim="hero">
             <div>
               <p className="eyebrow a-fade">
-                Player-feedback triage for game teams · <b>AZ · RU · EN</b>
+                Player-feedback triage for game teams
               </p>
               <h1 className="lines">
-                <span className="ln">
-                  Telemetry knows <em>where.</em>
-                </span>
-                <span className="ln">
-                  Players know <em>why.</em>
-                </span>
+                <span className="ln">Player complaints in.</span>
                 <span className="ln l3">
-                  PlayerPulse{" "}
                   <span className="ul">
-                    settles it.
+                    <em>Real bugs</em> out.
                     <svg className="doodle blu" viewBox="0 0 200 18" aria-hidden="true">
                       <path pathLength={1} strokeWidth="3" d="M3 10 C 38 5, 86 3, 128 6 C 160 8, 184 9, 197 5" />
                       <path pathLength={1} strokeWidth="2.2" d="M22 15 C 66 11, 118 11, 176 12" />
@@ -58,7 +51,7 @@ export default function Home() {
               </p>
               <div className="ctas a-fade">
                 <Link className="btn btn-p" href="/dashboard">
-                  Open live demo <span className="arr">→</span>
+                  Open live demo
                 </Link>
                 <a className="btn btn-g" href="#results">
                   See the results
@@ -276,7 +269,7 @@ export default function Home() {
             <h2>
               Measured against the <em>obvious</em> alternatives
             </h2>
-            <span>vs keyword &amp; mention counting</span>
+            <span>synthetic test pack · vs keyword &amp; mention counting</span>
           </div>
           <div className="score">
             <div className="a-score">
@@ -328,17 +321,15 @@ export default function Home() {
           </h2>
           <div className="ctas a-fade">
             <Link className="btn btn-p" href="/dashboard">
-              Open live demo <span className="arr">→</span>
+              Open live demo
             </Link>
             <a className="btn btn-g" href="/api/docs">
               Read the docs
             </a>
           </div>
           <div className="honest">
-            <span>
-              Results on a synthetic test pack with planted issues; see <code>TESTING.md</code>.
-            </span>
             <span>PlayerPulse</span>
+            <span>Built by team EnthuZone</span>
           </div>
         </div>
       </footer>
