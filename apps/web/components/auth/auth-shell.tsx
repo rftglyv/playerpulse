@@ -8,8 +8,8 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
     <main className="relative isolate flex min-h-svh w-full flex-1 items-center justify-center bg-muted/40 p-6 md:p-10">
       <AuthBackdrop />
       <div className="w-full max-w-sm space-y-6">
-        <Link href="/" className="flex items-center justify-center gap-2 font-serif text-xl font-semibold tracking-tight">
-          <BrandMark size={28} />
+        <Link href="/" className="flex items-center justify-center gap-[0.35em] font-serif text-xl leading-none font-semibold tracking-tight">
+          <BrandMark />
           PlayerPulse
         </Link>
         {children}

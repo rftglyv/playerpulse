@@ -51,13 +51,13 @@ def heart_cells():
                 yield OX + x * CELL, OY + y * CELL, SOFT if is_dither(x, y) else WHITE
 
 
-def mark_svg() -> str:
+def mark_svg(view_box: str = "0 0 64 64") -> str:
     rects = "".join(
         f'<rect x="{x:.2f}" y="{y:.2f}" width="{CELL - GAP:.2f}" height="{CELL - GAP:.2f}" rx="0.5" fill="{c}"/>'
         for x, y, c in heart_cells()
     )
     return (
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">'
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{view_box}">'
         f'<path d="{BUBBLE_D}" fill="{BLUE}"/>{rects}</svg>\n'
     )
 
@@ -107,6 +107,8 @@ def main():
     svg = mark_svg()
     (WEB / "app" / "icon.svg").write_text(svg)
     (WEB / "public" / "brand" / "mark.svg").write_text(svg)
+    # tight crop of the bubble (x 4-60, y 3-55) for inline lockups next to the wordmark
+    (WEB / "public" / "brand" / "mark-tight.svg").write_text(mark_svg("4 3 56 52"))
 
     # favicon.ico with the classic sizes; small sizes drawn directly at that size
     icos = [render(s) for s in (16, 32, 48)]

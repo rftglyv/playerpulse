@@ -1,6 +1,19 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element -- tiny static SVG; next/image adds nothing here */
 
-/** The PlayerPulse mark (logo 03a): blue speech bubble with the pixel heart. Source: public/brand/mark.svg. */
-export function BrandMark({ size = 24, className }: { size?: number; className?: string }) {
-  return <Image src="/brand/mark.svg" alt="" width={size} height={size} className={className} priority />;
+/**
+ * The PlayerPulse mark (logo 03a), tightly cropped to the bubble.
+ * Default height is 1em, so next to the wordmark it is exactly the text's height.
+ */
+export function BrandMark({ height = "1em", className }: { height?: string | number; className?: string }) {
+  return (
+    <img
+      src="/brand/mark-tight.svg"
+      alt=""
+      aria-hidden="true"
+      width={56}
+      height={52}
+      style={{ height, width: "auto" }}
+      className={className}
+    />
+  );
 }
