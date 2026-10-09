@@ -13,11 +13,16 @@
     "apps/api": {
       "name": "@playerpulse/api",
       "dependencies": {
+        "@elysiajs/openapi": "^1.4.16",
+        "@playerpulse/api-schemas": "workspace:*",
         "@playerpulse/db": "workspace:*",
         "@playerpulse/pipeline": "workspace:*",
         "drizzle-orm": "^0.44.2",
         "elysia": "^1.4.0",
         "zod": "^4.6.5",
+      },
+      "devDependencies": {
+        "@playerpulse/typescript-config": "workspace:*",
       },
     },
     "apps/web": {
@@ -51,6 +56,15 @@
         "typescript": "^5",
       },
     },
+    "packages/api-schemas": {
+      "name": "@playerpulse/api-schemas",
+      "dependencies": {
+        "zod": "^4.6.5",
+      },
+      "devDependencies": {
+        "@playerpulse/typescript-config": "workspace:*",
+      },
+    },
     "packages/db": {
       "name": "@playerpulse/db",
       "dependencies": {
@@ -59,6 +73,7 @@
         "postgres": "^3.4.5",
       },
       "devDependencies": {
+        "@playerpulse/typescript-config": "workspace:*",
         "drizzle-kit": "^0.31.11",
       },
     },
@@ -67,6 +82,13 @@
       "dependencies": {
         "zod": "^4.6.5",
       },
+      "devDependencies": {
+        "@playerpulse/typescript-config": "workspace:*",
+      },
+    },
+    "packages/typescript-config": {
+      "name": "@playerpulse/typescript-config",
+      "version": "0.0.0",
     },
   },
   "trustedDependencies": [
@@ -145,6 +167,8 @@
     "@dotenvx/primitives": ["@dotenvx/primitives@0.8.0", "", {}, "sha512-VYJy0uhFm9zTJ1TxBaW/pA8bjbOM/OttaNMwZ1RHG4JKyRG7DhSdiqD1ipQoAyoD22olUtxbP78W9xY3Wd11bg=="],
 
     "@drizzle-team/brocli": ["@drizzle-team/brocli@0.10.2", "", {}, "sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w=="],
+
+    "@elysiajs/openapi": ["@elysiajs/openapi@1.4.16", "", { "peerDependencies": { "@sinclair/typebox": ">= 0.34.0 < 1", "elysia": ">= 1.4.0", "typescript": ">= 5.0.0" } }, "sha512-kj8RBffE4J6myjm7nPPj6Dw1ujWt45NkdGW5sG9u3T0OfUzKN71s630/LEjajGo5jRZqFF3VHyk40lwXH2AbmQ=="],
 
     "@emnapi/core": ["@emnapi/core@1.10.0", "", { "dependencies": { "@emnapi/wasi-threads": "1.2.1", "tslib": "^2.4.0" } }, "sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw=="],
 
@@ -344,9 +368,13 @@
 
     "@playerpulse/api": ["@playerpulse/api@workspace:apps/api"],
 
+    "@playerpulse/api-schemas": ["@playerpulse/api-schemas@workspace:packages/api-schemas"],
+
     "@playerpulse/db": ["@playerpulse/db@workspace:packages/db"],
 
     "@playerpulse/pipeline": ["@playerpulse/pipeline@workspace:packages/pipeline"],
+
+    "@playerpulse/typescript-config": ["@playerpulse/typescript-config@workspace:packages/typescript-config"],
 
     "@playerpulse/web": ["@playerpulse/web@workspace:apps/web"],
 

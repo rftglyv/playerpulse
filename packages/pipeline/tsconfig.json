@@ -1,0 +1,1 @@
+{ "extends": "@playerpulse/typescript-config/base.json", "include": ["src", "test", "*.ts"] }
