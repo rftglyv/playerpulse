@@ -16,6 +16,11 @@ function fmt(n: number) {
 function countUp(el: HTMLElement, delay = 0, duration = 1900) {
   const target = Number(el.dataset.count);
   const o = { v: 0 };
+  // Fraunces has no tabular figures: lock the box to the final number's width so nothing shifts.
+  el.textContent = fmt(target);
+  el.style.display = "inline-block";
+  el.style.minWidth = `${el.getBoundingClientRect().width}px`;
+  el.style.textAlign = "left";
   el.textContent = "0";
   animate(o, {
     v: target,
@@ -52,9 +57,13 @@ function draw(paths: SVGPathElement[], delay: number) {
 function doodle(svgs: Element[], delay: number) {
   svgs.forEach((s, j) => {
     Array.from(s.querySelectorAll<SVGPathElement>("path")).forEach((p, i) => {
+      const d = delay + j * 300 + i * 180;
       p.style.strokeDasharray = "1";
       p.style.strokeDashoffset = "1";
-      animate(p, { strokeDashoffset: [1, 0], duration: 700, delay: delay + j * 300 + i * 180, ease: "inOutQuad" });
+      // round caps paint a dot even for a zero-length dash: keep the path hidden until it starts drawing
+      p.style.opacity = "0";
+      animate(p, { opacity: [0, 1], duration: 60, delay: d, ease: "linear" });
+      animate(p, { strokeDashoffset: [1, 0], duration: 700, delay: d, ease: "inOutQuad" });
     });
   });
 }
