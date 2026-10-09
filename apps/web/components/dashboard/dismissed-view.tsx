@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { EyeIcon, GavelIcon } from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { Issue, RunResult } from "@/lib/api";
@@ -83,7 +83,7 @@ export function DismissedView({ result, runId }: { result: RunResult; runId: str
       <section className="space-y-4">
         {dismissed.length === 0 ? (
           <ViewEmpty
-            icon={GavelIcon}
+            icon="gavel"
             title="Nothing dismissed"
             body={
               result.telemetry
@@ -104,7 +104,7 @@ export function DismissedView({ result, runId }: { result: RunResult; runId: str
           <Separator />
         </div>
         {watch.length === 0 ? (
-          <ViewEmpty icon={EyeIcon} title="Watch list is empty" />
+          <ViewEmpty icon="visibility" title="Watch list is empty" />
         ) : (
           watch.map((i, idx) => <VerdictCard key={idx} issue={i} result={result} tone="watch" href={hrefOf(i)} />)
         )}

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon, SearchXIcon } from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
@@ -49,9 +49,9 @@ export function IssueDetail({ result, index, runId }: { result: RunResult; index
   if (!issue)
     return (
       <div className="space-y-4">
-        <ViewEmpty icon={SearchXIcon} title={`Issue #${index + 1} isn't in this run`} body="Pick another run or go back to the issue list." />
+        <ViewEmpty icon="search_off" title={`Issue #${index + 1} isn't in this run`} body="Pick another run or go back to the issue list." />
         <Button variant="outline" size="sm" nativeButton={false} render={<Link href={issuesHref} />}>
-          <ArrowLeftIcon /> Back to issues
+          <Iconizer icon="arrow_back" size={16} data-icon="inline-start" /> Back to issues
         </Button>
       </div>
     );
@@ -81,7 +81,7 @@ export function IssueDetail({ result, index, runId }: { result: RunResult; index
         </Breadcrumb>
         <div className="flex shrink-0 flex-wrap items-center gap-2">
           <Button variant="ghost" size="sm" nativeButton={false} render={<Link href={issuesHref} />}>
-            <ArrowLeftIcon /> Back to issues
+            <Iconizer icon="arrow_back" size={16} data-icon="inline-start" /> Back to issues
           </Button>
           <ButtonGroup aria-label="Previous or next issue">
             <Button
@@ -92,7 +92,7 @@ export function IssueDetail({ result, index, runId }: { result: RunResult; index
               render={n > 1 ? <Link href={issueHref(n - 1, runId)} /> : undefined}
               nativeButton={n <= 1}
             >
-              <ChevronLeftIcon /> Prev
+              <Iconizer icon="chevron_left" size={16} data-icon="inline-start" /> Prev
             </Button>
             <Button
               variant="outline"
@@ -102,7 +102,7 @@ export function IssueDetail({ result, index, runId }: { result: RunResult; index
               render={n < total ? <Link href={issueHref(n + 1, runId)} /> : undefined}
               nativeButton={n >= total}
             >
-              Next <ChevronRightIcon />
+              Next <Iconizer icon="chevron_right" size={16} data-icon="inline-end" />
             </Button>
           </ButtonGroup>
         </div>
@@ -370,7 +370,7 @@ function Evidence({ issue, messages }: { issue: Issue; messages: RunMessage[] })
                       )}
                     </TableCell>
                     <TableCell title={CHANNEL_LABEL[m.channel] ?? m.channel}>
-                      <ChannelIcon channel={m.channel} className="size-4 text-muted-foreground" />
+                      <ChannelIcon channel={m.channel} className="text-muted-foreground" />
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">{langLabel(m.language)}</Badge>

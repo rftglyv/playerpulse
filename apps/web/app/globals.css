@@ -107,3 +107,37 @@
     @apply font-sans;
   }
 }
+/* Material Symbols (components/iconizer.tsx + components/font-links.tsx).
+ * Google's stylesheet ships an UNLAYERED `.material-symbols-outlined
+ * { font-size: 24px }`, which beats every Tailwind @layer utility. This rule is
+ * also unlayered and more specific, so icons default to 1em and follow the
+ * surrounding text size. For an explicit size use Iconizer's `size` prop
+ * (inline style) rather than a `text-*` / `size-*` class. */
+:root {
+  --font-gIcons: "Material Symbols Outlined";
+}
+
+.material-symbols-outlined.iconizer-icon {
+  font-family: var(--font-gIcons) !important;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  line-height: 1;
+  vertical-align: -0.125em;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  user-select: none;
+  pointer-events: none;
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
+}

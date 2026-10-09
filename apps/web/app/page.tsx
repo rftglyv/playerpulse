@@ -1,3 +1,4 @@
+import { Iconizer } from "@/components/iconizer";
 import { FAQ, jsonLd } from "@/components/landing/faq";
 import { BrandMark } from "@/components/brand-mark";
 import Link from "next/link";
@@ -175,12 +176,18 @@ export default function Home() {
           </div>
           <ol className="steps">
             <li className="a-step">
-              <span className="n">01 · Listen</span>
+              <span className="n">
+                <Iconizer icon="hearing" size={18} />
+                01 · Listen
+              </span>
               <h3>Read every channel</h3>
               <p>Discord, Steam reviews and in-game reports, in Azerbaijani, Russian, English or a mix of them.</p>
             </li>
             <li className="a-step">
-              <span className="n">02 · Verify</span>
+              <span className="n">
+                <Iconizer icon="query_stats" size={18} />
+                02 · Verify
+              </span>
               <h3>Check the telemetry</h3>
               <p>
                 Each complaint is checked against that level&apos;s completion, deaths and crash data. “Too hard”
@@ -188,7 +195,10 @@ export default function Home() {
               </p>
             </li>
             <li className="a-step">
-              <span className="n">03 · Prioritise</span>
+              <span className="n">
+                <Iconizer icon="task_alt" size={18} />
+                03 · Prioritise
+              </span>
               <h3>Ship a ticket</h3>
               <p>Real bugs come out ranked by players lost, with evidence and repro steps inferred from the reports.</p>
             </li>
@@ -301,19 +311,31 @@ export default function Home() {
           <div className="score">
             <div className="a-score">
               <b>5 / 5</b>
-              <span>planted issues found, 0 false alarms</span>
+              <span>
+                <Iconizer icon="bug_report" size={15} className="si" />
+                planted issues found, 0 false alarms
+              </span>
             </div>
             <div className="a-score">
               <b>100%</b>
-              <span>message accuracy</span>
+              <span>
+                <Iconizer icon="check_circle" size={15} className="si" />
+                message accuracy
+              </span>
             </div>
             <div className="a-score">
               <b>4 / 4</b>
-              <span>held-out scenario B, 0 false alarms, 98% accuracy</span>
+              <span>
+                <Iconizer icon="science" size={15} className="si" />
+                held-out scenario B, 0 false alarms, 98% accuracy
+              </span>
             </div>
             <div className="a-score">
               <b>$0.21</b>
-              <span>per 100 messages, ~30 s per run</span>
+              <span>
+                <Iconizer icon="payments" size={15} className="si" />
+                per 100 messages, ~30 s per run
+              </span>
             </div>
           </div>
           <div className="cmp-wrap">
@@ -351,7 +373,10 @@ export default function Home() {
           <div className="faq-list">
             {FAQ.map(({ q, a }) => (
               <details key={q} className="faq-item">
-                <summary>{q}</summary>
+                <summary>
+                  {q}
+                  <Iconizer icon="expand_more" size={22} className="faq-ic" />
+                </summary>
                 <p>{a}</p>
               </details>
             ))}
@@ -371,6 +396,7 @@ export default function Home() {
               Open live demo
             </Link>
             <a className="btn btn-g" href="/api/docs">
+              <Iconizer icon="menu_book" size={18} />
               Read the docs
             </a>
           </div>

@@ -6,13 +6,14 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { AlertCircleIcon, Loader2Icon } from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { Spinner } from "@/components/ui/spinner";
 import { authErrorMessage, safeNext, signIn } from "@/lib/auth-client";
 
 const schema = z.object({
@@ -27,7 +28,11 @@ type Values = z.infer<typeof schema>;
  * - `redirect` (standalone /login page): on success go to ?next= or /dashboard/overview.
  * - otherwise (dashboard auth gate): stay on the URL and router.refresh() so the server gate re-renders.
  */
-export function LoginForm({ redirect = false, className, ...props }: React.ComponentProps<"div"> & { redirect?: boolean }) {
+export function LoginForm({
+  redirect = false,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & { redirect?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -54,17 +59,20 @@ export function LoginForm({ redirect = false, className, ...props }: React.Compo
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl leading-tight font-semibold tracking-tight">
-            Sign in to PlayerPulse
-          </CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">Enter your email below to sign in to your account</CardDescription>
+          <CardTitle className="text-2xl leading-tight font-semibold tracking-tight">Sign in to PlayerPulse</CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">
+            Enter your email below to sign in to your account
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form id="login-form" noValidate onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
               {serverError && (
-                <Alert variant="destructive">
-                  <AlertCircleIcon />
+                <Alert
+                  variant="destructive"
+                  className="grid-cols-[auto_1fr] gap-x-2 *:data-[slot=alert-description]:col-start-2"
+                >
+                  <Iconizer icon="error" size={16} className="row-span-2 translate-y-0.5" />
                   <AlertDescription>{serverError}</AlertDescription>
                 </Alert>
               )}
@@ -74,15 +82,20 @@ export function LoginForm({ redirect = false, className, ...props }: React.Compo
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="login-email">Email</FieldLabel>
-                    <Input
-                      {...field}
-                      id="login-email"
-                      type="email"
-                      placeholder="you@studio.com"
-                      autoComplete="email"
-                      aria-invalid={fieldState.invalid}
-                      disabled={submitting}
-                    />
+                    <InputGroup>
+                      <InputGroupInput
+                        {...field}
+                        id="login-email"
+                        type="email"
+                        placeholder="you@studio.com"
+                        autoComplete="email"
+                        aria-invalid={fieldState.invalid}
+                        disabled={submitting}
+                      />
+                      <InputGroupAddon>
+                        <Iconizer icon="mail" size={16} />
+                      </InputGroupAddon>
+                    </InputGroup>
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
@@ -93,21 +106,26 @@ export function LoginForm({ redirect = false, className, ...props }: React.Compo
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="login-password">Password</FieldLabel>
-                    <Input
-                      {...field}
-                      id="login-password"
-                      type="password"
-                      autoComplete="current-password"
-                      aria-invalid={fieldState.invalid}
-                      disabled={submitting}
-                    />
+                    <InputGroup>
+                      <InputGroupInput
+                        {...field}
+                        id="login-password"
+                        type="password"
+                        autoComplete="current-password"
+                        aria-invalid={fieldState.invalid}
+                        disabled={submitting}
+                      />
+                      <InputGroupAddon>
+                        <Iconizer icon="lock" size={16} />
+                      </InputGroupAddon>
+                    </InputGroup>
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
               />
               <Field>
                 <Button type="submit" disabled={submitting}>
-                  {submitting && <Loader2Icon className="animate-spin" />}
+                  {submitting && <Spinner data-icon="inline-start" />}
                   {submitting ? "Signing in…" : "Sign in"}
                 </Button>
                 <FieldDescription className="text-center">

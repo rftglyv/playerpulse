@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangleIcon } from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,7 +22,7 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
     <Empty className="border border-destructive/30 bg-destructive/5">
       <EmptyHeader>
         <EmptyMedia variant="icon" className="bg-destructive/10 text-destructive">
-          <AlertTriangleIcon />
+          <Iconizer icon="warning" size={18} />
         </EmptyMedia>
         <EmptyTitle className="text-destructive">Something went wrong</EmptyTitle>
         <EmptyDescription className="max-w-prose text-foreground/80">{message}</EmptyDescription>

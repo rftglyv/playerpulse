@@ -1,7 +1,7 @@
 "use client";
 
 import { animate, stagger } from "animejs";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 
 const ex = "outExpo";
 
@@ -262,12 +262,10 @@ function run(r: HTMLElement) {
 
 /**
  * Landing-page motion: frosted header on scroll, Bayer-dither canvases (repainted on resize / fonts ready), section entrance sequences
- * (anime.js v4) triggered by IntersectionObserver, and a "Replay animation" button.
+ * (anime.js v4) triggered by IntersectionObserver.
  * Content is fully visible without JS; from-values are only set inside animate().
  */
 export function LandingMotion() {
-  const [canAnimate, setCanAnimate] = useState(false);
-  const replayRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     const hdr = document.getElementById("hdr");
@@ -308,26 +306,11 @@ export function LandingMotion() {
     );
     secs.forEach((s) => io.observe(s));
 
-    replayRef.current = () => {
-      secs.forEach((s) => {
-        const b = s.getBoundingClientRect();
-        if (b.top < window.innerHeight && b.bottom > 0) run(s);
-        else io.observe(s);
-      });
-    };
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- reveal button only once motion is available
-    setCanAnimate(true);
-
     return () => {
       cleanupBase();
       io.disconnect();
     };
   }, []);
 
-  if (!canAnimate) return null;
-  return (
-    <button className="replay" type="button" onClick={() => replayRef.current()}>
-      <span aria-hidden="true">↻</span> Replay animation
-    </button>
-  );
+  return null;
 }

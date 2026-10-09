@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { EllipsisVerticalIcon, LogOutIcon } from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -57,7 +57,7 @@ export function NavUser() {
           <DropdownMenuTrigger render={<SidebarMenuButton size="lg" className="aria-expanded:bg-muted" />}>
             {avatar}
             {who}
-            <EllipsisVerticalIcon className="ml-auto size-4" />
+            <Iconizer icon="more_vert" size={18} className="ml-auto" />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="min-w-56" side={isMobile ? "bottom" : "right"} align="end" sideOffset={4}>
             <DropdownMenuGroup>
@@ -75,7 +75,7 @@ export function NavUser() {
                 router.refresh();
               }}
             >
-              <LogOutIcon />
+              <Iconizer icon="logout" size={16} />
               Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
