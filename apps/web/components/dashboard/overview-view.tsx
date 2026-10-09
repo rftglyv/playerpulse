@@ -41,7 +41,7 @@ function Panel({
         <CardTitle className="text-base font-semibold tracking-tight">{title}</CardTitle>
         {note && <CardDescription className="text-xs">{note}</CardDescription>}
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className="flex-1">{children}</CardContent>
     </Card>
   );
 }
