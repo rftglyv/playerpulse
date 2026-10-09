@@ -57,7 +57,7 @@ html:has(.lp){-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-paddin
 .lp .eyebrow{font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.02em}
 .lp .eyebrow b{color:var(--soft-ink);font-weight:500;background:var(--soft);padding:1px 6px;border-radius:4px}
 .lp .lines{margin-top:18px;font-family:var(--serif);font-weight:400;font-size:clamp(2.35rem,6.2vw,4.4rem);line-height:1.06;letter-spacing:-.025em}
-.lp .lines .ln{display:block}
+.lp .lines .ln{display:block;text-wrap:balance}
 .lp .lines em{font-style:italic;color:var(--blue)}
 .lp .lines .l3{font-weight:600}
 .lp .ul{position:relative;display:inline-block;white-space:nowrap}
