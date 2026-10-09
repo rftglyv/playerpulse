@@ -115,7 +115,7 @@
       "routeType": "page",
       "response": "complete",
       "compute": "static",
-      "htmlSize": 22573,
+      "htmlSize": 22798,
       "experimentalPPR": true,
       "experimentalBypassFor": [
         {

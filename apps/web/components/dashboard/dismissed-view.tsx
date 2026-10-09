@@ -5,6 +5,7 @@ import { fmt } from "@/lib/api";
 import { CategoryBadge, LanguageChips, whereLabel } from "./issues-view";
 import { ChartLegendInline, TelemetryChart } from "./telemetry-chart";
 import { EmptyState } from "./states";
+import { Stamp } from "./case-file";
 
 function headline(issue: Issue, unit: string) {
   const n = issue.distinct_players;
@@ -20,35 +21,32 @@ function headline(issue: Issue, unit: string) {
 
 function VerdictCard({ issue, result, tone }: { issue: Issue; result: RunResult; tone: "proof" | "watch" }) {
   return (
-    <article className="grid gap-5 rounded-xl bg-card p-5 ring-1 ring-foreground/8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+    <article
+      data-card
+      className="relative grid gap-6 overflow-hidden rounded-[10px] border border-border bg-card p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]"
+    >
+      <Stamp tone={tone}>{tone === "proof" ? "DISMISSED" : "WATCH"}</Stamp>
       <div className="space-y-3">
+        <div className="pr-32 font-mono text-xs text-muted-foreground lg:pr-0">{whereLabel(issue, result.unit)}</div>
+        <h3 className="pr-24 font-serif text-[22px] leading-tight font-medium tracking-[-0.01em] text-balance lg:pr-0">
+          {headline(issue, result.unit)}
+        </h3>
         <div className="flex flex-wrap items-center gap-1.5">
-          <span
-            className={
-              tone === "proof"
-                ? "rounded-md bg-proof/15 px-2 py-0.5 text-xs font-medium text-proof"
-                : "rounded-md bg-watch/15 px-2 py-0.5 text-xs font-medium text-watch"
-            }
-          >
-            {tone === "proof" ? "Dismissed" : "Watching"}
-          </span>
           <CategoryBadge category={issue.category} />
-          <span className="text-sm text-muted-foreground">{whereLabel(issue, result.unit)}</span>
         </div>
-        <h3 className="text-lg font-semibold leading-snug text-balance">{headline(issue, result.unit)}</h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="font-mono text-xs text-muted-foreground">
           {issue.message_ids.length} reports from {issue.distinct_players} players
           {issue.players_lost_estimate > 0 && <> · est. {fmt.int(issue.players_lost_estimate)} players lost</>}
         </p>
         {issue.telemetry_evidence && (
-          <p className="text-sm leading-relaxed">
-            <span className="font-medium">{tone === "proof" ? "Proof: " : "Why we're watching: "}</span>
+          <p className="font-serif text-[15px] leading-relaxed text-muted-foreground italic">
+            <span className="font-sans font-medium text-foreground not-italic">{tone === "proof" ? "Proof: " : "Why we're watching: "}</span>
             {issue.telemetry_evidence}
           </p>
         )}
         <LanguageChips languages={issue.languages} />
       </div>
-      <div className="space-y-2">
+      <div className="space-y-3 lg:pt-10">
         <ChartLegendInline tone={tone} />
         <TelemetryChart telemetry={issue.telemetry} tone={tone} />
       </div>
@@ -62,8 +60,8 @@ export function DismissedView({ result }: { result: RunResult }) {
   return (
     <div className="space-y-10">
       <section className="space-y-4">
-        <div>
-          <h2 className="text-base font-semibold">Dismissed with proof</h2>
+        <div className="border-b border-border pb-3">
+          <h2 className="font-serif text-2xl font-medium tracking-[-0.02em]">Dismissed with proof</h2>
           <p className="text-sm text-muted-foreground">
             Loud complaints where the numbers didn&apos;t move. Technical bugs are never dismissed this way.
           </p>
@@ -82,8 +80,8 @@ export function DismissedView({ result }: { result: RunResult }) {
         )}
       </section>
       <section className="space-y-4">
-        <div>
-          <h2 className="text-base font-semibold">Watch list</h2>
+        <div className="border-b border-border pb-3">
+          <h2 className="font-serif text-2xl font-medium tracking-[-0.02em]">Watch list</h2>
           <p className="text-sm text-muted-foreground">Signals that aren&apos;t strong enough to act on yet.</p>
         </div>
         {watch.length === 0 ? (
