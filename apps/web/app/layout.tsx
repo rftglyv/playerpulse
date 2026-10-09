@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import { Agentation } from "agentation";
 import "./globals.css";
@@ -23,8 +23,11 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "PlayerPulse",
-  description: "Telemetry knows where. Players know why. PlayerPulse settles it.",
+  description: "Player complaints in. Real bugs out. PlayerPulse checks player feedback against your telemetry and ranks the real bugs.",
+  applicationName: "PlayerPulse",
 };
+
+export const viewport: Viewport = { themeColor: "#2563eb" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

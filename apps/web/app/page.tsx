@@ -1,3 +1,4 @@
+import { BrandMark } from "@/components/brand-mark";
 import Link from "next/link";
 import { LandingMotion } from "@/components/landing/landing-motion";
 import "./landing.css";
@@ -8,6 +9,7 @@ export default function Home() {
       <header className="hdr" id="hdr">
         <div className="hdr-in">
           <a className="logo" href="#top">
+            <BrandMark size={28} />
             PlayerPulse
           </a>
           <nav className="nav" aria-label="Main">
