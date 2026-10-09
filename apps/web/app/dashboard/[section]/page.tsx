@@ -8,6 +8,9 @@ export function generateStaticParams() {
   return SECTION_IDS.map((section) => ({ section }));
 }
 
+// See [section]/layout.tsx: the auth gate may render the login card in place of this segment.
+export const instant = false;
+
 type Params = Promise<{ section: string }>;
 
 // The shell renders instantly; reading the URL param happens inside <Suspense>
