@@ -2,6 +2,17 @@ import type { Issue, RunResult } from "@playerpulse/pipeline";
 
 export type { Issue, RunResult };
 export type RunMessage = RunResult["messages"][number];
+export type TelemetryRow = NonNullable<RunResult["telemetry_table"]>[number];
+
+export interface UploadPayload {
+  messages_csv: string;
+  telemetry_csv?: string;
+  game_info_json: string;
+}
+
+export type CreateRunBody =
+  | { scenario: "A" | "B"; telemetry: boolean; model: string }
+  | { upload: UploadPayload; telemetry: boolean; model: string; name?: string };
 
 export interface ModelInfo {
   id: string;
@@ -95,7 +106,7 @@ export const api = {
   models: () => request<ModelsResponse>("/api/models"),
   runs: () => request<RunRow[]>("/api/runs"),
   run: (id: string) => request<RunDetail>(`/api/runs/${id}`),
-  createRun: (body: { scenario: "A" | "B"; telemetry: boolean; model: string }) =>
+  createRun: (body: CreateRunBody) =>
     request<{ id: string }>("/api/runs", { method: "POST", body: JSON.stringify(body) }),
   tasks: (runId: string) => request<Task[]>(`/api/tasks?runId=${encodeURIComponent(runId)}`),
   patchTask: (id: string, body: Partial<Pick<Task, "state" | "assignee" | "tags">>) =>

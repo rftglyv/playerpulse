@@ -2,7 +2,16 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { EyeIcon, InboxIcon, ListChecksIcon, MessagesSquareIcon, ScaleIcon, SirenIcon } from "lucide-react";
+import {
+  EyeIcon,
+  GitCompareArrowsIcon,
+  InboxIcon,
+  LayoutDashboardIcon,
+  ListChecksIcon,
+  MessagesSquareIcon,
+  ScaleIcon,
+  SirenIcon,
+} from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Sidebar,
@@ -25,15 +34,25 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { api, fmt, type RunDetail, type RunResult, type RunRow } from "@/lib/api";
 import { DismissedView } from "./dismissed-view";
 import { IssuesView } from "./issues-view";
-import { MessagesView, ReviewView } from "./messages-view";
+import { ReviewView } from "./messages-view";
+import { OverviewView } from "./overview-view";
+import { PatchCompareView } from "./patch-compare-view";
+import { VoicesView } from "./voices-view";
 import { NewRunButton } from "./new-run-dialog";
 import { CardsSkeleton, EmptyState, ErrorState } from "./states";
 import { TasksView } from "./tasks-view";
 import { Reveal } from "./case-file";
 
-type Section = "issues" | "dismissed" | "tasks" | "review" | "messages";
+type Section = "overview" | "compare" | "issues" | "dismissed" | "tasks" | "voices" | "review";
 
 const SECTIONS: { id: Section; label: string; icon: typeof SirenIcon; blurb: string }[] = [
+  { id: "overview", label: "Overview", icon: LayoutDashboardIcon, blurb: "The whole patch at a glance." },
+  {
+    id: "compare",
+    label: "Patch compare",
+    icon: GitCompareArrowsIcon,
+    blurb: "Every level, previous patch against current, next to what players said.",
+  },
   { id: "issues", label: "Issues", icon: SirenIcon, blurb: "Verified problems, ranked by players lost." },
   {
     id: "dismissed",
@@ -42,8 +61,13 @@ const SECTIONS: { id: Section; label: string; icon: typeof SirenIcon; blurb: str
     blurb: "Complaints the telemetry settled, plus what we're keeping an eye on.",
   },
   { id: "tasks", label: "Tasks", icon: ListChecksIcon, blurb: "Work items created from verified issues." },
+  {
+    id: "voices",
+    label: "Player voices",
+    icon: MessagesSquareIcon,
+    blurb: "Every player message, clustered by the mechanic it's about.",
+  },
   { id: "review", label: "Needs a human look", icon: EyeIcon, blurb: "Messages the model wasn't confident about." },
-  { id: "messages", label: "Messages", icon: MessagesSquareIcon, blurb: "Every player message in this run." },
 ];
 
 function counts(r: RunResult | null | undefined): Partial<Record<Section, number>> {
@@ -52,7 +76,7 @@ function counts(r: RunResult | null | undefined): Partial<Record<Section, number
     issues: r.issues.filter((i) => i.status === "reported").length,
     dismissed: r.issues.filter((i) => i.status !== "reported").length,
     review: r.messages.filter((m) => m.needs_review).length,
-    messages: r.messages.length,
+    voices: r.messages.length,
   };
 }
 
@@ -61,7 +85,7 @@ function runLabel(r: RunRow) {
 }
 
 export function Dashboard() {
-  const [section, setSection] = useState<Section>("issues");
+  const [section, setSection] = useState<Section>("overview");
   const [runs, setRuns] = useState<RunRow[] | null>(null);
   const [runsError, setRunsError] = useState<string | null>(null);
   const [runId, setRunId] = useState<string | null>(null);
@@ -117,11 +141,13 @@ export function Dashboard() {
         body={`Status: ${run.status}. Pick another run or start a new one.`}
       />
     );
+  else if (section === "overview") body = <OverviewView result={result} onOpenIssues={() => setSection("issues")} />;
+  else if (section === "compare") body = <PatchCompareView result={result} />;
   else if (section === "issues") body = <IssuesView result={result} />;
   else if (section === "dismissed") body = <DismissedView result={result} />;
   else if (section === "tasks") body = <TasksView runId={run.id} unit={result.unit} />;
   else if (section === "review") body = <ReviewView result={result} />;
-  else body = <MessagesView result={result} />;
+  else body = <VoicesView result={result} />;
 
   return (
     <TooltipProvider>
@@ -186,7 +212,7 @@ export function Dashboard() {
             <NewRunButton onCreated={(id) => loadRuns(id)} />
           </header>
 
-          <Reveal deps={[section, run]} className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
+          <Reveal deps={[section, run]} className="mx-auto w-full max-w-6xl flex-1 px-4 pt-8 pb-16 sm:px-6">
             {body}
           </Reveal>
 
@@ -200,7 +226,7 @@ export function Dashboard() {
 function RunFooter({ run, result }: { run: RunDetail | null; result: RunResult | null }) {
   if (!run) {
     return (
-      <footer className="border-t border-border px-6 py-3">
+      <footer className="sticky bottom-0 z-10 border-t border-border bg-[rgba(255,255,255,0.72)] backdrop-blur-xl backdrop-saturate-[1.4] shadow-[0_-1px_2px_rgba(0,0,0,0.03),0_-12px_32px_-20px_rgba(0,0,0,0.18)] px-6 py-3">
         <Skeleton className="h-4 w-80" />
       </footer>
     );
@@ -215,7 +241,7 @@ function RunFooter({ run, result }: { run: RunDetail | null; result: RunResult |
     ["Cached calls", m ? `${fmt.int(m.cache_hits)} of ${fmt.int(m.llm_calls)}` : "–"],
   ];
   return (
-    <footer className="flex flex-wrap gap-x-6 gap-y-1 border-t border-border px-4 py-3 font-mono text-[11.5px] sm:px-6">
+    <footer className="sticky bottom-0 z-10 border-t border-border bg-[rgba(255,255,255,0.72)] backdrop-blur-xl backdrop-saturate-[1.4] shadow-[0_-1px_2px_rgba(0,0,0,0.03),0_-12px_32px_-20px_rgba(0,0,0,0.18)] flex flex-wrap gap-x-6 gap-y-1 px-4 py-3 font-mono text-[11.5px] sm:px-6">
       <InboxIcon className="hidden size-3.5 self-center text-muted-foreground sm:block" />
       {items.map(([k, v]) => (
         <span key={k}>
