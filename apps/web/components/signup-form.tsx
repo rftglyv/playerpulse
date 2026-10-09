@@ -62,7 +62,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle className="text-2xl leading-tight font-semibold tracking-tight">
             Create your account
           </CardTitle>
