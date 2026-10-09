@@ -10,7 +10,8 @@
   },
   "scripts": {
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:migrate": "bun src/migrate.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.44.2",
