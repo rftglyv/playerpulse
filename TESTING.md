@@ -89,3 +89,15 @@ other outputs, and that the batch containing them was classified correctly.
 
 Determinism: temperature 0 + a disk cache keyed by hash(model + prompt version + prompt), so reruns
 return identical outputs. A cold-cache rerun was not done (cost/time).
+
+## Cheaper model (feasibility), scenario A test
+
+Run through the deployed API (`POST /api/runs`, model `anthropic/claude-haiku-5.5`), scored the same way:
+
+| Model | Issues found | False alarms | Duplicates | Top-3 | Message accuracy | Cost (180 msgs) | Wall clock |
+|---|---|---|---|---|---|---|---|
+| Sonnet 5.5 | 5/5 | 0 | 0 | 3/3 | 100% | $0.3772 | 30.5 s |
+| Haiku 5.5 | 5/5 | 0 | 2 | 2/3 | 99% | $0.0248 | 28.9 s |
+
+Haiku is ~15× cheaper and keeps 0 false alarms, but splits two issues into duplicates, which costs
+one top-3 slot. Sonnet stays the default.
