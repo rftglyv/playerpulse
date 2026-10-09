@@ -53,7 +53,7 @@ export function DonutChart({
 
   if (total === 0)
     return (
-      <p className="py-8 text-center font-mono text-xs text-muted-foreground">
+      <p className="py-8 text-center text-xs text-muted-foreground">
         No messages.
       </p>
     );
@@ -71,7 +71,7 @@ export function DonutChart({
               <ChartTooltipContent
                 hideLabel
                 nameKey="key"
-                className="font-mono"
+                className="tabular-nums"
               />
             }
           />
@@ -103,7 +103,7 @@ export function DonutChart({
                     <tspan
                       x={cx}
                       y={cy - 4}
-                      className="fill-foreground font-serif text-2xl font-semibold"
+                      className="fill-foreground text-2xl font-semibold tracking-tight tabular-nums"
                       style={{ fontVariantNumeric: "tabular-nums lining-nums" }}
                     >
                       {total}
@@ -111,7 +111,7 @@ export function DonutChart({
                     <tspan
                       x={cx}
                       y={cy + 16}
-                      className="fill-muted-foreground font-mono text-[10px]"
+                      className="fill-muted-foreground text-[11px]"
                     >
                       {totalLabel}
                     </tspan>

@@ -63,10 +63,10 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif text-[24px] leading-tight font-medium tracking-[-0.02em]">
+          <CardTitle className="text-2xl leading-tight font-semibold tracking-tight">
             Create your account
           </CardTitle>
-          <CardDescription className="font-mono text-[11.5px]">Enter your details below to create a PlayerPulse account</CardDescription>
+          <CardDescription className="text-sm text-muted-foreground">Enter your details below to create a PlayerPulse account</CardDescription>
         </CardHeader>
         <CardContent>
           <form id="signup-form" noValidate onSubmit={form.handleSubmit(onSubmit)}>
@@ -95,7 +95,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                         disabled={submitting}
                       />
                       {f.description && !fieldState.invalid && (
-                        <FieldDescription className="font-mono text-[11px]">{f.description}</FieldDescription>
+                        <FieldDescription className="text-xs">{f.description}</FieldDescription>
                       )}
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>

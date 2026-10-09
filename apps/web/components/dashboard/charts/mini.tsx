@@ -171,7 +171,7 @@ export function SegmentBar({
         <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
           {segments.map((s) => (
             <li key={s.key} className="min-w-0">
-              <div className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span
                   className="size-2 shrink-0 rounded-[2px]"
                   style={{ background: s.color }}
@@ -179,7 +179,7 @@ export function SegmentBar({
                 <span>{s.label}</span>
               </div>
               <div className="mt-1 flex items-baseline gap-1.5">
-                <span className="font-serif text-xl font-semibold tracking-[-0.02em] tabular-nums lining-nums">
+                <span className="text-xl font-semibold tracking-tight tabular-nums lining-nums">
                   {s.value}
                 </span>
                 <span className="font-mono text-[11px] text-muted-foreground tabular-nums">

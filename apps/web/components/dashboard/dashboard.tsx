@@ -226,7 +226,7 @@ function RunFooter({ run, result }: { run: RunDetail | null; result: RunResult |
     ["Cached calls", m ? `${fmt.int(m.cache_hits)} of ${fmt.int(m.llm_calls)}` : "–"],
   ];
   return (
-    <footer className="sticky bottom-0 z-10 border-t border-border bg-[rgba(255,255,255,0.72)] backdrop-blur-xl backdrop-saturate-[1.4] shadow-[0_-1px_2px_rgba(0,0,0,0.03),0_-12px_32px_-20px_rgba(0,0,0,0.18)] flex flex-wrap gap-x-6 gap-y-1 px-4 py-3 font-mono text-[11.5px] sm:px-6">
+    <footer className="sticky bottom-0 z-10 border-t border-border bg-[rgba(255,255,255,0.72)] backdrop-blur-xl backdrop-saturate-[1.4] shadow-[0_-1px_2px_rgba(0,0,0,0.03),0_-12px_32px_-20px_rgba(0,0,0,0.18)] flex flex-wrap gap-x-6 gap-y-1 px-4 py-3 text-xs sm:px-6">
       <InboxIcon className="hidden size-3.5 self-center text-muted-foreground sm:block" />
       {items.map(([k, v]) => (
         <span key={k}>

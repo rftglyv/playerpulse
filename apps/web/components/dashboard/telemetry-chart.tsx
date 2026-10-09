@@ -29,7 +29,7 @@ export function TelemetryChart({
 }) {
   if (!telemetry) {
     return (
-      <p className="rounded-lg border border-dashed border-border px-3 py-4 font-mono text-xs text-muted-foreground">
+      <p className="rounded-lg border border-dashed border-border px-3 py-4 text-xs text-muted-foreground">
         No telemetry for this level in this run. Verdict is based on player reports only.
       </p>
     );
@@ -102,7 +102,7 @@ export function TelemetryChart({
 
 export function ChartLegendInline({ tone = "loss" }: { tone?: "loss" | "proof" | "watch" }) {
   return (
-    <div className="flex items-center gap-4 font-mono text-[11px] text-muted-foreground">
+    <div className="flex items-center gap-4 text-xs text-muted-foreground">
       <span className="flex items-center gap-1.5">
         <span className="size-2 rounded-[2px] bg-chart-1" /> {"Previous patch"}
       </span>

@@ -58,7 +58,7 @@ export function ReportsTimelineChart({
               aria-pressed={!off}
               onClick={() => toggle(k)}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors",
+                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-colors",
                 off
                   ? "border-dashed border-border text-muted-foreground"
                   : "border-border bg-background text-foreground hover:bg-muted",
@@ -103,7 +103,7 @@ export function ReportsTimelineChart({
           />
           <ChartTooltip
             cursor={{ fill: "rgba(10,10,10,0.04)" }}
-            content={<ChartTooltipContent className="font-mono" />}
+            content={<ChartTooltipContent className="tabular-nums" />}
           />
           {KEYS.map((k) => (
             <Bar

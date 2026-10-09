@@ -31,7 +31,7 @@ export function NavMain({ label, items }: { label?: string; items: NavItem[] }) 
                 {item.icon}
                 <span>{item.title}</span>
               </SidebarMenuButton>
-              {item.badge != null && <SidebarMenuBadge className="font-mono tabular-nums">{item.badge}</SidebarMenuBadge>}
+              {item.badge != null && <SidebarMenuBadge className="tabular-nums">{item.badge}</SidebarMenuBadge>}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

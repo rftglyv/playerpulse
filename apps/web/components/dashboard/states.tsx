@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function EmptyState({ title, body, action }: { title: string; body?: string; action?: React.ReactNode }) {
   return (
     <div className="flex flex-col items-start gap-2 rounded-[10px] border border-dashed border-border px-6 py-10">
-      <p className="font-serif text-lg font-medium tracking-[-0.01em]">{title}</p>
+      <p className="text-lg font-semibold tracking-tight">{title}</p>
       {body && <p className="max-w-prose text-sm text-muted-foreground">{body}</p>}
       {action && <div className="pt-2">{action}</div>}
     </div>

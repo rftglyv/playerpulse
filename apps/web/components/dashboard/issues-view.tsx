@@ -26,7 +26,7 @@ export function CategoryBadge({ category }: { category: string }) {
     <Badge
       variant="outline"
       className={cn(
-        "font-mono text-[11px]",
+        "text-[11px]",
         category === "bug" && "border-loss/40 text-loss",
         category === "balance" && "border-watch/40 text-watch",
         category === "skill_issue" && "border-proof/40 text-proof",
@@ -42,7 +42,7 @@ export function SeverityBadge({ severity }: { severity?: string | null }) {
   return (
     <Badge
       className={cn(
-        "font-mono text-[11px] capitalize",
+        "text-[11px] capitalize",
         severity === "blocker" && "bg-loss text-background",
         severity === "major" && "bg-loss/10 text-loss",
         severity === "minor" && "bg-muted text-foreground",
@@ -58,7 +58,7 @@ export function LanguageChips({ languages }: { languages: string[] }) {
   return (
     <div className="flex flex-wrap gap-1">
       {languages.map((l) => (
-        <span key={l} className="rounded-[5px] border border-dashed border-border px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">
+        <span key={l} className="rounded-[5px] border border-dashed border-border px-1.5 py-0.5 text-[11px] text-muted-foreground">
           {langLabel(l)}
         </span>
       ))}
@@ -147,8 +147,8 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
       <Stamp tone="loss">VERIFIED · #{issue.priority ?? "–"}</Stamp>
       <header className="grid gap-5 p-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
         <div className="min-w-0 space-y-2.5">
-          <div className="pr-36 font-mono text-xs text-muted-foreground">{whereLabel(issue, result.unit)}</div>
-          <h3 className="max-w-[34ch] pr-28 font-serif text-[22px] leading-tight font-medium tracking-[-0.01em] text-balance sm:pr-0">
+          <div className="pr-36 text-xs text-muted-foreground">{whereLabel(issue, result.unit)}</div>
+          <h3 className="max-w-[34ch] pr-28 text-xl leading-tight font-semibold tracking-tight text-balance sm:pr-0">
             {t?.title ?? issue.title}
           </h3>
           <div className="flex flex-wrap items-center gap-1.5">
@@ -165,7 +165,7 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
           </div>
           <div>
             <div className="font-mono text-2xl leading-none tabular-nums">{issue.message_ids.length}</div>
-            <div className="mt-1.5 font-mono text-[11px] text-muted-foreground">
+            <div className="mt-1.5 text-xs text-muted-foreground">
               reports · {issue.distinct_players} players
             </div>
           </div>
@@ -175,13 +175,13 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
       <div className="grid gap-6 border-t border-border p-6 lg:grid-cols-2">
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="font-mono text-xs tracking-wide text-muted-foreground uppercase">Telemetry</h4>
+            <h4 className="text-xs font-medium tracking-wide text-muted-foreground uppercase">Telemetry</h4>
             <ChartLegendInline />
           </div>
           <TelemetryChart telemetry={issue.telemetry} />
           {issue.telemetry_evidence && <p className="text-sm text-muted-foreground">{issue.telemetry_evidence}</p>}
           <div className="flex items-center gap-2 pt-1">
-            <span className="font-mono text-[11px] text-muted-foreground">Reported in</span>
+            <span className="text-xs text-muted-foreground">Reported in</span>
             <LanguageChips languages={issue.languages} />
           </div>
         </section>
@@ -189,13 +189,13 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
           {t?.summary && <p className="leading-relaxed">{t.summary}</p>}
           {t?.suspected_cause && (
             <div>
-              <h4 className="mb-1.5 font-mono text-xs tracking-wide text-muted-foreground uppercase">Suspected cause</h4>
+              <h4 className="mb-1.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">Suspected cause</h4>
               <p className="leading-relaxed text-muted-foreground">{t.suspected_cause}</p>
             </div>
           )}
           {steps.length > 0 && (
             <div>
-              <h4 className="mb-1.5 font-mono text-xs tracking-wide text-muted-foreground uppercase">
+              <h4 className="mb-1.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
                 Repro steps <span className="normal-case tracking-normal text-muted-foreground/70">· inferred from player reports</span>
               </h4>
               <ol className="list-decimal space-y-1 pl-5 text-muted-foreground marker:tabular-nums">
@@ -210,11 +210,11 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
 
       {t?.evidence && t.evidence.length > 0 && (
         <div className="border-t border-border p-6">
-          <h4 className="mb-3 font-mono text-xs tracking-wide text-muted-foreground uppercase">What players said</h4>
+          <h4 className="mb-3 text-xs font-medium tracking-wide text-muted-foreground uppercase">What players said</h4>
           <div className="grid gap-3 md:grid-cols-2">
             {t.evidence.map((e) => (
               <figure key={e.id} className="border-l-2 border-border py-1 pl-3 text-sm">
-                <blockquote className="font-serif text-[15px] leading-relaxed italic">“{e.text}”</blockquote>
+                <blockquote className="text-[15px] leading-relaxed">“{e.text}”</blockquote>
                 {e.english && e.english !== e.text && (
                   <figcaption className="mt-1.5 leading-relaxed text-muted-foreground">{e.english}</figcaption>
                 )}
@@ -314,7 +314,7 @@ export function IssuesView({ result }: { result: RunResult }) {
         </div>
       )}
       {filtered && (
-        <p className="font-mono text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           Showing {issues.length} of {all.length} issues
         </p>
       )}
@@ -327,7 +327,7 @@ export function IssuesView({ result }: { result: RunResult }) {
       ) : (
         issues.map((i, idx) => <IssueCard key={`${i.title}-${idx}`} issue={i} result={result} />)
       )}
-      <p className="font-mono text-xs text-muted-foreground">
+      <p className="text-xs text-muted-foreground">
         Priority = players who started the level on the new patch × drop in completion rate
       </p>
     </div>
@@ -378,7 +378,7 @@ function IssuesTable({ issues, result }: { issues: Issue[]; result: RunResult })
         <TableBody>
           {issues.map((i, idx) => (
             <TableRow key={idx}>
-              <TableCell className="pl-5 font-mono text-xs text-muted-foreground">{i.priority ?? "–"}</TableCell>
+              <TableCell className="pl-5 text-xs tabular-nums text-muted-foreground">{i.priority ?? "–"}</TableCell>
               <TableCell className="max-w-md font-medium whitespace-normal">{i.ticket?.title ?? i.title}</TableCell>
               <TableCell className="text-muted-foreground">{whereLabel(i, result.unit)}</TableCell>
               <TableCell>

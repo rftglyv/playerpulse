@@ -32,11 +32,11 @@ function Panel({
       )}
     >
       <div className="mb-4 flex items-baseline justify-between gap-3">
-        <h3 className="font-serif text-lg font-medium tracking-[-0.01em]">
+        <h3 className="text-base font-semibold tracking-tight">
           {title}
         </h3>
         {note && (
-          <span className="font-mono text-[11px] text-muted-foreground">
+          <span className="text-xs text-muted-foreground">
             {note}
           </span>
         )}
@@ -62,7 +62,7 @@ function Kpi({
   return (
     <div className="relative flex min-w-0 flex-col justify-between gap-3 px-5 py-4">
       <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0 font-mono text-[11px] text-muted-foreground">
+        <div className="min-w-0 text-xs text-muted-foreground">
           {label}
         </div>
         {chart && <div className="shrink-0">{chart}</div>}
@@ -79,7 +79,7 @@ function Kpi({
           {value}
         </div>
         {caption && (
-          <div className="mt-2 inline-flex max-w-full items-center gap-1 truncate rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
+          <div className="mt-2 inline-flex max-w-full items-center gap-1 truncate rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
             {caption}
           </div>
         )}
@@ -298,7 +298,7 @@ export function OverviewView({
           note={`completion rate · ${result.previous_patch} vs ${result.current_patch}`}
         >
           {funnel.length === 0 ? (
-            <p className="rounded-lg border border-dashed border-border px-3 py-10 text-center font-mono text-xs text-muted-foreground">
+            <p className="rounded-lg border border-dashed border-border px-3 py-10 text-center text-xs text-muted-foreground">
               Community-only run: no telemetry, so there is no funnel to draw.
             </p>
           ) : (
@@ -315,7 +315,7 @@ export function OverviewView({
           note={`${signal.length} non-noise messages per day`}
         >
           {timeline.length === 0 ? (
-            <p className="py-10 text-center font-mono text-xs text-muted-foreground">
+            <p className="py-10 text-center text-xs text-muted-foreground">
               No timestamps in this run.
             </p>
           ) : (
@@ -369,7 +369,7 @@ export function OverviewView({
                 (k === "mixed" ? "Mixed" : k),
               label: (
                 <>
-                  <span className="font-mono text-[11px] text-muted-foreground">
+                  <span className="text-[11px] font-medium text-muted-foreground">
                     {langLabel(k)}
                   </span>
                   {LANGUAGE_NAMES[k.toLowerCase()] ??
@@ -392,14 +392,14 @@ export function OverviewView({
                     href={issuesHref}
                     className="group grid w-full grid-cols-[1.5rem_minmax(0,1fr)_auto] items-start gap-2 text-left"
                   >
-                    <span className="font-mono text-xs text-muted-foreground">
+                    <span className="text-xs tabular-nums text-muted-foreground">
                       #{i.priority ?? idx + 1}
                     </span>
                     <span className="min-w-0">
                       <span className="line-clamp-2 text-sm font-medium group-hover:underline">
                         {i.ticket?.title ?? i.title}
                       </span>
-                      <span className="mt-1 flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+                      <span className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                         <CategoryBadge category={i.category} />{" "}
                         {whereLabel(i, result.unit)}
                       </span>
@@ -414,7 +414,7 @@ export function OverviewView({
           )}
           <Link
             href={issuesHref}
-            className="mt-4 inline-flex items-center gap-1 font-mono text-xs text-watch hover:underline"
+            className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-watch hover:underline"
           >
             All issues <ArrowRightIcon className="size-3" />
           </Link>

@@ -39,7 +39,7 @@ export function AppSidebar({
               </span>
               <span className="grid min-w-0 flex-1 text-left leading-tight">
                 <span className="truncate font-serif text-[19px] font-semibold tracking-[-0.01em]">PlayerPulse</span>
-                <span className="truncate font-mono text-[11px] text-muted-foreground">{game ?? "No run selected"}</span>
+                <span className="truncate text-xs text-muted-foreground">{game ?? "No run selected"}</span>
               </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -61,7 +61,7 @@ export function AppSidebar({
         ))}
       </SidebarContent>
       <SidebarFooter className="gap-3 pb-3">
-        <p className="px-2 font-serif text-sm leading-relaxed text-muted-foreground italic group-data-[collapsible=icon]:hidden">
+        <p className="px-2 text-xs leading-relaxed text-muted-foreground group-data-[collapsible=icon]:hidden">
           Telemetry knows where. Players know why.
         </p>
         <NavUser />

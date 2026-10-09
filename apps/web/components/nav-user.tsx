@@ -40,13 +40,13 @@ export function NavUser() {
   const { name, email } = data.user;
   const avatar = (
     <Avatar className="size-8 rounded-lg after:rounded-lg">
-      <AvatarFallback className="rounded-lg bg-primary/10 font-mono text-xs text-primary">{initials(name)}</AvatarFallback>
+      <AvatarFallback className="rounded-lg bg-primary/10 text-xs font-medium text-primary">{initials(name)}</AvatarFallback>
     </Avatar>
   );
   const who = (
     <div className="grid flex-1 text-left text-sm leading-tight">
       <span className="truncate font-medium">{name}</span>
-      <span className="truncate font-mono text-[11px] text-muted-foreground">{email}</span>
+      <span className="truncate text-xs text-muted-foreground">{email}</span>
     </div>
   );
 
