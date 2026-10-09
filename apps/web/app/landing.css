@@ -177,3 +177,15 @@ html:has(.lp){-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-paddin
 .lp, .lp *{transition:none!important;scroll-behavior:auto!important}
 }
 
+
+/* sprinkled hero doodles */
+.lp .sprinkles{position:absolute;inset:0;pointer-events:none;z-index:0}
+.lp .sprinkle{position:absolute;opacity:.55}
+.lp .s-pad{width:64px;left:-84px;top:96px;transform:rotate(-12deg)}
+.lp .s-star{width:26px;left:46%;top:58px;transform:rotate(10deg)}
+.lp .s-splash{width:28px;left:-40px;bottom:210px}
+.lp .s-heart{width:26px;left:49%;bottom:150px;transform:rotate(-8deg)}
+.lp .s-bubble{width:40px;right:-48px;top:44px;transform:rotate(8deg)}
+.lp .s-coin{width:26px;right:-30px;bottom:180px}
+@media(max-width:1279px){.lp .s-pad,.lp .s-splash,.lp .s-bubble,.lp .s-coin{display:none}}
+@media(max-width:959px){.lp .sprinkles{display:none}}
