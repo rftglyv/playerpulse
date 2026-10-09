@@ -21,8 +21,11 @@ export function AppSidebar({
   runId,
   counts,
   game,
+  status,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
+  /** run status card shown above the user menu */
+  status?: React.ReactNode;
   section: Section;
   runId: string | null;
   counts: Partial<Record<Section, number>>;
@@ -61,9 +64,7 @@ export function AppSidebar({
         ))}
       </SidebarContent>
       <SidebarFooter className="gap-3 pb-3">
-        <p className="px-2 text-xs leading-relaxed text-muted-foreground group-data-[collapsible=icon]:hidden">
-          Telemetry knows where. Players know why.
-        </p>
+        {status}
         <NavUser />
       </SidebarFooter>
       <SidebarRail />
