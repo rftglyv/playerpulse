@@ -19,6 +19,8 @@ services:
       dockerfile: apps/web/Dockerfile
       args: { API_URL: http://api:4000 }
     restart: unless-stopped
+    environment:
+      API_URL: http://api:4000
     ports: ["${WEB_PORT:-3000}:3000"]
     depends_on:
       api: { condition: service_healthy }

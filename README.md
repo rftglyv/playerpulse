@@ -39,7 +39,11 @@ bun install && bun run --filter @playerpulse/db db:migrate
 bun run dev                   # web :3000, api :4000
 ```
 
-Deploy: `docker compose up -d --build` (api + web; Postgres is external via `DATABASE_URL`).
+Seed test accounts with data: `bun run db:seed` (creates `test@playerpulse.app` / `playerpulse-test` and
+`judge@playerpulse.app` / `playerpulse-judge`, each with its own copy of the evaluated runs; override with `SEED_USERS`).
+
+Deploy: `docker compose up -d --build` (api + web; Postgres is external via `DATABASE_URL`), then once:
+`docker compose exec api bun apps/api/scripts/seed.ts`.
 
 ## Reproduce the evaluation
 

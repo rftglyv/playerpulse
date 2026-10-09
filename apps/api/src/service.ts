@@ -12,7 +12,7 @@ import {
   type Scenario,
 } from "@playerpulse/pipeline";
 import type { RunCreate } from "@playerpulse/api-schemas";
-import { sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const DATA_DIR = resolve(process.env.EVAL_DATA_DIR ?? join(import.meta.dir, "../../../eval/data"));
 const DEMO_DIR = resolve(process.env.DEMO_DIR ?? join(import.meta.dir, "../../../demo"));
@@ -79,15 +79,22 @@ export async function saveRun(result: RunResult, name: string, createdBy: string
   });
 }
 
-/** Load committed demo results into an empty database so the dashboard works with no API key. */
-export async function seedDemo() {
-  const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(runs);
-  if (n > 0 || !existsSync(DEMO_DIR)) return 0;
-  const files = readdirSync(DEMO_DIR).filter((f) => f.endsWith(".json")).sort().reverse(); // scenario A seeds last = newest = default view
-  for (const f of files) await saveRun(JSON.parse(readFileSync(join(DEMO_DIR, f), "utf8")), `demo: ${f.replace(".json", "")}`);
-  return files.length;
+/** Give a user the committed evaluation runs (demo/*.json) as their own data. Skips runs they already have. */
+export async function seedRunsFor(userId: string) {
+  if (!existsSync(DEMO_DIR)) return 0;
+  const owned = await db.select({ name: runs.name }).from(runs).where(eq(runs.createdBy, userId));
+  const have = new Set(owned.map((r) => r.name));
+  // scenario A is saved last so it is the newest run and the default view
+  const files = readdirSync(DEMO_DIR).filter((f) => f.endsWith(".json")).sort().reverse();
+  let added = 0;
+  for (const f of files) {
+    const name = `seed: ${f.replace(".json", "")}`;
+    if (have.has(name)) continue;
+    await saveRun(JSON.parse(readFileSync(join(DEMO_DIR, f), "utf8")), name, userId);
+    added++;
+  }
+  return added;
 }
-
 
 export class InputError extends Error {}
 

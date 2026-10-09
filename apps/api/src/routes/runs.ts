@@ -1,7 +1,7 @@
 import { IdParam, RunCreate } from "@playerpulse/api-schemas";
 import { db, runs } from "@playerpulse/db";
 import { DEFAULT_MODEL, MODELS } from "@playerpulse/pipeline";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { Elysia } from "elysia";
 import { authPlugin } from "../auth";
 import { acquireRun, clientIp, demoReadonly } from "../limits";
@@ -9,23 +9,28 @@ import { buildScenario, InputError, runPipeline, saveRun } from "../service";
 
 export const runRoutes = new Elysia({ prefix: "/runs", tags: ["runs"] })
   .use(authPlugin)
-  .get("/", () =>
-    db
-      .select({
-        id: runs.id, name: runs.name, scenario: runs.scenario, game: runs.game, model: runs.model,
-        telemetry: runs.telemetry, status: runs.status, costUsd: runs.costUsd, seconds: runs.seconds,
-        messagesProcessed: runs.messagesProcessed, createdAt: runs.createdAt,
-      })
-      .from(runs)
-      .orderBy(desc(runs.createdAt)),
+  // Every run belongs to the user who created it; users only ever see their own.
+  .get(
+    "/",
+    ({ user }) =>
+      db
+        .select({
+          id: runs.id, name: runs.name, scenario: runs.scenario, game: runs.game, model: runs.model,
+          telemetry: runs.telemetry, status: runs.status, costUsd: runs.costUsd, seconds: runs.seconds,
+          messagesProcessed: runs.messagesProcessed, createdAt: runs.createdAt,
+        })
+        .from(runs)
+        .where(eq(runs.createdBy, user.id))
+        .orderBy(desc(runs.createdAt)),
+    { auth: true },
   )
   .get(
     "/:id",
-    async ({ params, status }) => {
-      const [run] = await db.select().from(runs).where(eq(runs.id, params.id));
+    async ({ params, status, user }) => {
+      const [run] = await db.select().from(runs).where(and(eq(runs.id, params.id), eq(runs.createdBy, user.id)));
       return run ?? status(404, { error: "run not found" });
     },
-    { params: IdParam },
+    { auth: true, params: IdParam },
   )
   .post(
     "/",

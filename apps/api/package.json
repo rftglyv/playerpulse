@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "bun --env-file=../../.env --watch src/index.ts",
     "start": "bun src/index.ts",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "db:seed": "bun --env-file=../../.env scripts/seed.ts"
   },
   "dependencies": {
     "@elysiajs/openapi": "^1.4.16",
