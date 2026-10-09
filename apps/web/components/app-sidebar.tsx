@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandMark } from "@/components/brand-mark";
 import * as React from "react";
 import Link from "next/link";
 import { NavMain } from "@/components/nav-main";
@@ -38,7 +39,7 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" tooltip="PlayerPulse" render={<Link href="/" />}>
               <span className="flex size-8 shrink-0 items-center justify-center">
-                <span className="size-2 rounded-full bg-watch shadow-[0_0_0_3px_#DBEAFE]" />
+                <BrandMark size={26} />
               </span>
               <span className="grid min-w-0 flex-1 text-left leading-tight">
                 <span className="truncate font-serif text-[19px] font-semibold tracking-[-0.01em]">PlayerPulse</span>
