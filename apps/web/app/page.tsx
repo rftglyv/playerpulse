@@ -1,3 +1,4 @@
+import { FAQ, jsonLd } from "@/components/landing/faq";
 import { BrandMark } from "@/components/brand-mark";
 import Link from "next/link";
 import { LandingMotion } from "@/components/landing/landing-motion";
@@ -340,6 +341,26 @@ export default function Home() {
       </section>
 
       {/* FOOTER CTA */}
+      {/* FAQ */}
+      <section className="sec faq" id="faq">
+        <div className="wrap">
+          <div className="sec-h a-fade">
+            <h2>Questions studios ask</h2>
+            <span>answers from our test runs</span>
+          </div>
+          <div className="faq-list">
+            {FAQ.map(({ q, a }) => (
+              <details key={q} className="faq-item">
+                <summary>{q}</summary>
+                <p>{a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }} />
+
       <footer className="foot" data-anim="foot">
         <div className="wrap">
           <h2 className="a-fade">

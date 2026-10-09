@@ -12,7 +12,8 @@ RUN bun install --frozen-lockfile
 COPY apps/web ./apps/web
 COPY packages ./packages
 ARG API_URL=http://api:4000
-ENV API_URL=$API_URL NEXT_TELEMETRY_DISABLED=1
+ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
+ENV API_URL=$API_URL NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL NEXT_TELEMETRY_DISABLED=1
 RUN cd apps/web && bun run build
 
 FROM node:24-alpine
