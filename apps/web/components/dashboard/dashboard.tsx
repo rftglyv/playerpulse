@@ -1,5 +1,6 @@
 "use client";
 
+import { RunStatusCard } from "./run-status-card";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { InboxIcon } from "lucide-react";
@@ -130,7 +131,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     <Ctx.Provider value={ctx}>
       <TooltipProvider>
         <SidebarProvider>
-          <AppSidebar section={section} runId={runId} counts={c} game={result?.game ?? run?.game} />
+          <AppSidebar
+            section={section}
+            runId={runId}
+            counts={c}
+            game={result?.game ?? run?.game}
+            status={<RunStatusCard run={run?.id === runId ? run : null} runs={runs} />}
+          />
 
           <SidebarInset className="min-h-svh">
             <SiteHeader title={current.label} description={current.blurb}>
