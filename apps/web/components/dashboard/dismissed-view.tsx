@@ -27,20 +27,20 @@ function VerdictCard({ issue, result, tone }: { issue: Issue; result: RunResult;
     >
       <Stamp tone={tone}>{tone === "proof" ? "DISMISSED" : "WATCH"}</Stamp>
       <div className="space-y-3">
-        <div className="pr-32 font-mono text-xs text-muted-foreground lg:pr-0">{whereLabel(issue, result.unit)}</div>
-        <h3 className="pr-24 font-serif text-[22px] leading-tight font-medium tracking-[-0.01em] text-balance lg:pr-0">
+        <div className="pr-32 text-xs text-muted-foreground lg:pr-0">{whereLabel(issue, result.unit)}</div>
+        <h3 className="pr-24 text-xl leading-tight font-semibold tracking-tight text-balance lg:pr-0">
           {headline(issue, result.unit)}
         </h3>
         <div className="flex flex-wrap items-center gap-1.5">
           <CategoryBadge category={issue.category} />
         </div>
-        <p className="font-mono text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           {issue.message_ids.length} reports from {issue.distinct_players} players
           {issue.players_lost_estimate > 0 && <> · est. {fmt.int(issue.players_lost_estimate)} players lost</>}
         </p>
         {issue.telemetry_evidence && (
-          <p className="font-serif text-[15px] leading-relaxed text-muted-foreground italic">
-            <span className="font-sans font-medium text-foreground not-italic">{tone === "proof" ? "Proof: " : "Why we're watching: "}</span>
+          <p className="text-[15px] leading-relaxed text-muted-foreground">
+            <span className="font-medium text-foreground">{tone === "proof" ? "Proof: " : "Why we're watching: "}</span>
             {issue.telemetry_evidence}
           </p>
         )}
@@ -75,7 +75,7 @@ export function DismissedView({ result }: { result: RunResult }) {
       </section>
       <section className="space-y-4">
         <div className="border-b border-border pb-3">
-          <h2 className="font-serif text-2xl font-medium tracking-[-0.02em]">Watch list</h2>
+          <h2 className="text-xl font-semibold tracking-tight">Watch list</h2>
           <p className="text-sm text-muted-foreground">Signals that aren&apos;t strong enough to act on yet.</p>
         </div>
         {watch.length === 0 ? (

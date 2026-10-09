@@ -20,7 +20,7 @@ function Verdict({ status }: { status: string }) {
   return (
     <span
       className={cn(
-        "inline-block rounded-[3px] border-[1.5px] border-current px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-[0.1em] uppercase",
+        "inline-block rounded-[3px] border-[1.5px] border-current px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.1em] uppercase",
         status === "reported" && "text-loss",
         status === "dismissed" && "text-proof",
         status === "watch" && "text-watch",
@@ -75,7 +75,7 @@ export function PatchCompareView({ result }: { result: RunResult }) {
   return (
     <div className="space-y-3">
       {!table && (
-        <p className="rounded-lg border border-dashed border-border px-3 py-3 font-mono text-xs text-muted-foreground">
+        <p className="rounded-lg border border-dashed border-border px-3 py-3 text-xs text-muted-foreground">
           Community-only run: no telemetry, so only report counts and verdicts
           are shown.
         </p>
@@ -203,7 +203,7 @@ export function PatchCompareView({ result }: { result: RunResult }) {
           </TableBody>
         </Table>
       </div>
-      <p className="font-mono text-xs text-muted-foreground">
+      <p className="text-xs text-muted-foreground">
         Δ in red = completion dropped by 5 points or more. Reports = non-noise
         player messages about the {result.unit}.
       </p>

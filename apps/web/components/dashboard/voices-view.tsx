@@ -33,9 +33,9 @@ function Voice({ m, result }: { m: RunMessage; result: RunResult }) {
     <li className="grid grid-cols-[1.25rem_minmax(0,1fr)] gap-3 border-b border-border py-3 last:border-b-0">
       <ChannelIcon channel={m.channel} className="mt-1 size-4 text-muted-foreground" />
       <div className="min-w-0 space-y-1.5">
-        <p className="font-serif text-[15px] leading-relaxed italic">“{m.text}”</p>
+        <p className="text-[15px] leading-relaxed">“{m.text}”</p>
         {translated && <p className="text-sm leading-relaxed text-muted-foreground">{m.english_translation}</p>}
-        <div className="flex flex-wrap items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
           <span className="rounded-[5px] border border-dashed border-border px-1.5 py-0.5">{langLabel(m.language)}</span>
           <CategoryBadge category={m.category} />
           {m.sarcastic && (
@@ -83,7 +83,7 @@ export function VoicesView({ result }: { result: RunResult }) {
               filter === f ? "bg-foreground text-background" : "bg-muted text-muted-foreground hover:text-foreground",
             )}
           >
-            {f === "all" ? "All" : CATEGORY_LABEL[f]} <span className="font-mono tabular-nums opacity-70">{count(f)}</span>
+            {f === "all" ? "All" : CATEGORY_LABEL[f]} <span className="tabular-nums opacity-70">{count(f)}</span>
           </button>
         ))}
       </div>
@@ -98,10 +98,10 @@ export function VoicesView({ result }: { result: RunResult }) {
           return (
             <section key={mechanic} data-card className="rounded-[10px] border border-border bg-card px-6 py-5">
               <header className="mb-2 flex flex-wrap items-baseline justify-between gap-3">
-                <h3 className="font-serif text-xl font-medium tracking-[-0.01em] capitalize">
+                <h3 className="text-lg font-semibold tracking-tight capitalize">
                   {mechanic === "unclustered" ? "No specific mechanic" : mechanic}
                 </h3>
-                <div className="flex items-center gap-3 font-mono text-[11px] text-muted-foreground">
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     {channels.map((c) => (
                       <ChannelIcon key={c} channel={c} className="size-3.5" />
@@ -119,7 +119,7 @@ export function VoicesView({ result }: { result: RunResult }) {
               {items.length > 3 && (
                 <button
                   onClick={() => setOpen(expanded ? null : mechanic)}
-                  className="mt-2 font-mono text-xs text-watch hover:underline"
+                  className="mt-2 text-xs text-watch hover:underline"
                 >
                   {expanded ? "Show fewer" : `Show all ${items.length} messages`}
                 </button>

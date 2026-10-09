@@ -54,10 +54,10 @@ export function LoginForm({ redirect = false, className, ...props }: React.Compo
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif text-[24px] leading-tight font-medium tracking-[-0.02em]">
+          <CardTitle className="text-2xl leading-tight font-semibold tracking-tight">
             Sign in to PlayerPulse
           </CardTitle>
-          <CardDescription className="font-mono text-[11.5px]">Enter your email below to sign in to your account</CardDescription>
+          <CardDescription className="text-sm text-muted-foreground">Enter your email below to sign in to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <form id="login-form" noValidate onSubmit={form.handleSubmit(onSubmit)}>

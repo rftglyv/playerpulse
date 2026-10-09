@@ -37,7 +37,7 @@ export function LevelFunnelChart({
   const drops = data.filter(dropped).length;
   return (
     <div>
-      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] text-muted-foreground">
+      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <svg className="size-2.5 rounded-[2px]" aria-hidden>
             <rect width="10" height="10" fill="url(#pp-legend-hatch)" />
@@ -125,7 +125,7 @@ export function LevelFunnelChart({
               cursor={{ fill: "rgba(10,10,10,0.04)" }}
               content={
                 <ChartTooltipContent
-                  className="font-mono"
+                  className="tabular-nums"
                   labelFormatter={(l, p) => p?.[0]?.payload?.name ?? l}
                 />
               }

@@ -35,7 +35,7 @@ function PTagChip({ tag }: { tag: string }) {
   return (
     <span
       className={cn(
-        "inline-flex h-5 min-w-8 items-center justify-center rounded-md px-1.5 font-mono text-xs font-semibold",
+        "inline-flex h-5 min-w-8 items-center justify-center rounded-md px-1.5 text-xs tabular-nums font-semibold",
         tag === "P0" && "bg-[#B91C1C]/10 text-[#B91C1C]",
         tag === "P1" && "bg-[#2563EB]/10 text-[#2563EB]",
         tag !== "P0" && tag !== "P1" && "bg-muted text-muted-foreground",
@@ -125,7 +125,7 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
 
   const toggle = (
     <div className="flex items-center justify-between gap-3">
-      <p className="font-mono text-xs text-muted-foreground">
+      <p className="text-xs text-muted-foreground">
         {tasks.length} tasks · {tasks.filter((t) => t.state === "done").length} done
       </p>
       <div className="flex rounded-lg bg-muted p-[3px]" role="group" aria-label="View">
@@ -295,7 +295,7 @@ function TaskBoard({
           >
             <div className="flex items-center justify-between px-1.5 pt-0.5">
               <h3 className="text-sm font-semibold">{col.label}</h3>
-              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-background px-1.5 font-mono text-[11px] text-muted-foreground tabular-nums ring-1 ring-border">
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-background px-1.5 text-[11px] text-muted-foreground tabular-nums ring-1 ring-border">
                 {columns[col.value].length}
               </span>
             </div>
@@ -306,7 +306,7 @@ function TaskBoard({
                 </KanbanItem>
               ))}
               {columns[col.value].length === 0 && (
-                <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center font-mono text-[11px] text-muted-foreground">
+                <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
                   Drop a card here
                 </p>
               )}
@@ -346,7 +346,7 @@ function TaskCard({ task: t, unit, overlay }: { task: Task; unit: string; overla
         <CategoryBadge category={t.category} />
         <SeverityBadge severity={t.severity} />
       </div>
-      <div className="flex items-center justify-between gap-2 font-mono text-[11px] text-muted-foreground">
+      <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
         <span className="truncate">{t.level == null ? "–" : `${t.levelName ?? unit} · ${t.level}`}</span>
         {t.playersLost != null && t.playersLost > 0 && (
           <span className="text-loss tabular-nums">−{fmt.int(t.playersLost)} players</span>

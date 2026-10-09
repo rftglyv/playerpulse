@@ -32,7 +32,7 @@ function MessagesTable({ messages, showReason }: { messages: RunMessage[]; showR
                   {m.sarcastic && <span className="text-[11px] text-watch">sarcastic</span>}
                 </div>
               </TableCell>
-              <TableCell className="font-mono text-xs">{langLabel(m.language)}</TableCell>
+              <TableCell className="text-xs">{langLabel(m.language)}</TableCell>
               <TableCell className="max-w-sm whitespace-normal">{m.text}</TableCell>
               <TableCell className="max-w-sm whitespace-normal text-muted-foreground">
                 {m.english_translation && m.english_translation !== m.text ? m.english_translation : "–"}

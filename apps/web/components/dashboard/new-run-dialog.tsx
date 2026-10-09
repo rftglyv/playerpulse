@@ -116,12 +116,12 @@ function FileField({
             disabled={disabled}
             aria-invalid={fieldState.invalid}
             onChange={(e) => field.onChange(e.target.files?.[0] ?? null)}
-            className="block w-full cursor-pointer rounded-lg border border-input bg-background text-xs file:mr-3 file:cursor-pointer file:border-0 file:border-r file:border-input file:bg-muted file:px-3 file:py-2 file:font-mono file:text-xs aria-invalid:border-destructive"
+            className="block w-full cursor-pointer rounded-lg border border-input bg-background text-xs file:mr-3 file:cursor-pointer file:border-0 file:border-r file:border-input file:bg-muted file:px-3 file:py-2 file:text-xs file:font-medium aria-invalid:border-destructive"
           />
           {fieldState.invalid ? (
             <FieldError errors={[fieldState.error]} className="text-xs" />
           ) : (
-            <FieldDescription className="font-mono text-[11px]">
+            <FieldDescription className="text-xs">
               {field.value ? `${field.value.name} · ${Math.ceil(field.value.size / 1024)} KB` : hint}
             </FieldDescription>
           )}
@@ -319,7 +319,7 @@ export function NewRunButton({ onCreated }: { onCreated: (id: string) => void })
                     )}
                   />
                   <details className="rounded-lg border border-dashed border-border px-3 py-2 text-xs">
-                    <summary className="cursor-pointer font-mono text-muted-foreground">Expected formats</summary>
+                    <summary className="cursor-pointer text-muted-foreground">Expected formats</summary>
                     <pre className="mt-2 overflow-x-auto font-mono text-[11px] leading-relaxed whitespace-pre text-muted-foreground">{`messages.csv
 id,timestamp,channel,author,text
 A001,2026-10-02T11:02,discord,ash_92,"fell through the floor on lvl 4"

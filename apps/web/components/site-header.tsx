@@ -8,7 +8,7 @@ export function SiteHeader({ title, description, children }: { title: string; de
       <Separator orientation="vertical" className="mx-1 h-4 data-vertical:self-auto" />
       <div className="min-w-0 flex-1">
         <h1 className="truncate font-serif text-[22px] leading-tight font-medium tracking-[-0.02em]">{title}</h1>
-        {description && <p className="truncate font-mono text-[11.5px] text-muted-foreground">{description}</p>}
+        {description && <p className="truncate text-xs text-muted-foreground">{description}</p>}
       </div>
       {children}
     </header>
