@@ -6,6 +6,8 @@ COPY apps/web/package.json apps/web/
 COPY apps/api/package.json apps/api/
 COPY packages/db/package.json packages/db/
 COPY packages/pipeline/package.json packages/pipeline/
+COPY packages/api-schemas/package.json packages/api-schemas/
+COPY packages/typescript-config/package.json packages/typescript-config/
 RUN bun install --frozen-lockfile
 COPY apps/web ./apps/web
 COPY packages ./packages

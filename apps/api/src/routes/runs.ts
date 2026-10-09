@@ -1,0 +1,47 @@
+import { IdParam, RunCreate } from "@playerpulse/api-schemas";
+import { db, runs } from "@playerpulse/db";
+import { DEFAULT_MODEL, MODELS } from "@playerpulse/pipeline";
+import { desc, eq } from "drizzle-orm";
+import { Elysia } from "elysia";
+import { buildScenario, InputError, runPipeline, saveRun } from "../service";
+
+export const runRoutes = new Elysia({ prefix: "/runs", tags: ["runs"] })
+  .get("/", () =>
+    db
+      .select({
+        id: runs.id, name: runs.name, scenario: runs.scenario, game: runs.game, model: runs.model,
+        telemetry: runs.telemetry, status: runs.status, costUsd: runs.costUsd, seconds: runs.seconds,
+        messagesProcessed: runs.messagesProcessed, createdAt: runs.createdAt,
+      })
+      .from(runs)
+      .orderBy(desc(runs.createdAt)),
+  )
+  .get(
+    "/:id",
+    async ({ params, status }) => {
+      const [run] = await db.select().from(runs).where(eq(runs.id, params.id));
+      return run ?? status(404, { error: "run not found" });
+    },
+    { params: IdParam },
+  )
+  .post(
+    "/",
+    async ({ body, status }) => {
+      if (!process.env.OPENROUTER_API_KEY) {
+        return status(503, { error: "live runs are disabled: no OPENROUTER_API_KEY; demo results are loaded" });
+      }
+      const model = body.model ?? DEFAULT_MODEL;
+      if (!MODELS.some((m) => m.id === model)) return status(422, { error: `unknown model ${model}` });
+      let scenario;
+      try {
+        scenario = buildScenario(body);
+      } catch (err) {
+        if (err instanceof InputError) return status(422, { error: err.message });
+        throw err;
+      }
+      const result = await runPipeline(scenario, { model });
+      const id = await saveRun(result, body.name ?? `${scenario.name} · ${body.telemetry ? "telemetry" : "community-only"} · ${model}`);
+      return { id, meta: result.meta };
+    },
+    { body: RunCreate },
+  );

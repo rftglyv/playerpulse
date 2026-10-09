@@ -11,7 +11,8 @@
   "scripts": {
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:migrate": "bun src/migrate.ts"
+    "db:migrate": "bun src/migrate.ts",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "drizzle-orm": "^0.44.2",
@@ -19,6 +20,7 @@
     "@playerpulse/pipeline": "workspace:*"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.11"
+    "drizzle-kit": "^0.31.11",
+    "@playerpulse/typescript-config": "workspace:*"
   }
 }

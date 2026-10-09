@@ -5,6 +5,8 @@ COPY apps/web/package.json apps/web/
 COPY apps/api/package.json apps/api/
 COPY packages/db/package.json packages/db/
 COPY packages/pipeline/package.json packages/pipeline/
+COPY packages/api-schemas/package.json packages/api-schemas/
+COPY packages/typescript-config/package.json packages/typescript-config/
 RUN bun install --frozen-lockfile --production
 
 FROM oven/bun:1.3.12-alpine
@@ -20,4 +22,4 @@ RUN mkdir -p /app/.cache/llm && chown -R bun:bun /app/.cache
 USER bun
 EXPOSE 4000
 HEALTHCHECK --interval=10s --timeout=3s --retries=5 CMD wget -qO- http://127.0.0.1:4000/api/health || exit 1
-CMD ["sh", "-c", "bun packages/db/src/migrate.ts && bun apps/api/src/server.ts"]
+CMD ["sh", "-c", "bun packages/db/src/migrate.ts && bun apps/api/src/index.ts"]
