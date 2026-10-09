@@ -15,9 +15,9 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@playerpulse/pipeline": "workspace:*",
     "drizzle-orm": "^0.44.2",
-    "postgres": "^3.4.5",
-    "@playerpulse/pipeline": "workspace:*"
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.11",

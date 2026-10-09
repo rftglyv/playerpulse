@@ -1,5 +1,5 @@
 # Dokploy: deploy as a Compose app. Postgres is hosted separately (backups).
-# Set in Dokploy's env panel: DATABASE_URL, OPENROUTER_API_KEY, optional OPENROUTER_MODEL, WEB_PORT.
+# Set in Dokploy's env panel: DATABASE_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL, TRUSTED_ORIGINS, OPENROUTER_API_KEY, optional OPENROUTER_MODEL, WEB_PORT.
 services:
   api:
     build: { context: ., dockerfile: apps/api/Dockerfile }
@@ -8,6 +8,9 @@ services:
       DATABASE_URL: ${DATABASE_URL:?set DATABASE_URL}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-anthropic/claude-sonnet-5.5}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:?set BETTER_AUTH_URL}
+      TRUSTED_ORIGINS: ${TRUSTED_ORIGINS:-}
     volumes: [llmcache:/app/.cache/llm]
 
   web:

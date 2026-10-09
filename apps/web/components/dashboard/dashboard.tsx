@@ -1,17 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  EyeIcon,
-  GitCompareArrowsIcon,
-  InboxIcon,
-  LayoutDashboardIcon,
-  ListChecksIcon,
-  MessagesSquareIcon,
-  ScaleIcon,
-  SirenIcon,
-} from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { InboxIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Sidebar,
@@ -27,6 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,36 +32,11 @@ import { OverviewView } from "./overview-view";
 import { PatchCompareView } from "./patch-compare-view";
 import { VoicesView } from "./voices-view";
 import { NewRunButton } from "./new-run-dialog";
+import { SidebarUserMenu } from "@/components/auth/user-menu";
 import { CardsSkeleton, EmptyState, ErrorState } from "./states";
 import { TasksView } from "./tasks-view";
 import { Reveal } from "./case-file";
-
-type Section = "overview" | "compare" | "issues" | "dismissed" | "tasks" | "voices" | "review";
-
-const SECTIONS: { id: Section; label: string; icon: typeof SirenIcon; blurb: string }[] = [
-  { id: "overview", label: "Overview", icon: LayoutDashboardIcon, blurb: "The whole patch at a glance." },
-  {
-    id: "compare",
-    label: "Patch compare",
-    icon: GitCompareArrowsIcon,
-    blurb: "Every level, previous patch against current, next to what players said.",
-  },
-  { id: "issues", label: "Issues", icon: SirenIcon, blurb: "Verified problems, ranked by players lost." },
-  {
-    id: "dismissed",
-    label: "Dismissed with proof",
-    icon: ScaleIcon,
-    blurb: "Complaints the telemetry settled, plus what we're keeping an eye on.",
-  },
-  { id: "tasks", label: "Tasks", icon: ListChecksIcon, blurb: "Work items created from verified issues." },
-  {
-    id: "voices",
-    label: "Player voices",
-    icon: MessagesSquareIcon,
-    blurb: "Every player message, clustered by the mechanic it's about.",
-  },
-  { id: "review", label: "Needs a human look", icon: EyeIcon, blurb: "Messages the model wasn't confident about." },
-];
+import { SECTION_GROUPS, SECTIONS, isSection, sectionHref, type Section } from "./sections";
 
 function counts(r: RunResult | null | undefined): Partial<Record<Section, number>> {
   if (!r) return {};
@@ -84,143 +52,232 @@ function runLabel(r: RunRow) {
   return `${r.name || `Scenario ${r.scenario}`} · ${r.telemetry ? "telemetry" : "community only"} · ${fmt.date(r.createdAt)}`;
 }
 
-export function Dashboard() {
-  const [section, setSection] = useState<Section>("overview");
-  const [runs, setRuns] = useState<RunRow[] | null>(null);
+interface DashboardCtx {
+  runs: RunRow[] | null;
+  runsError: string | null;
+  loadRuns: () => void;
+  runId: string | null;
+  run: RunDetail | null;
+  runError: string | null;
+  loadRun: (force?: boolean) => void;
+}
+
+// The shell lives in app/dashboard/[section]/layout.tsx and remounts per section, so keep fetched data
+// at module scope: section switches reuse it instead of refetching.
+const cache: { runs: RunRow[] | null; run: Map<string, RunDetail> } = { runs: null, run: new Map() };
+
+const Ctx = createContext<DashboardCtx | null>(null);
+
+function useDashboard() {
+  const c = useContext(Ctx);
+  if (!c) throw new Error("useDashboard must be used inside DashboardShell");
+  return c;
+}
+
+export function DashboardShell({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const seg = pathname.split("/")[2] ?? "overview";
+  const section: Section = isSection(seg) ? seg : "overview";
+
+  const [runs, setRuns] = useState<RunRow[] | null>(cache.runs);
   const [runsError, setRunsError] = useState<string | null>(null);
-  const [runId, setRunId] = useState<string | null>(null);
-  const [run, setRun] = useState<RunDetail | null>(null);
+  const initialRunId = searchParams.get("run") ?? cache.runs?.[0]?.id ?? null;
+  const [run, setRun] = useState<RunDetail | null>(initialRunId ? (cache.run.get(initialRunId) ?? null) : null);
   const [runError, setRunError] = useState<string | null>(null);
 
-  const loadRuns = useCallback((select?: string) => {
+  const runId = searchParams.get("run") ?? runs?.[0]?.id ?? null;
+
+  const selectRun = useCallback(
+    (id: string) => router.replace(sectionHref(section, id), { scroll: false }),
+    [router, section],
+  );
+
+  const loadRuns = useCallback(() => {
     setRunsError(null);
     api
       .runs()
       .then((rs) => {
+        cache.runs = rs;
         setRuns(rs);
-        setRunId((cur) => select ?? cur ?? rs[0]?.id ?? null);
       })
       .catch((e: Error) => setRunsError(e.message));
   }, []);
 
-  useEffect(() => loadRuns(), [loadRuns]);
+  useEffect(() => {
+    if (!cache.runs) loadRuns();
+  }, [loadRuns]);
 
-  const loadRun = useCallback(() => {
-    if (!runId) return;
-    setRun(null);
-    setRunError(null);
-    api
-      .run(runId)
-      .then(setRun)
-      .catch((e: Error) => setRunError(e.message));
-  }, [runId]);
+  const loadRun = useCallback(
+    (force = false) => {
+      if (!runId) return;
+      const hit = cache.run.get(runId);
+      setRunError(null);
+      if (hit && !force) {
+        setRun(hit);
+        return;
+      }
+      setRun((cur) => (cur?.id === runId ? cur : null));
+      api
+        .run(runId)
+        .then((r) => {
+          // Only cache finished runs; pending ones should refresh on the next visit.
+          if (r.result) cache.run.set(r.id, r);
+          setRun(r);
+        })
+        .catch((e: Error) => setRunError(e.message));
+    },
+    [runId],
+  );
 
-  useEffect(loadRun, [loadRun]);
+  useEffect(() => loadRun(), [loadRun]);
 
-  const result = run?.result ?? null;
+  const result = run?.id === runId ? (run?.result ?? null) : null;
   const c = counts(result);
   const current = SECTIONS.find((s) => s.id === section)!;
   const runItems = runs?.map((r) => ({ value: r.id, label: runLabel(r) })) ?? [];
+  const ctx = useMemo<DashboardCtx>(
+    () => ({ runs, runsError, loadRuns, runId, run: run?.id === runId ? run : null, runError, loadRun }),
+    [runs, runsError, loadRuns, runId, run, runError, loadRun],
+  );
 
-  let body: React.ReactNode;
-  if (runsError) body = <ErrorState message={runsError} onRetry={() => loadRuns()} />;
-  else if (!runs) body = <CardsSkeleton />;
-  else if (runs.length === 0)
-    body = (
+  return (
+    <Ctx.Provider value={ctx}>
+      <TooltipProvider>
+        <SidebarProvider>
+          <Sidebar collapsible="icon">
+            <SidebarHeader>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton size="lg" tooltip="PlayerPulse" render={<Link href="/" />}>
+                    <span className="flex size-8 shrink-0 items-center justify-center">
+                      <span className="size-2 rounded-full bg-watch shadow-[0_0_0_3px_#DBEAFE]" />
+                    </span>
+                    <span className="grid min-w-0 flex-1 text-left leading-tight">
+                      <span className="truncate font-serif text-[19px] font-semibold tracking-[-0.01em]">PlayerPulse</span>
+                      <span className="truncate font-mono text-[11px] text-muted-foreground">
+                        {result?.game ?? run?.game ?? "No run selected"}
+                      </span>
+                    </span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarHeader>
+            <SidebarContent>
+              {SECTION_GROUPS.map((g) => (
+                <SidebarGroup key={g}>
+                  <SidebarGroupLabel>{g}</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {SECTIONS.filter((s) => s.group === g).map((s) => (
+                        <SidebarMenuItem key={s.id}>
+                          <SidebarMenuButton
+                            isActive={section === s.id}
+                            tooltip={s.label}
+                            render={<Link href={sectionHref(s.id, runId)} />}
+                          >
+                            <s.icon />
+                            <span>{s.label}</span>
+                          </SidebarMenuButton>
+                          {c[s.id] != null && (
+                            <SidebarMenuBadge className="font-mono tabular-nums">{c[s.id]}</SidebarMenuBadge>
+                          )}
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ))}
+            </SidebarContent>
+            <SidebarFooter className="gap-3 pb-3">
+              <p className="px-2 font-serif text-sm leading-relaxed text-muted-foreground italic group-data-[collapsible=icon]:hidden">
+                Telemetry knows where. Players know why.
+              </p>
+              <SidebarUserMenu />
+            </SidebarFooter>
+            <SidebarRail />
+          </Sidebar>
+
+          <SidebarInset className="min-h-svh">
+            <header className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-border bg-[rgba(255,255,255,0.72)] px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.03),0_12px_32px_-20px_rgba(0,0,0,0.18)] backdrop-blur-xl backdrop-saturate-[1.4] sm:px-6">
+              <SidebarTrigger />
+              <div className="min-w-0 flex-1">
+                <h1 className="truncate font-serif text-[22px] leading-tight font-medium tracking-[-0.02em]">{current.label}</h1>
+                <p className="truncate font-mono text-[11.5px] text-muted-foreground">{current.blurb}</p>
+              </div>
+              {runs && runs.length > 0 && (
+                <Select items={runItems} value={runId} onValueChange={(v) => v && selectRun(v as string)}>
+                  <SelectTrigger size="sm" className="max-w-[22rem]" aria-label="Select run">
+                    <SelectValue placeholder="Select a run" />
+                  </SelectTrigger>
+                  <SelectContent alignItemWithTrigger={false}>
+                    {runs.map((r) => (
+                      <SelectItem key={r.id} value={r.id}>
+                        {runLabel(r)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+              <NewRunButton
+                onCreated={(id) => {
+                  loadRuns();
+                  selectRun(id);
+                }}
+              />
+            </header>
+
+            <Reveal deps={[section, run]} className="mx-auto w-full max-w-6xl flex-1 px-4 pt-8 pb-16 sm:px-6">
+              {children}
+            </Reveal>
+
+            <RunFooter run={ctx.run} result={result} />
+          </SidebarInset>
+        </SidebarProvider>
+      </TooltipProvider>
+    </Ctx.Provider>
+  );
+}
+
+export function SectionBody({ section }: { section: Section }) {
+  const { runs, runsError, loadRuns, run, runError, loadRun, runId } = useDashboard();
+  const result = run?.result ?? null;
+
+  if (runsError) return <ErrorState message={runsError} onRetry={loadRuns} />;
+  if (!runs) return <CardsSkeleton />;
+  if (runs.length === 0)
+    return (
       <EmptyState
         title="No runs yet"
         body="Start a run to analyse player messages for a scenario. Results show up here when it finishes."
       />
     );
-  else if (runError) body = <ErrorState message={runError} onRetry={loadRun} />;
-  else if (!run) body = <CardsSkeleton />;
-  else if (!result)
-    body = (
+  if (runError) return <ErrorState message={runError} onRetry={() => loadRun(true)} />;
+  if (!run) return <CardsSkeleton />;
+  if (!result)
+    return (
       <EmptyState
         title={run.status === "failed" ? "This run failed" : "This run has no results yet"}
         body={`Status: ${run.status}. Pick another run or start a new one.`}
       />
     );
-  else if (section === "overview") body = <OverviewView result={result} onOpenIssues={() => setSection("issues")} />;
-  else if (section === "compare") body = <PatchCompareView result={result} />;
-  else if (section === "issues") body = <IssuesView result={result} />;
-  else if (section === "dismissed") body = <DismissedView result={result} />;
-  else if (section === "tasks") body = <TasksView runId={run.id} unit={result.unit} />;
-  else if (section === "review") body = <ReviewView result={result} />;
-  else body = <VoicesView result={result} />;
-
-  return (
-    <TooltipProvider>
-      <SidebarProvider>
-        <Sidebar collapsible="icon">
-          <SidebarHeader className="px-4 py-4">
-            <Link href="/" className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
-              <span className="size-2 shrink-0 rounded-full bg-watch shadow-[0_0_0_3px_#DBEAFE]" />
-              <span className="font-serif text-[19px] font-semibold tracking-[-0.01em] group-data-[collapsible=icon]:hidden">
-                PlayerPulse
-              </span>
-            </Link>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel className="font-mono">{result ? result.game : "Run"}</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {SECTIONS.map((s) => (
-                    <SidebarMenuItem key={s.id}>
-                      <SidebarMenuButton
-                        isActive={section === s.id}
-                        tooltip={s.label}
-                        onClick={() => setSection(s.id)}
-                      >
-                        <s.icon />
-                        <span>{s.label}</span>
-                      </SidebarMenuButton>
-                      {c[s.id] != null && <SidebarMenuBadge className="font-mono tabular-nums">{c[s.id]}</SidebarMenuBadge>}
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-          <SidebarFooter className="px-4 pb-4 font-serif text-sm leading-relaxed text-muted-foreground italic group-data-[collapsible=icon]:hidden">
-            Telemetry knows where. Players know why.
-          </SidebarFooter>
-        </Sidebar>
-
-        <SidebarInset className="min-h-svh">
-          <header className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-border bg-[rgba(255,255,255,0.72)] px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.03),0_12px_32px_-20px_rgba(0,0,0,0.18)] backdrop-blur-xl backdrop-saturate-[1.4] sm:px-6">
-            <SidebarTrigger />
-            <div className="min-w-0 flex-1">
-              <h1 className="truncate font-serif text-[22px] leading-tight font-medium tracking-[-0.02em]">{current.label}</h1>
-              <p className="truncate font-mono text-[11.5px] text-muted-foreground">{current.blurb}</p>
-            </div>
-            {runs && runs.length > 0 && (
-              <Select items={runItems} value={runId} onValueChange={(v) => v && setRunId(v as string)}>
-                <SelectTrigger size="sm" className="max-w-[22rem]" aria-label="Select run">
-                  <SelectValue placeholder="Select a run" />
-                </SelectTrigger>
-                <SelectContent alignItemWithTrigger={false}>
-                  {runs.map((r) => (
-                    <SelectItem key={r.id} value={r.id}>
-                      {runLabel(r)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-            <NewRunButton onCreated={(id) => loadRuns(id)} />
-          </header>
-
-          <Reveal deps={[section, run]} className="mx-auto w-full max-w-6xl flex-1 px-4 pt-8 pb-16 sm:px-6">
-            {body}
-          </Reveal>
-
-          <RunFooter run={run} result={result} />
-        </SidebarInset>
-      </SidebarProvider>
-    </TooltipProvider>
-  );
+  switch (section) {
+    case "overview":
+      return <OverviewView result={result} issuesHref={sectionHref("issues", runId)} />;
+    case "patch-compare":
+      return <PatchCompareView result={result} />;
+    case "issues":
+      return <IssuesView result={result} />;
+    case "dismissed":
+      return <DismissedView result={result} />;
+    case "tasks":
+      return <TasksView runId={run.id} unit={result.unit} />;
+    case "review":
+      return <ReviewView result={result} />;
+    default:
+      return <VoicesView result={result} />;
+  }
 }
 
 function RunFooter({ run, result }: { run: RunDetail | null; result: RunResult | null }) {
