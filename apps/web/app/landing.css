@@ -35,15 +35,16 @@ html:has(.lp){-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-paddin
 @media(min-width:760px){
 .lp .nav{display:flex}
 }
-.lp .hdr .btn{margin-left:auto;height:40px;font-size:14px;padding:0 14px}
+.lp .hdr .btn{margin-left:auto}
 @media(max-width:760px){
 .lp .hdr-in{gap:12px}
 .lp .hdr.scrolled .hdr-in{padding:8px 8px 8px 14px}
 }
 @media(max-width:380px){
-.lp .hdr .btn{padding:0 11px;font-size:13px}
+.lp .hdr .btn{padding:0 16px}
 }
-.lp .btn{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 20px;border-radius:10px;font-weight:500;font-size:15px;text-decoration:none;white-space:nowrap;transition:background .2s,border-color .2s,transform .2s}
+/* same scale as the shadcn Button "lg" size used in the dashboard: 40px tall, 24px sides, 14px medium, radius 0.625rem */
+.lp .btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 24px;border-radius:.625rem;font-weight:500;font-size:14px;text-decoration:none;white-space:nowrap;transition:background .2s,border-color .2s,transform .2s}
 .lp .btn-p{background:var(--blue);color:#fff}
 .lp .btn-p:hover{background:var(--blue-h)}
 .lp .btn-p:active{transform:translateY(1px)}
