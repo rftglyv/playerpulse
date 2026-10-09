@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRightIcon } from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import type { RunResult } from "@/lib/api";
 import { fmt, LANGUAGE_NAMES, langLabel } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -348,7 +348,8 @@ export function OverviewView({
                 <>
                   <ChannelIcon
                     channel={k}
-                    className="size-3.5 text-muted-foreground"
+                    size={14}
+                    className="text-muted-foreground"
                   />
                   {CHANNEL_LABEL[k] ?? k}
                 </>
@@ -414,7 +415,7 @@ export function OverviewView({
             href={issuesHref}
             className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-watch hover:underline"
           >
-            All issues <ArrowRightIcon className="size-3" />
+            All issues <Iconizer icon="arrow_forward" size={12} />
           </Link>
         </Panel>
       </div>

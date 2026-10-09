@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Controller, useForm, useWatch, type Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { AlertCircleIcon, PlusIcon } from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -224,7 +224,7 @@ export function NewRunButton({ onCreated }: { onCreated: (id: string) => void })
       disabled={!!disabledReason || !models}
       onClick={() => setOpen(true)}
     >
-      <PlusIcon /> New run
+      <Iconizer icon="add" size={16} /> New run
     </Button>
   );
   const tooltip = disabledReason;
@@ -420,8 +420,8 @@ game_info.json
             </div>
           )}
           {error && (
-            <Alert variant="destructive">
-              <AlertCircleIcon />
+            <Alert variant="destructive" className="grid-cols-[auto_1fr] gap-x-2 *:data-[slot=alert-description]:col-start-2">
+              <Iconizer icon="error" size={16} className="row-span-2 translate-y-0.5" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}

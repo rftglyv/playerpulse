@@ -3,6 +3,7 @@
 import { BrandMark } from "@/components/brand-mark";
 import * as React from "react";
 import Link from "next/link";
+import { Iconizer } from "@/components/iconizer";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import { SECTION_GROUPS, SECTIONS, sectionHref, type Section } from "@/components/dashboard/sections";
@@ -57,7 +58,7 @@ export function AppSidebar({
             items={SECTIONS.filter((s) => s.group === g).map((s) => ({
               title: s.label,
               url: sectionHref(s.id, runId),
-              icon: <s.icon />,
+              icon: <Iconizer icon={s.icon} size={18} />,
               isActive: section === s.id,
               badge: counts[s.id],
             }))}

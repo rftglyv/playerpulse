@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRightIcon, CheckIcon, CopyIcon, InboxIcon, LayoutGridIcon, ListIcon, SearchIcon, SearchXIcon } from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -81,17 +81,18 @@ export function LanguageChips({ languages }: { languages: string[] }) {
 export function ViewEmpty({
   title,
   body,
-  icon: Icon = InboxIcon,
+  icon = "inbox",
 }: {
   title: string;
   body?: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  /** Material Symbols name */
+  icon?: string;
 }) {
   return (
     <Empty className="items-start rounded-[10px] border border-dashed border-border px-6 py-10 text-left">
       <EmptyHeader className="max-w-prose items-start">
         <EmptyMedia variant="icon">
-          <Icon />
+          <Iconizer icon={icon} size={18} />
         </EmptyMedia>
         <EmptyTitle className="text-lg font-semibold">{title}</EmptyTitle>
         {body && <EmptyDescription>{body}</EmptyDescription>}
@@ -167,7 +168,7 @@ export function CopyButton({ issue, result }: { issue: Issue; result: RunResult 
         }
       }}
     >
-      {copied ? <CheckIcon /> : <CopyIcon />}
+      <Iconizer icon={copied ? "check" : "content_copy"} size={16} />
       {copied ? "Copied" : "Copy as GitHub issue"}
     </Button>
   );
@@ -271,7 +272,7 @@ function IssueCard({ issue, result, href }: { issue: Issue; result: RunResult; h
       <CardFooter className="justify-end gap-2 bg-transparent px-6 py-3">
         <CopyButton issue={issue} result={result} />
         <Button variant="outline" size="sm" nativeButton={false} render={<Link href={href} />}>
-          View details <ArrowRightIcon />
+          View details <Iconizer icon="arrow_forward" size={16} data-icon="inline-end" />
         </Button>
       </CardFooter>
     </Card>
@@ -334,7 +335,7 @@ export function IssuesView({ result, runId }: { result: RunResult; runId: string
               aria-label="Search issues"
             />
             <InputGroupAddon>
-              <SearchIcon className="size-3.5" />
+              <Iconizer icon="search" size={16} />
             </InputGroupAddon>
           </InputGroup>
           <FilterSelect items={catItems} value={category} onChange={setCategory} label="Category" />
@@ -353,10 +354,10 @@ export function IssuesView({ result, runId }: { result: RunResult; runId: string
           >
             {(
               [
-                ["cards", LayoutGridIcon, "Card view"],
-                ["table", ListIcon, "Table view"],
+                ["cards", "grid_view", "Card view"],
+                ["table", "view_list", "Table view"],
               ] as const
-            ).map(([v, Icon, label]) => (
+            ).map(([v, icon, label]) => (
               <Tooltip key={v}>
                 <TooltipTrigger
                   render={
@@ -367,7 +368,7 @@ export function IssuesView({ result, runId }: { result: RunResult; runId: string
                     />
                   }
                 >
-                  <Icon className="size-4" />
+                  <Iconizer icon={icon} size={18} />
                 </TooltipTrigger>
                 <TooltipContent>{label}</TooltipContent>
               </Tooltip>
@@ -383,7 +384,7 @@ export function IssuesView({ result, runId }: { result: RunResult; runId: string
       {all.length === 0 ? (
         <ViewEmpty title="No verified issues in this run" body="Nothing players reported was confirmed as a real problem." />
       ) : issues.length === 0 ? (
-        <ViewEmpty title="No issues match these filters" icon={SearchXIcon} />
+        <ViewEmpty title="No issues match these filters" icon="search_off" />
       ) : view === "table" ? (
         <IssuesTable issues={issues} result={result} hrefOf={hrefOf} />
       ) : (

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import { Agentation } from "agentation";
+import { FontLinks } from "@/components/font-links";
 import { SITE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -57,6 +58,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${fraunces.variable} ${instrumentSans.variable} ${plexMono.variable} h-full antialiased`}
     >
+      <head>
+        <FontLinks />
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         {children}
         {process.env.NODE_ENV === "development" && <Agentation />}

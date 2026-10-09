@@ -1,12 +1,7 @@
 "use client";
 
 import { Fragment, useMemo, useState } from "react";
-import {
-  Gamepad2Icon,
-  MessageSquareIcon,
-  StarIcon,
-  type LucideIcon,
-} from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,23 +44,28 @@ export const CHANNEL_LABEL: Record<string, string> = {
   in_game: "In-game reports",
 };
 
-const CHANNEL_ICON: Record<string, LucideIcon> = {
-  discord: MessageSquareIcon,
-  steam_review: StarIcon,
-  in_game: Gamepad2Icon,
+const CHANNEL_ICON: Record<string, string> = {
+  discord: "chat",
+  steam_review: "star",
+  in_game: "sports_esports",
 };
 
 export function ChannelIcon({
   channel,
   className,
+  size = 16,
 }: {
   channel: string;
   className?: string;
+  size?: number;
 }) {
-  const Icon = CHANNEL_ICON[channel] ?? MessageSquareIcon;
   return (
-    <Icon
+    <Iconizer
+      icon={CHANNEL_ICON[channel] ?? "chat"}
+      size={size}
       className={cn("shrink-0", className)}
+      role="img"
+      aria-hidden={false}
       aria-label={CHANNEL_LABEL[channel] ?? channel}
     />
   );
@@ -78,7 +78,7 @@ function Voice({ m, result }: { m: RunMessage; result: RunResult }) {
   return (
     <Item size="sm" className="items-start px-0">
       <ItemMedia className="mt-1 text-muted-foreground">
-        <ChannelIcon channel={m.channel} className="size-4" />
+        <ChannelIcon channel={m.channel} />
       </ItemMedia>
       <ItemContent className="min-w-0">
         <ItemTitle className="line-clamp-none w-auto text-[15px] leading-relaxed font-normal">
@@ -224,7 +224,7 @@ export function VoicesView({ result }: { result: RunResult }) {
                   <CardAction className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       {channels.map((c) => (
-                        <ChannelIcon key={c} channel={c} className="size-3.5" />
+                        <ChannelIcon key={c} channel={c} size={14} />
                       ))}
                     </span>
                     <span>{langs.join(" · ")}</span>

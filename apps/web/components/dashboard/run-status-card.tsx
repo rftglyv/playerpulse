@@ -1,5 +1,6 @@
 "use client";
 
+import { Iconizer } from "@/components/iconizer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
@@ -19,16 +20,16 @@ export function RunStatusCard({ run, runs }: { run: RunDetail | null; runs: RunR
   const playersLost = reported.reduce((s, i) => s + (i.players_lost_estimate ?? 0), 0);
   const tone =
     state === "failed"
-      ? { dot: "bg-destructive", label: "Failed" }
+      ? { icon: "error", cls: "", label: "Failed" }
       : state === "running"
-        ? { dot: "bg-primary animate-pulse", label: "Running" }
-        : { dot: "bg-[var(--proof)]", label: "Done" };
+        ? { icon: "hourglass_top", cls: "text-primary animate-pulse", label: "Running" }
+        : { icon: "check_circle", cls: "text-[var(--proof)]", label: "Done" };
 
   return (
     <Card size="sm" className="mx-2 gap-2 text-xs ring-sidebar-border group-data-[collapsible=icon]:hidden">
       <CardHeader className="flex items-center gap-2">
         <Badge variant={state === "failed" ? "destructive" : "outline"} className="gap-1.5">
-          <span className={`size-2 shrink-0 rounded-full ${tone.dot}`} aria-hidden="true" />
+          <Iconizer icon={tone.icon} size={14} className={tone.cls} />
           {tone.label}
         </Badge>
         <span className="ml-auto truncate text-muted-foreground">{run?.telemetry ? "with telemetry" : "community-only"}</span>
@@ -68,8 +69,8 @@ export function RunStatusCard({ run, runs }: { run: RunDetail | null; runs: RunR
                   </dl>
                 </>
               )}
-              <p className="font-mono text-[11px] text-muted-foreground tabular-nums">
-                ${run.costUsd.toFixed(2)} · {run.seconds}s
+              <p className="flex items-center gap-1 font-mono text-[11px] text-muted-foreground tabular-nums">
+                <Iconizer icon="schedule" size={12} />${run.costUsd.toFixed(2)} · {run.seconds}s
               </p>
             </>
           )

@@ -1,12 +1,7 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import {
-  ArrowDownIcon,
-  GripVerticalIcon,
-  KanbanSquareIcon,
-  ListIcon,
-} from "lucide-react";
+import { Iconizer } from "@/components/iconizer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -189,7 +184,7 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
         )}
       >
         {children}
-        {sort === k && <ArrowDownIcon data-icon="inline-end" />}
+        {sort === k && <Iconizer icon="arrow_downward" size={14} data-icon="inline-end" />}
       </Button>
     </TableHead>
   );
@@ -220,12 +215,12 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
       >
         {(
           [
-            ["board", KanbanSquareIcon, "Board view"],
-            ["list", ListIcon, "List view"],
+            ["board", "view_kanban", "Board view"],
+            ["list", "view_list", "List view"],
           ] as const
-        ).map(([v, Icon, label]) => (
+        ).map(([v, icon, label]) => (
           <ToggleGroupItem key={v} value={v} aria-label={label}>
-            <Icon data-icon="inline-start" /> {label.split(" ")[0]}
+            <Iconizer icon={icon} size={16} data-icon="inline-start" /> {label.split(" ")[0]}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -485,7 +480,7 @@ function TaskCard({
             }
             className="-mt-0.5 -mr-1 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity group-hover/card:opacity-100 hover:bg-muted focus-visible:opacity-100"
           >
-            <GripVerticalIcon className="size-4" />
+            <Iconizer icon="drag_indicator" size={16} />
           </KanbanItemHandle>
         </CardAction>
       </CardHeader>
