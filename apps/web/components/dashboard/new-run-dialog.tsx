@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Controller, useForm, useWatch, type Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2Icon, PlusIcon } from "lucide-react";
+import { AlertCircleIcon, PlusIcon } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
+import { Spinner } from "@/components/ui/spinner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,7 +25,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api, ApiError, type ModelsResponse } from "@/lib/api";
-import { cn } from "@/lib/utils";
 
 const SCENARIOS = [
   { value: "A", label: "Scenario A" },
@@ -419,9 +420,10 @@ game_info.json
             </div>
           )}
           {error && (
-            <p role="alert" className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {error}
-            </p>
+            <Alert variant="destructive">
+              <AlertCircleIcon />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           <DialogFooter>
@@ -429,7 +431,7 @@ game_info.json
               Cancel
             </Button>
             <Button type="submit" form="new-run-form" disabled={running || !models}>
-              {running && <Loader2Icon className={cn("animate-spin")} />}
+              {running && <Spinner data-icon="inline-start" />}
               {running ? "Running…" : "Start run"}
             </Button>
           </DialogFooter>

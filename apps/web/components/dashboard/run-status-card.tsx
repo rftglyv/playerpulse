@@ -1,5 +1,9 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
+import { Separator } from "@/components/ui/separator";
 import type { RunDetail, RunRow } from "@/lib/api";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
@@ -21,45 +25,56 @@ export function RunStatusCard({ run, runs }: { run: RunDetail | null; runs: RunR
         : { dot: "bg-[var(--proof)]", label: "Done" };
 
   return (
-    <div className="mx-2 rounded-lg border border-sidebar-border bg-background p-3 text-xs group-data-[collapsible=icon]:hidden">
-      <div className="flex items-center gap-2">
-        <span className={`size-2 shrink-0 rounded-full ${tone.dot}`} aria-hidden="true" />
-        <span className="font-medium">{tone.label}</span>
+    <Card size="sm" className="mx-2 gap-2 text-xs ring-sidebar-border group-data-[collapsible=icon]:hidden">
+      <CardHeader className="flex items-center gap-2">
+        <Badge variant={state === "failed" ? "destructive" : "outline"} className="gap-1.5">
+          <span className={`size-2 shrink-0 rounded-full ${tone.dot}`} aria-hidden="true" />
+          {tone.label}
+        </Badge>
         <span className="ml-auto truncate text-muted-foreground">{run?.telemetry ? "with telemetry" : "community-only"}</span>
-      </div>
-      {state === "running" && running && running.id !== run?.id ? (
-        <p className="mt-2 text-muted-foreground">A new run is in progress. It appears in the run list when it finishes (~30 s).</p>
-      ) : (
-        run && (
-          <>
-            <p className="mt-2 truncate font-medium" title={run.name}>
-              {run.name}
-            </p>
-            <p className="truncate font-mono text-[11px] text-muted-foreground" title={run.model}>
-              {run.model}
-            </p>
-            {result && (
-              <dl className="mt-3 grid grid-cols-3 gap-2 border-t border-sidebar-border pt-3">
-                <div>
-                  <dt className="text-muted-foreground">Messages</dt>
-                  <dd className="font-mono tabular-nums">{fmt(result.messages.length)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Issues</dt>
-                  <dd className="font-mono tabular-nums">{reported.length}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">Lost</dt>
-                  <dd className="font-mono tabular-nums text-[var(--loss)]">{fmt(playersLost)}</dd>
-                </div>
-              </dl>
-            )}
-            <p className="mt-2 font-mono text-[11px] text-muted-foreground tabular-nums">
-              ${run.costUsd.toFixed(2)} · {run.seconds}s
-            </p>
-          </>
-        )
-      )}
-    </div>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
+        {state === "running" && running && running.id !== run?.id ? (
+          <p className="text-muted-foreground">A new run is in progress. It appears in the run list when it finishes (~30 s).</p>
+        ) : (
+          run && (
+            <>
+              <Item size="xs" className="p-0">
+                <ItemContent className="min-w-0">
+                  <ItemTitle className="block w-full truncate text-xs" title={run.name}>
+                    {run.name}
+                  </ItemTitle>
+                  <ItemDescription className="truncate font-mono text-[11px]" title={run.model}>
+                    {run.model}
+                  </ItemDescription>
+                </ItemContent>
+              </Item>
+              {result && (
+                <>
+                  <Separator className="bg-sidebar-border" />
+                  <dl className="grid grid-cols-3 gap-2">
+                    <div>
+                      <dt className="text-muted-foreground">Messages</dt>
+                      <dd className="font-mono tabular-nums">{fmt(result.messages.length)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">Issues</dt>
+                      <dd className="font-mono tabular-nums">{reported.length}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">Lost</dt>
+                      <dd className="font-mono tabular-nums text-[var(--loss)]">{fmt(playersLost)}</dd>
+                    </div>
+                  </dl>
+                </>
+              )}
+              <p className="font-mono text-[11px] text-muted-foreground tabular-nums">
+                ${run.costUsd.toFixed(2)} · {run.seconds}s
+              </p>
+            </>
+          )
+        )}
+      </CardContent>
+    </Card>
   );
 }

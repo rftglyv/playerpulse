@@ -24,7 +24,7 @@ export function NavMain({ label, items }: { label?: string; items: NavItem[] }) 
     <SidebarGroup>
       {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
       <SidebarGroupContent className="flex flex-col gap-2">
-        <SidebarMenu>
+        <SidebarMenu className="gap-1">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton tooltip={item.title} isActive={item.isActive} render={<Link href={item.url} />}>

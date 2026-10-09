@@ -1,10 +1,47 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowDownIcon, GripVerticalIcon, KanbanSquareIcon, ListIcon } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  ArrowDownIcon,
+  GripVerticalIcon,
+  KanbanSquareIcon,
+  ListIcon,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardAction,
+} from "@/components/ui/card";
+import { Empty, EmptyDescription, EmptyHeader } from "@/components/ui/empty";
+import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { api, fmt, type Task, type TaskState } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import {
@@ -33,16 +70,17 @@ function pTag(t: Task) {
 
 function PTagChip({ tag }: { tag: string }) {
   return (
-    <span
+    <Badge
+      variant="secondary"
       className={cn(
-        "inline-flex h-5 min-w-8 items-center justify-center rounded-md px-1.5 text-xs tabular-nums font-semibold",
+        "min-w-8 rounded-md px-1.5 font-mono font-semibold tabular-nums",
         tag === "P0" && "bg-[#B91C1C]/10 text-[#B91C1C]",
         tag === "P1" && "bg-[#2563EB]/10 text-[#2563EB]",
         tag !== "P0" && tag !== "P1" && "bg-muted text-muted-foreground",
       )}
     >
       {tag}
-    </span>
+    </Badge>
   );
 }
 
@@ -54,6 +92,7 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
   const [rowError, setRowError] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>("ptag");
   const [view, setView] = useState<"board" | "list">("board");
+  const [saving, setSaving] = useState<Set<string>>(() => new Set());
 
   const load = useCallback(() => {
     setError(null);
@@ -71,12 +110,16 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
     const sorted = [...tasks].sort((a, b) =>
       sort === "lost"
         ? (b.playersLost ?? 0) - (a.playersLost ?? 0)
-        : pTag(a).localeCompare(pTag(b)) || (a.priority ?? 999) - (b.priority ?? 999),
+        : pTag(a).localeCompare(pTag(b)) ||
+          (a.priority ?? 999) - (b.priority ?? 999),
     );
     if (sort === "lost") return [{ tag: null as string | null, items: sorted }];
     const map = new Map<string, Task[]>();
     for (const t of sorted) map.set(pTag(t), [...(map.get(pTag(t)) ?? []), t]);
-    return [...map.entries()].map(([tag, items]) => ({ tag: tag as string | null, items }));
+    return [...map.entries()].map(([tag, items]) => ({
+      tag: tag as string | null,
+      items,
+    }));
   }, [tasks, sort]);
 
   // Cross-column drops: the board already shows the new layout; persist each state change, roll back on failure.
@@ -84,7 +127,8 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
     if (!tasks) return;
     const moved: { task: Task; state: TaskState }[] = [];
     for (const col of STATES)
-      for (const t of next[col.value]) if (t.state !== col.value) moved.push({ task: t, state: col.value });
+      for (const t of next[col.value])
+        if (t.state !== col.value) moved.push({ task: t, state: col.value });
     await Promise.all(moved.map((m) => setState(m.task, m.state)));
   }
 
@@ -92,12 +136,25 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
     const before = task.state;
     if (before === state) return;
     setRowError(null);
-    setTasks((ts) => ts?.map((t) => (t.id === task.id ? { ...t, state } : t)) ?? null);
+    setTasks(
+      (ts) => ts?.map((t) => (t.id === task.id ? { ...t, state } : t)) ?? null,
+    );
+    setSaving((s) => new Set(s).add(task.id));
     try {
       await api.patchTask(task.id, { state });
     } catch (e) {
-      setTasks((ts) => ts?.map((t) => (t.id === task.id ? { ...t, state: before } : t)) ?? null);
+      setTasks(
+        (ts) =>
+          ts?.map((t) => (t.id === task.id ? { ...t, state: before } : t)) ??
+          null,
+      );
       setRowError(`Couldn't update "${task.title}": ${(e as Error).message}`);
+    } finally {
+      setSaving((s) => {
+        const n = new Set(s);
+        n.delete(task.id);
+        return n;
+      });
     }
   }
 
@@ -111,43 +168,67 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
       />
     );
 
-  const SortHead = ({ k, children, className }: { k: SortKey; children: React.ReactNode; className?: string }) => (
+  const SortHead = ({
+    k,
+    children,
+    className,
+  }: {
+    k: SortKey;
+    children: React.ReactNode;
+    className?: string;
+  }) => (
     <TableHead className={className}>
-      <button
+      <Button
+        variant="ghost"
+        size="xs"
         onClick={() => setSort(k)}
-        className={cn("inline-flex items-center gap-1 hover:text-foreground", sort === k && "text-foreground")}
+        aria-pressed={sort === k}
+        className={cn(
+          "-ml-2 font-medium text-muted-foreground",
+          sort === k && "text-foreground",
+        )}
       >
         {children}
-        {sort === k && <ArrowDownIcon className="size-3" />}
-      </button>
+        {sort === k && <ArrowDownIcon data-icon="inline-end" />}
+      </Button>
     </TableHead>
   );
 
   const toggle = (
     <div className="flex items-center justify-between gap-3">
-      <p className="text-xs text-muted-foreground">
-        {tasks.length} tasks · {tasks.filter((t) => t.state === "done").length} done
+      <p className="flex items-center gap-2 text-xs text-muted-foreground">
+        <span>
+          <span className="font-mono tabular-nums">{tasks.length}</span> tasks ·{" "}
+          <span className="font-mono tabular-nums">
+            {tasks.filter((t) => t.state === "done").length}
+          </span>{" "}
+          done
+        </span>
+        {saving.size > 0 && (
+          <span className="flex items-center gap-1">
+            <Spinner className="size-3" /> Saving
+          </span>
+        )}
       </p>
-      <div className="flex rounded-lg bg-muted p-[3px]" role="group" aria-label="View">
+      <ToggleGroup
+        variant="outline"
+        size="sm"
+        spacing={0}
+        value={[view]}
+        onValueChange={(v) => v[0] && setView(v[0] as "board" | "list")}
+        aria-label="View"
+      >
         {(
           [
             ["board", KanbanSquareIcon, "Board view"],
             ["list", ListIcon, "List view"],
           ] as const
         ).map(([v, Icon, label]) => (
-          <button
-            key={v}
-            onClick={() => setView(v)}
-            aria-pressed={view === v}
-            className={cn(
-              "flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground",
-              view === v && "bg-background text-foreground shadow-sm",
-            )}
-          >
-            <Icon className="size-3.5" /> {label.split(" ")[0]}
-          </button>
+          <ToggleGroupItem key={v} value={v} aria-label={label}>
+            <Icon data-icon="inline-start" /> {label.split(" ")[0]}
+          </ToggleGroupItem>
         ))}
-      </div>
+      </ToggleGroup>
     </div>
   );
 
@@ -175,7 +256,14 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
               <TableHead className="w-28">Category</TableHead>
               <TableHead className="w-40">Level</TableHead>
               <SortHead k="lost" className="w-28 text-right">
-                Players lost
+                <Tooltip>
+                  <TooltipTrigger render={<span />}>
+                    Players lost
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Click to sort by players lost
+                  </TooltipContent>
+                </Tooltip>
               </SortHead>
               <TableHead className="w-40">State</TableHead>
             </TableRow>
@@ -185,13 +273,23 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
               <Fragment key={g.tag ?? "all"}>
                 {g.tag && (
                   <TableRow className="bg-muted/30 hover:bg-muted/30">
-                    <TableCell colSpan={6} className="py-1.5 text-xs text-muted-foreground">
-                      {g.tag === "—" ? "Untagged" : g.tag} · {g.items.length} {g.items.length === 1 ? "task" : "tasks"}
+                    <TableCell
+                      colSpan={6}
+                      className="py-1.5 text-xs text-muted-foreground"
+                    >
+                      {g.tag === "—" ? "Untagged" : g.tag} · {g.items.length}{" "}
+                      {g.items.length === 1 ? "task" : "tasks"}
                     </TableCell>
                   </TableRow>
                 )}
                 {g.items.map((t) => (
-                  <TableRow key={t.id} className={cn((t.state === "done" || t.state === "wont_fix") && "opacity-60")}>
+                  <TableRow
+                    key={t.id}
+                    className={cn(
+                      (t.state === "done" || t.state === "wont_fix") &&
+                        "opacity-60",
+                    )}
+                  >
                     <TableCell>
                       <PTagChip tag={pTag(t)} />
                     </TableCell>
@@ -200,9 +298,13 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
                       {t.tags.length > 1 && (
                         <span className="ml-2 inline-flex gap-1 align-middle">
                           {t.tags.slice(1).map((tag) => (
-                            <span key={tag} className="rounded bg-muted px-1 text-[11px] font-normal text-muted-foreground">
+                            <Badge
+                              key={tag}
+                              variant="secondary"
+                              className="rounded px-1 font-normal"
+                            >
                               {tag}
-                            </span>
+                            </Badge>
                           ))}
                         </span>
                       )}
@@ -211,26 +313,37 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
                       <CategoryBadge category={t.category} />
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {t.level == null ? "–" : `${t.levelName ?? unit} · ${t.level}`}
+                      {t.level == null
+                        ? "–"
+                        : `${t.levelName ?? unit} · ${t.level}`}
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">{fmt.int(t.playersLost)}</TableCell>
+                    <TableCell className="text-right font-mono tabular-nums">
+                      {fmt.int(t.playersLost)}
+                    </TableCell>
                     <TableCell>
-                      <Select
-                        items={STATES}
-                        value={t.state}
-                        onValueChange={(v) => v && setState(t, v as TaskState)}
-                      >
-                        <SelectTrigger size="sm" className="w-32">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {STATES.map((s) => (
-                            <SelectItem key={s.value} value={s.value}>
-                              {s.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <div className="flex items-center gap-2">
+                        <Select
+                          items={STATES}
+                          value={t.state}
+                          onValueChange={(v) =>
+                            v && setState(t, v as TaskState)
+                          }
+                        >
+                          <SelectTrigger size="sm" className="w-32">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {STATES.map((s) => (
+                              <SelectItem key={s.value} value={s.value}>
+                                {s.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {saving.has(t.id) && (
+                          <Spinner className="size-3.5 text-muted-foreground" />
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -247,9 +360,13 @@ type Columns = Record<TaskState, Task[]>;
 
 function groupByState(tasks: Task[]): Columns {
   const sorted = [...tasks].sort(
-    (a, b) => pTag(a).localeCompare(pTag(b)) || (b.playersLost ?? 0) - (a.playersLost ?? 0),
+    (a, b) =>
+      pTag(a).localeCompare(pTag(b)) ||
+      (b.playersLost ?? 0) - (a.playersLost ?? 0),
   );
-  const cols = Object.fromEntries(STATES.map((s) => [s.value, [] as Task[]])) as Columns;
+  const cols = Object.fromEntries(
+    STATES.map((s) => [s.value, [] as Task[]]),
+  ) as Columns;
   for (const t of sorted) cols[t.state]?.push(t);
   return cols;
 }
@@ -271,9 +388,11 @@ function TaskBoard({
   if (synced !== signature) {
     setSynced(signature);
     const placed = new Map<string, TaskState>();
-    for (const col of STATES) for (const t of columns[col.value]) placed.set(t.id, col.value);
+    for (const col of STATES)
+      for (const t of columns[col.value]) placed.set(t.id, col.value);
     // Only regroup if the board disagrees with the data (keeps manual ordering after a successful drop).
-    if (tasks.some((t) => placed.get(t.id) !== t.state)) setColumns(groupByState(tasks));
+    if (tasks.some((t) => placed.get(t.id) !== t.state))
+      setColumns(groupByState(tasks));
   }
 
   const byId = useMemo(() => new Map(tasks.map((t) => [t.id, t])), [tasks]);
@@ -295,20 +414,30 @@ function TaskBoard({
           >
             <div className="flex items-center justify-between px-1.5 pt-0.5">
               <h3 className="text-sm font-semibold">{col.label}</h3>
-              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-background px-1.5 text-[11px] text-muted-foreground tabular-nums ring-1 ring-border">
+              <Badge
+                variant="outline"
+                className="min-w-5 bg-background px-1.5 font-mono text-[11px] text-muted-foreground tabular-nums"
+              >
                 {columns[col.value].length}
-              </span>
+              </Badge>
             </div>
-            <KanbanColumnContent value={col.value} className="flex min-h-16 flex-col gap-2">
+            <KanbanColumnContent
+              value={col.value}
+              className="flex min-h-16 flex-col gap-2"
+            >
               {columns[col.value].map((t) => (
                 <KanbanItem key={t.id} value={t.id}>
                   <TaskCard task={t} unit={unit} />
                 </KanbanItem>
               ))}
               {columns[col.value].length === 0 && (
-                <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
-                  Drop a card here
-                </p>
+                <Empty className="gap-0 rounded-lg border border-border p-0 py-6">
+                  <EmptyHeader>
+                    <EmptyDescription className="text-xs">
+                      Drop a card here
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
               )}
             </KanbanColumnContent>
           </KanbanColumn>
@@ -324,34 +453,58 @@ function TaskBoard({
   );
 }
 
-function TaskCard({ task: t, unit, overlay }: { task: Task; unit: string; overlay?: boolean }) {
+function TaskCard({
+  task: t,
+  unit,
+  overlay,
+}: {
+  task: Task;
+  unit: string;
+  overlay?: boolean;
+}) {
   return (
-    <article
+    <Card
+      size="sm"
       className={cn(
-        "group/card relative space-y-2.5 rounded-lg border border-border bg-background p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)]",
+        "gap-2.5 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.04)]",
         overlay && "rotate-1 shadow-lg",
       )}
     >
-      <div className="flex items-start gap-2">
-        <p className="min-w-0 flex-1 text-sm leading-snug font-medium">{t.title}</p>
-        <KanbanItemHandle
-          render={<button type="button" aria-label={`Drag "${t.title}"`} />}
-          className="-mt-0.5 -mr-1 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity group-hover/card:opacity-100 hover:bg-muted focus-visible:opacity-100"
-        >
-          <GripVerticalIcon className="size-4" />
-        </KanbanItemHandle>
-      </div>
-      <div className="flex flex-wrap items-center gap-1">
+      <CardHeader>
+        <CardTitle className="min-w-0 text-sm leading-snug font-medium">
+          {t.title}
+        </CardTitle>
+        <CardAction>
+          <KanbanItemHandle
+            render={
+              <button
+                type="button"
+                aria-label={`Drag "${t.title}"`}
+                title="Drag to change state"
+              />
+            }
+            className="-mt-0.5 -mr-1 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity group-hover/card:opacity-100 hover:bg-muted focus-visible:opacity-100"
+          >
+            <GripVerticalIcon className="size-4" />
+          </KanbanItemHandle>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="flex flex-wrap items-center gap-1">
         <PTagChip tag={pTag(t)} />
         <CategoryBadge category={t.category} />
         <SeverityBadge severity={t.severity} />
-      </div>
-      <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
-        <span className="truncate">{t.level == null ? "–" : `${t.levelName ?? unit} · ${t.level}`}</span>
+      </CardContent>
+      <Separator />
+      <CardFooter className="justify-between gap-2 border-t-0 bg-transparent pt-0 text-xs text-muted-foreground">
+        <span className="truncate">
+          {t.level == null ? "–" : `${t.levelName ?? unit} · ${t.level}`}
+        </span>
         {t.playersLost != null && t.playersLost > 0 && (
-          <span className="text-loss tabular-nums">−{fmt.int(t.playersLost)} players</span>
+          <span className="font-mono text-loss tabular-nums">
+            −{fmt.int(t.playersLost)} players
+          </span>
         )}
-      </div>
-    </article>
+      </CardFooter>
+    </Card>
   );
 }
