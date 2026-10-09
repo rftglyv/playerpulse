@@ -189,3 +189,8 @@ html:has(.lp){-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-paddin
 .lp .s-coin{width:26px;right:-30px;bottom:180px}
 @media(max-width:1279px){.lp .s-pad,.lp .s-splash,.lp .s-bubble,.lp .s-coin{display:none}}
 @media(max-width:959px){.lp .sprinkles{display:none}}
+
+/* hero fills the first screen: 100dvh minus the 68px sticky header (12px top pad + 56px bar) */
+.lp .hero-shell{min-height:calc(100svh - 68px);min-height:calc(100dvh - 68px);display:flex;flex-direction:column}
+.lp .hero-shell > main{flex:1;display:flex;flex-direction:column;justify-content:center;width:100%}
+@media(min-width:960px){.lp .hero{padding:32px 0 168px}}
