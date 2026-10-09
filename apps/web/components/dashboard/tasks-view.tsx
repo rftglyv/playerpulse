@@ -1,12 +1,21 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowDownIcon, KanbanSquareIcon, ListIcon } from "lucide-react";
+import { ArrowDownIcon, GripVerticalIcon, KanbanSquareIcon, ListIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { api, fmt, type Task, type TaskState } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import {
+  Kanban,
+  KanbanBoard,
+  KanbanColumn,
+  KanbanColumnContent,
+  KanbanItem,
+  KanbanItemHandle,
+  KanbanOverlay,
+} from "@/components/reui/kanban";
 import { CategoryBadge, SeverityBadge } from "./issues-view";
 import { EmptyState, ErrorState } from "./states";
 
@@ -27,8 +36,8 @@ function PTagChip({ tag }: { tag: string }) {
     <span
       className={cn(
         "inline-flex h-5 min-w-8 items-center justify-center rounded-md px-1.5 font-mono text-xs font-semibold",
-        tag === "P0" && "bg-loss text-background",
-        tag === "P1" && "bg-watch/10 text-watch",
+        tag === "P0" && "bg-[#B91C1C]/10 text-[#B91C1C]",
+        tag === "P1" && "bg-[#2563EB]/10 text-[#2563EB]",
         tag !== "P0" && tag !== "P1" && "bg-muted text-muted-foreground",
       )}
     >
@@ -69,6 +78,15 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
     for (const t of sorted) map.set(pTag(t), [...(map.get(pTag(t)) ?? []), t]);
     return [...map.entries()].map(([tag, items]) => ({ tag: tag as string | null, items }));
   }, [tasks, sort]);
+
+  // Cross-column drops: the board already shows the new layout; persist each state change, roll back on failure.
+  async function commitBoard(next: Record<TaskState, Task[]>) {
+    if (!tasks) return;
+    const moved: { task: Task; state: TaskState }[] = [];
+    for (const col of STATES)
+      for (const t of next[col.value]) if (t.state !== col.value) moved.push({ task: t, state: col.value });
+    await Promise.all(moved.map((m) => setState(m.task, m.state)));
+  }
 
   async function setState(task: Task, state: TaskState) {
     const before = task.state;
@@ -138,7 +156,7 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
       <div className="space-y-3">
         {toggle}
         {rowError && <p className="text-sm text-destructive">{rowError}</p>}
-        <Board tasks={tasks} unit={unit} onMove={setState} />
+        <TaskBoard tasks={tasks} unit={unit} onCommit={commitBoard} />
       </div>
     );
 
@@ -225,95 +243,115 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
   );
 }
 
-function StateSelect({ task, onMove, className }: { task: Task; onMove: (t: Task, s: TaskState) => void; className?: string }) {
-  return (
-    <Select items={STATES} value={task.state} onValueChange={(v) => v && onMove(task, v as TaskState)}>
-      <SelectTrigger size="sm" className={className} aria-label={`Move "${task.title}"`}>
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {STATES.map((s) => (
-          <SelectItem key={s.value} value={s.value}>
-            {s.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-}
+type Columns = Record<TaskState, Task[]>;
 
-function Board({ tasks, unit, onMove }: { tasks: Task[]; unit: string; onMove: (t: Task, s: TaskState) => void }) {
-  const [over, setOver] = useState<TaskState | null>(null);
+function groupByState(tasks: Task[]): Columns {
   const sorted = [...tasks].sort(
     (a, b) => pTag(a).localeCompare(pTag(b)) || (b.playersLost ?? 0) - (a.playersLost ?? 0),
   );
+  const cols = Object.fromEntries(STATES.map((s) => [s.value, [] as Task[]])) as Columns;
+  for (const t of sorted) cols[t.state]?.push(t);
+  return cols;
+}
+
+function TaskBoard({
+  tasks,
+  unit,
+  onCommit,
+}: {
+  tasks: Task[];
+  unit: string;
+  onCommit: (next: Columns) => void;
+}) {
+  const [columns, setColumns] = useState<Columns>(() => groupByState(tasks));
+
+  // Re-sync when task states change outside a drag (load, list-view edits, rollback).
+  const signature = tasks.map((t) => `${t.id}:${t.state}`).join("|");
+  const [synced, setSynced] = useState(signature);
+  if (synced !== signature) {
+    setSynced(signature);
+    const placed = new Map<string, TaskState>();
+    for (const col of STATES) for (const t of columns[col.value]) placed.set(t.id, col.value);
+    // Only regroup if the board disagrees with the data (keeps manual ordering after a successful drop).
+    if (tasks.some((t) => placed.get(t.id) !== t.state)) setColumns(groupByState(tasks));
+  }
+
+  const byId = useMemo(() => new Map(tasks.map((t) => [t.id, t])), [tasks]);
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {STATES.map((col) => {
-        const items = sorted.filter((t) => t.state === col.value);
-        return (
-          <section
+    <Kanban<Task>
+      value={columns}
+      onValueChange={(v) => setColumns(v as Columns)}
+      getItemValue={(t) => t.id}
+      onValueCommit={(v) => onCommit(v as Columns)}
+      restoreOnCancel
+    >
+      <KanbanBoard className="grid auto-rows-auto items-start gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {STATES.map((col) => (
+          <KanbanColumn
             key={col.value}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setOver(col.value);
-            }}
-            onDragLeave={() => setOver((o) => (o === col.value ? null : o))}
-            onDrop={(e) => {
-              e.preventDefault();
-              setOver(null);
-              const id = e.dataTransfer.getData("text/plain");
-              const t = tasks.find((x) => x.id === id);
-              if (t) onMove(t, col.value);
-            }}
-            className={cn(
-              "flex min-h-40 flex-col gap-3 rounded-[10px] bg-muted/50 p-3 transition-colors",
-              over === col.value && "bg-watch/10 ring-1 ring-watch/40",
-            )}
+            value={col.value}
+            className="flex min-h-40 flex-col gap-3 rounded-xl border border-border/60 bg-muted/60 p-2.5"
           >
-            <header className="flex items-center justify-between px-1">
-              <h3 className="font-serif text-[15px] font-medium">{col.label}</h3>
-              <span className="font-mono text-xs text-muted-foreground tabular-nums">{items.length}</span>
-            </header>
-            {items.map((t) => (
-              <article
-                key={t.id}
-                data-card
-                draggable
-                onDragStart={(e) => {
-                  e.dataTransfer.setData("text/plain", t.id);
-                  e.dataTransfer.effectAllowed = "move";
-                }}
-                className={cn(
-                  "cursor-grab space-y-2.5 rounded-lg border border-border bg-card p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)] active:cursor-grabbing",
-                  (t.state === "done" || t.state === "wont_fix") && "opacity-70",
-                )}
-              >
-                <div className="flex items-start gap-2">
-                  <PTagChip tag={pTag(t)} />
-                  <p className="min-w-0 flex-1 text-sm leading-snug font-medium">{t.title}</p>
-                </div>
-                <div className="flex items-center justify-between font-mono text-[11px] text-muted-foreground">
-                  <span className="truncate">{t.level == null ? "–" : `${t.levelName ?? unit} · ${t.level}`}</span>
-                  {t.playersLost != null && t.playersLost > 0 && (
-                    <span className="text-loss tabular-nums">−{fmt.int(t.playersLost)} players</span>
-                  )}
-                </div>
-                <div className="flex flex-wrap items-center gap-1">
-                  <CategoryBadge category={t.category} />
-                  <SeverityBadge severity={t.severity} />
-                </div>
-                <StateSelect task={t} onMove={onMove} className="h-7 w-full text-xs" />
-              </article>
-            ))}
-            {items.length === 0 && (
-              <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center font-mono text-[11px] text-muted-foreground">
-                Drop a card here
-              </p>
-            )}
-          </section>
-        );
-      })}
-    </div>
+            <div className="flex items-center justify-between px-1.5 pt-0.5">
+              <h3 className="text-sm font-semibold">{col.label}</h3>
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-background px-1.5 font-mono text-[11px] text-muted-foreground tabular-nums ring-1 ring-border">
+                {columns[col.value].length}
+              </span>
+            </div>
+            <KanbanColumnContent value={col.value} className="flex min-h-16 flex-col gap-2">
+              {columns[col.value].map((t) => (
+                <KanbanItem key={t.id} value={t.id}>
+                  <TaskCard task={t} unit={unit} />
+                </KanbanItem>
+              ))}
+              {columns[col.value].length === 0 && (
+                <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center font-mono text-[11px] text-muted-foreground">
+                  Drop a card here
+                </p>
+              )}
+            </KanbanColumnContent>
+          </KanbanColumn>
+        ))}
+      </KanbanBoard>
+      <KanbanOverlay>
+        {({ value, variant }) => {
+          const t = variant === "item" ? byId.get(String(value)) : null;
+          return t ? <TaskCard task={t} unit={unit} overlay /> : null;
+        }}
+      </KanbanOverlay>
+    </Kanban>
+  );
+}
+
+function TaskCard({ task: t, unit, overlay }: { task: Task; unit: string; overlay?: boolean }) {
+  return (
+    <article
+      className={cn(
+        "group/card relative space-y-2.5 rounded-lg border border-border bg-background p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)]",
+        overlay && "rotate-1 shadow-lg",
+      )}
+    >
+      <div className="flex items-start gap-2">
+        <p className="min-w-0 flex-1 text-sm leading-snug font-medium">{t.title}</p>
+        <KanbanItemHandle
+          render={<button type="button" aria-label={`Drag "${t.title}"`} />}
+          className="-mt-0.5 -mr-1 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity group-hover/card:opacity-100 hover:bg-muted focus-visible:opacity-100"
+        >
+          <GripVerticalIcon className="size-4" />
+        </KanbanItemHandle>
+      </div>
+      <div className="flex flex-wrap items-center gap-1">
+        <PTagChip tag={pTag(t)} />
+        <CategoryBadge category={t.category} />
+        <SeverityBadge severity={t.severity} />
+      </div>
+      <div className="flex items-center justify-between gap-2 font-mono text-[11px] text-muted-foreground">
+        <span className="truncate">{t.level == null ? "–" : `${t.levelName ?? unit} · ${t.level}`}</span>
+        {t.playersLost != null && t.playersLost > 0 && (
+          <span className="text-loss tabular-nums">−{fmt.int(t.playersLost)} players</span>
+        )}
+      </div>
+    </article>
   );
 }

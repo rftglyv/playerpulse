@@ -1,8 +1,5 @@
-import type { Metadata } from "next";
-import { Dashboard } from "@/components/dashboard/dashboard";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = { title: "Dashboard · PlayerPulse" };
-
-export default function DashboardPage() {
-  return <Dashboard />;
+export default function DashboardIndex() {
+  redirect("/dashboard/overview");
 }
