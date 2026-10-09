@@ -4,8 +4,9 @@
 #   `web` service on port 3000 (no API domain needed: web proxies /api/* to the api container internally).
 #   Both services join `dokploy-network`, so the api reaches a Postgres service created in Dokploy and Traefik
 #   reaches web.
-# Local: run `docker network create dokploy-network` once, then `docker compose up -d --build`;
-#   the site is on http://localhost:${WEB_PORT:-3105}.
+# Local: `bun run dev` is the normal way. To try the production images locally, run
+#   `docker network create dokploy-network` once and `docker compose up -d --build`; web listens on port 3000
+#   inside the network (no host port is published, so nothing can collide with other apps on the server).
 services:
   api:
     build: { context: ., dockerfile: apps/api/Dockerfile }
@@ -35,8 +36,8 @@ services:
     restart: unless-stopped
     environment:
       API_URL: http://api:4000
-    # host port for local use; 3105 by default so it never collides with Dokploy's own UI on 3000
-    ports: ["${WEB_PORT:-3105}:3000"]
+    # no host port: Traefik (Dokploy) reaches web over dokploy-network on its internal port 3000.
+    expose: ["3000"]
     depends_on:
       api: { condition: service_healthy }
     networks: [default, dokploy-network]

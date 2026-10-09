@@ -43,7 +43,8 @@ Seed test accounts with data: `bun run db:seed` (creates `test@playerpulse.app` 
 `judge@playerpulse.app` / `playerpulse-judge`, each with its own copy of the evaluated runs; override with `SEED_USERS`).
 
 Deploy: `docker network create dokploy-network` once (Dokploy already has it), then `docker compose up -d --build`
-(api + web; Postgres is external via `DATABASE_URL`; site on port 3105 locally), then once:
+(api + web; Postgres is external via `DATABASE_URL`; web is reached through the proxy on dokploy-network,
+no host port is published), then once:
 `docker compose exec api bun apps/api/scripts/seed.ts`.
 
 ## Reproduce the evaluation
