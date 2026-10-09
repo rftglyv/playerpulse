@@ -2,7 +2,7 @@ FROM oven/bun:1.3.12-alpine AS deps
 WORKDIR /app
 COPY package.json bun.lock ./
 COPY apps/web/package.json apps/web/
-COPY packages/api/package.json packages/api/
+COPY apps/api/package.json apps/api/
 COPY packages/db/package.json packages/db/
 COPY packages/pipeline/package.json packages/pipeline/
 RUN bun install --frozen-lockfile --production
@@ -12,6 +12,7 @@ WORKDIR /app
 ENV NODE_ENV=production PORT=4000 EVAL_DATA_DIR=/app/eval/data DEMO_DIR=/app/demo PP_CACHE_DIR=/app/.cache/llm
 COPY --from=deps /app ./
 COPY packages ./packages
+COPY apps/api ./apps/api
 COPY demo ./demo
 # Scenario inputs only. The answer key is never shipped.
 COPY eval/data ./eval/data
@@ -19,4 +20,4 @@ RUN mkdir -p /app/.cache/llm && chown -R bun:bun /app/.cache
 USER bun
 EXPOSE 4000
 HEALTHCHECK --interval=10s --timeout=3s --retries=5 CMD wget -qO- http://127.0.0.1:4000/api/health || exit 1
-CMD ["sh", "-c", "bun packages/db/src/migrate.ts && bun packages/api/src/server.ts"]
+CMD ["sh", "-c", "bun packages/db/src/migrate.ts && bun apps/api/src/server.ts"]

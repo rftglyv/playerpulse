@@ -14,7 +14,7 @@ services:
       retries: 10
 
   api:
-    build: { context: ., dockerfile: Dockerfile.api }
+    build: { context: ., dockerfile: apps/api/Dockerfile }
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://playerpulse:${POSTGRES_PASSWORD}@postgres:5432/playerpulse
@@ -27,7 +27,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.web
+      dockerfile: apps/web/Dockerfile
       args: { API_URL: http://api:4000 }
     restart: unless-stopped
     ports: ["${WEB_PORT:-3000}:3000"]

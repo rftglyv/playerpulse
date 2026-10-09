@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
-import { loadScenarioDir, levelDelta, playersLost, verifyGroup } from "../packages/pipeline/src";
+import { loadScenarioDir, levelDelta, playersLost, verifyGroup } from "../src";
 
 const A = loadScenarioDir("eval/data/scenario_A");
 const d = (level: number) => levelDelta(A.telemetry, level, "1.3", "1.4");
@@ -38,7 +38,7 @@ test("answer-key guard: app code never references the answer key", () => {
       if (f === "node_modules" || f.startsWith(".")) continue;
       const p = join(dir, f);
       if (statSync(p).isDirectory()) walk(p);
-      else if (/\.(ts|tsx|js)$/.test(f) && readFileSync(p, "utf8").includes("answer_key") && !p.endsWith("cli.ts")) hits.push(p);
+      else if (/\.(ts|tsx|js)$/.test(f) && readFileSync(p, "utf8").includes("answer_key") && !p.endsWith("cli.ts") && !p.endsWith(".test.ts")) hits.push(p);
     }
   };
   for (const dir of ["apps", "packages"]) walk(dir);
