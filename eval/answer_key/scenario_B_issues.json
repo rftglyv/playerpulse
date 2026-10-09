@@ -1,0 +1,71 @@
+{
+  "scenario": "B",
+  "previous_patch": "2.0",
+  "current_patch": "2.1",
+  "priority_definition": "players_lost_estimate = players_started(current patch) x drop in completion_rate vs previous patch; real issues ranked by it, highest first",
+  "issues": [
+    {
+      "issue_id": "B-ISS-01",
+      "category": "bug",
+      "level": 5,
+      "title": "Co-op partner desyncs and disconnects on the Cargo Lift elevator, since 2.1",
+      "priority_rank": 2,
+      "players_lost_estimate": 587,
+      "message_count": 10
+    },
+    {
+      "issue_id": "B-ISS-02",
+      "category": "balance",
+      "level": 3,
+      "title": "Ammo drops in Flooded Market reduced too much in 2.1",
+      "priority_rank": 1,
+      "players_lost_estimate": 801,
+      "message_count": 9
+    },
+    {
+      "issue_id": "B-ISS-03",
+      "category": "bug",
+      "level": 7,
+      "title": "Harbor Master key item never spawns after the cutscene - soft lock",
+      "priority_rank": 3,
+      "players_lost_estimate": 482,
+      "message_count": 10
+    },
+    {
+      "issue_id": "B-ISS-04",
+      "category": "bug",
+      "level": 4,
+      "title": "Flashlight key stops working after remapping controls (Lighthouse) - no telemetry signal",
+      "priority_rank": 4,
+      "players_lost_estimate": 0,
+      "message_count": 6
+    },
+    {
+      "issue_id": "B-SKILL-02",
+      "category": "skill_issue",
+      "level": 2,
+      "title": "'Stealth is impossible' complaints - telemetry normal, NOT a real issue",
+      "priority_rank": null,
+      "players_lost_estimate": 57,
+      "message_count": 9
+    },
+    {
+      "issue_id": "B-SKILL-06",
+      "category": "skill_issue",
+      "level": 6,
+      "title": "'Storm Pier too hard' complaints - telemetry normal, NOT a real issue",
+      "priority_rank": null,
+      "players_lost_estimate": 13,
+      "message_count": 6
+    },
+    {
+      "issue_id": "NOISE",
+      "category": "noise",
+      "level": null,
+      "title": "Toxicity, feature requests, praise, pricing/account complaints, vague posts",
+      "priority_rank": null,
+      "players_lost_estimate": null,
+      "message_count": 16
+    }
+  ]
+}

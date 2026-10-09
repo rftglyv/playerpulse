@@ -1,0 +1,29 @@
+{
+  "scenario": "A",
+  "game": "Ember Trail (fictional)",
+  "genre": "2D action platformer, single player",
+  "unit": "level",
+  "previous_patch": "1.3",
+  "current_patch": "1.4",
+  "patch_date": "2026-10-02",
+  "levels": {
+    "1": "Ashfield",
+    "2": "Old Mill",
+    "3": "Thorn Canyon",
+    "4": "Twin Bridges",
+    "5": "Clocktower",
+    "6": "Magma Warden (boss)",
+    "7": "Frost Keep (boss)",
+    "8": "Sunken Road",
+    "9": "Archive",
+    "10": "Ember Throne (final boss)"
+  },
+  "patch_notes_1_4": [
+    "New main menu",
+    "Boss tuning pass",
+    "Physics and collision optimisation",
+    "Save system refactor",
+    "Inventory UI rework",
+    "Localisation updates"
+  ]
+}

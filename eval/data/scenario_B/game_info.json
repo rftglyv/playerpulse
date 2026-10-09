@@ -1,0 +1,25 @@
+{
+  "scenario": "B",
+  "game": "Hollow Harbor (fictional)",
+  "genre": "co-op survival shooter, 1-4 players",
+  "unit": "mission",
+  "previous_patch": "2.0",
+  "current_patch": "2.1",
+  "patch_date": "2026-10-01",
+  "levels": {
+    "1": "Dockside",
+    "2": "Silent Warehouse (stealth)",
+    "3": "Flooded Market",
+    "4": "Lighthouse",
+    "5": "Cargo Lift",
+    "6": "Storm Pier",
+    "7": "Harbor Master",
+    "8": "Last Ferry"
+  },
+  "patch_notes_2_1": [
+    "Loot table rebalance",
+    "Netcode improvements for moving platforms",
+    "Mission scripting fixes",
+    "New weapon skins"
+  ]
+}

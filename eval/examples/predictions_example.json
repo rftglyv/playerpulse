@@ -1,0 +1,39 @@
+{
+  "system": "PlayerPulse v1 (with telemetry)",
+  "scenario": "A",
+  "model": "write the exact model ID you used",
+  "messages": [
+    {"id": "A004", "category": "bug", "level": 4, "mechanic": "collision", "symptom": "falls through floor after second bridge", "confidence": 0.93},
+    {"id": "A005", "category": "skill_issue", "level": 3, "mechanic": "jumping", "symptom": "says level is impossible", "confidence": 0.71},
+    {"id": "A006", "category": "noise", "level": null, "mechanic": null, "symptom": null, "confidence": 0.95}
+  ],
+  "issues": [
+    {
+      "title": "Players fall through the floor after the second bridge on Twin Bridges (level 4) since 1.4",
+      "category": "bug",
+      "level": 4,
+      "status": "reported",
+      "priority": 1,
+      "message_ids": ["A004", "A017", "A033"],
+      "telemetry_evidence": "completion 80% -> 43%, deaths per player 2.1 -> 2.2 (not a difficulty spike), restarts 1.2 -> 2.6",
+      "players_lost_estimate": 2946,
+      "repro_steps": ["Start level 4", "Cross the second bridge", "Jump onto the stone ledge", "Player falls through the ledge"]
+    },
+    {
+      "title": "'Level 3 is impossible' complaints",
+      "category": "skill_issue",
+      "level": 3,
+      "status": "dismissed",
+      "message_ids": ["A005", "A021"],
+      "telemetry_evidence": "completion 85% -> 84%, deaths 3.2 -> 3.3: no change since the patch"
+    },
+    {
+      "title": "Wall jump not responding on level 3 (single report)",
+      "category": "bug",
+      "level": 3,
+      "status": "watch",
+      "message_ids": ["A090"],
+      "telemetry_evidence": "no telemetry signal, one report only"
+    }
+  ]
+}
