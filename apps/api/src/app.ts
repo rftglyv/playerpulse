@@ -1,6 +1,7 @@
 import { openapi } from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import { BodyTooLarge, MAX_BODY_BYTES, readCapped } from "./limits";
+import { authPlugin } from "./auth";
 import { runRoutes } from "./routes/runs";
 import { systemRoutes } from "./routes/system";
 import { taskRoutes } from "./routes/tasks";
@@ -16,6 +17,8 @@ export const app = new Elysia({ prefix: "/api" })
     }
   })
   .onParse(async ({ request, contentType }) => {
+    // Better Auth reads the raw body itself: hand Elysia a placeholder so the stream stays unread.
+    if (new URL(request.url).pathname.startsWith("/api/auth/")) return {};
     // Chunked JSON bodies carry no content-length: stream them with a cap instead of trusting the header.
     if (request.headers.has("content-length") || !contentType?.startsWith("application/json")) return;
     const text = await readCapped(request);
@@ -43,6 +46,7 @@ export const app = new Elysia({ prefix: "/api" })
     set.status = 500;
     return { error: "internal error" };
   })
+  .use(authPlugin)
   .use(systemRoutes)
   .use(runRoutes)
   .use(taskRoutes);

@@ -2,8 +2,10 @@ import { IdParam, TaskQuery, TaskUpdate } from "@playerpulse/api-schemas";
 import { db, issues, tasks } from "@playerpulse/db";
 import { asc, eq } from "drizzle-orm";
 import { Elysia } from "elysia";
+import { authPlugin } from "../auth";
 
 export const taskRoutes = new Elysia({ prefix: "/tasks", tags: ["tasks"] })
+  .use(authPlugin)
   .get(
     "/",
     ({ query }) =>
@@ -26,5 +28,5 @@ export const taskRoutes = new Elysia({ prefix: "/tasks", tags: ["tasks"] })
       const [row] = await db.update(tasks).set({ ...body, updatedAt: new Date() }).where(eq(tasks.id, params.id)).returning();
       return row ?? status(404, { error: "task not found" });
     },
-    { params: IdParam, body: TaskUpdate },
+    { auth: true, params: IdParam, body: TaskUpdate },
   );

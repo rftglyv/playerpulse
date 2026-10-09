@@ -27,7 +27,7 @@ export function priorityTag(i: Issue): "P0" | "P1" | "P2" {
   return "P2";
 }
 
-export async function saveRun(result: RunResult, name: string) {
+export async function saveRun(result: RunResult, name: string, createdBy: string | null = null) {
   return db.transaction(async (tx) => {
     const [run] = await tx
       .insert(runs)
@@ -45,6 +45,7 @@ export async function saveRun(result: RunResult, name: string) {
         costUsd: result.meta.cost_usd,
         seconds: result.meta.seconds,
         result,
+        createdBy,
       })
       .returning({ id: runs.id });
     for (const i of result.issues) {

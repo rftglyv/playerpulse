@@ -1,3 +1,4 @@
+import { user } from "./auth-schema";
 import { index, integer, jsonb, pgEnum, pgTable, real, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const runStatus = pgEnum("run_status", ["running", "done", "failed"]);
@@ -23,6 +24,7 @@ export const runs = pgTable("runs", {
   costUsd: real("cost_usd").notNull().default(0),
   seconds: real("seconds").notNull().default(0),
   result: jsonb("result"), // full predictions contract, as written by the pipeline
+  createdBy: text("created_by").references(() => user.id, { onDelete: "set null" }), // null for demo runs
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -63,3 +65,5 @@ export const tasks = pgTable(
   },
   (t) => [index("tasks_issue_idx").on(t.issueId)],
 );
+
+export * from "./auth-schema";

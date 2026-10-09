@@ -3,10 +3,12 @@ import { db, runs } from "@playerpulse/db";
 import { DEFAULT_MODEL, MODELS } from "@playerpulse/pipeline";
 import { desc, eq } from "drizzle-orm";
 import { Elysia } from "elysia";
+import { authPlugin } from "../auth";
 import { acquireRun, clientIp, demoReadonly } from "../limits";
 import { buildScenario, InputError, runPipeline, saveRun } from "../service";
 
 export const runRoutes = new Elysia({ prefix: "/runs", tags: ["runs"] })
+  .use(authPlugin)
   .get("/", () =>
     db
       .select({
@@ -27,7 +29,7 @@ export const runRoutes = new Elysia({ prefix: "/runs", tags: ["runs"] })
   )
   .post(
     "/",
-    async ({ body, status, request, server, set }) => {
+    async ({ body, status, user, request, server, set }) => {
       if (demoReadonly()) return status(403, { error: "live runs are disabled on this demo" });
       if (!process.env.OPENROUTER_API_KEY) {
         return status(503, { error: "live runs are disabled: no OPENROUTER_API_KEY; demo results are loaded" });
@@ -48,11 +50,15 @@ export const runRoutes = new Elysia({ prefix: "/runs", tags: ["runs"] })
       }
       try {
         const result = await runPipeline(scenario, { model });
-        const id = await saveRun(result, body.name ?? `${scenario.name} · ${body.telemetry ? "telemetry" : "community-only"} · ${model}`);
+        const id = await saveRun(
+          result,
+          body.name ?? `${scenario.name} · ${body.telemetry ? "telemetry" : "community-only"} · ${model}`,
+          user.id,
+        );
         return { id, meta: result.meta };
       } finally {
         slot.release();
       }
     },
-    { body: RunCreate },
+    { auth: true, body: RunCreate },
   );
