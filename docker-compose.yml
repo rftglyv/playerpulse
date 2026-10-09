@@ -1,5 +1,11 @@
-# Dokploy: deploy as a Compose app. Postgres is hosted separately (backups).
-# Set in Dokploy's env panel: DATABASE_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL, TRUSTED_ORIGINS, OPENROUTER_API_KEY, optional OPENROUTER_MODEL, WEB_PORT.
+# One compose file for local Docker and Dokploy.
+#
+# Dokploy: Compose path ./docker-compose.yml; paste .env.staging into Environment; add the domain to the
+#   `web` service on port 3000 (no API domain needed: web proxies /api/* to the api container internally).
+#   Both services join `dokploy-network`, so the api reaches a Postgres service created in Dokploy and Traefik
+#   reaches web.
+# Local: run `docker network create dokploy-network` once, then `docker compose up -d --build`;
+#   the site is on http://localhost:${WEB_PORT:-3105}.
 services:
   api:
     build: { context: ., dockerfile: apps/api/Dockerfile }
@@ -16,6 +22,7 @@ services:
       DEMO_READONLY: ${DEMO_READONLY:-false}
       SEED_USERS: ${SEED_USERS:-}
     volumes: [llmcache:/app/.cache/llm]
+    networks: [default, dokploy-network]
 
   web:
     build:
@@ -24,13 +31,19 @@ services:
       args:
         API_URL: http://api:4000
         # public site URL for canonical links, Open Graph and the sitemap (inlined at build time)
-        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3105}
     restart: unless-stopped
     environment:
       API_URL: http://api:4000
-    ports: ["${WEB_PORT:-3000}:3000"]
+    # host port for local use; 3105 by default so it never collides with Dokploy's own UI on 3000
+    ports: ["${WEB_PORT:-3105}:3000"]
     depends_on:
       api: { condition: service_healthy }
+    networks: [default, dokploy-network]
 
 volumes:
   llmcache:
+
+networks:
+  dokploy-network:
+    external: true
