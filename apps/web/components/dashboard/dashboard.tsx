@@ -129,7 +129,7 @@ export function Dashboard() {
         <Sidebar collapsible="icon">
           <SidebarHeader className="px-4 py-4">
             <Link href="/" className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
-              <span className="size-2 shrink-0 rounded-full bg-watch shadow-[0_0_0_3px_rgba(255,178,36,0.16)]" />
+              <span className="size-2 shrink-0 rounded-full bg-watch shadow-[0_0_0_3px_#DBEAFE]" />
               <span className="font-serif text-[19px] font-semibold tracking-[-0.01em] group-data-[collapsible=icon]:hidden">
                 PlayerPulse
               </span>
@@ -163,7 +163,7 @@ export function Dashboard() {
         </Sidebar>
 
         <SidebarInset className="min-h-svh">
-          <header className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-foreground/9 bg-card/70 px-4 py-3 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.7)] backdrop-blur-xl backdrop-saturate-[1.4] sm:px-6">
+          <header className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-border bg-[rgba(255,255,255,0.72)] px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.03),0_12px_32px_-20px_rgba(0,0,0,0.18)] backdrop-blur-xl backdrop-saturate-[1.4] sm:px-6">
             <SidebarTrigger />
             <div className="min-w-0 flex-1">
               <h1 className="truncate font-serif text-[22px] leading-tight font-medium tracking-[-0.02em]">{current.label}</h1>

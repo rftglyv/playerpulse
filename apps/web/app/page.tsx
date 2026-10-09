@@ -22,98 +22,129 @@ export default function Home() {
         </div>
       </header>
 
-      <main id="top" className="wrap">
-        {/* HERO */}
-        <section className="hero" data-anim="hero">
-          <div>
-            <p className="eyebrow a-fade">
-              Player-feedback triage for game teams · <b>AZ · RU · EN</b>
-            </p>
-            <h1 className="lines">
-              <span className="ln">
-                Telemetry knows <em>where.</em>
-              </span>
-              <span className="ln">
-                Players know <em>why.</em>
-              </span>
-              <span className="ln l3">PlayerPulse settles it.</span>
-            </h1>
-            <p className="sub a-fade">
-              It reads Discord, Steam reviews and in-game feedback in Azerbaijani, Russian and
-              English, then checks every complaint against your gameplay telemetry.{" "}
-              <b>You get the real bugs, ranked, with evidence and repro steps.</b>
-            </p>
-            <div className="ctas a-fade">
-              <Link className="btn btn-p" href="/dashboard">
-                Open live demo <span className="arr">→</span>
-              </Link>
-              <a className="btn btn-g" href="#results">
-                See the results
-              </a>
+      <div className="hero-shell">
+        <div className="hero-band" aria-hidden="true">
+          <canvas className="dither" data-dither="horizon" />
+        </div>
+        <main id="top" className="wrap">
+          {/* HERO */}
+          <section className="hero" data-anim="hero">
+            <div>
+              <p className="eyebrow a-fade">
+                Player-feedback triage for game teams · <b>AZ · RU · EN</b>
+              </p>
+              <h1 className="lines">
+                <span className="ln">
+                  Telemetry knows <em>where.</em>
+                </span>
+                <span className="ln">
+                  Players know <em>why.</em>
+                </span>
+                <span className="ln l3">
+                  PlayerPulse{" "}
+                  <span className="ul">
+                    settles it.
+                    <svg className="doodle blu" viewBox="0 0 200 18" aria-hidden="true">
+                      <path pathLength={1} strokeWidth="3" d="M3 10 C 38 5, 86 3, 128 6 C 160 8, 184 9, 197 5" />
+                      <path pathLength={1} strokeWidth="2.2" d="M22 15 C 66 11, 118 11, 176 12" />
+                    </svg>
+                  </span>
+                </span>
+              </h1>
+              <p className="sub a-fade">
+                It reads Discord, Steam reviews and in-game feedback in Azerbaijani, Russian and
+                English, then checks every complaint against your gameplay telemetry.{" "}
+                <b>You get the real bugs, ranked, with evidence and repro steps.</b>
+              </p>
+              <div className="ctas a-fade">
+                <Link className="btn btn-p" href="/dashboard">
+                  Open live demo <span className="arr">→</span>
+                </Link>
+                <a className="btn btn-g" href="#results">
+                  See the results
+                </a>
+              </div>
             </div>
-          </div>
 
-          <div className="console a-card" aria-label="Sample of PlayerPulse tagging messages">
-            <div className="console-h mono">
-              <span>incoming · Ember Trail</span>
-              <span className="tag">sample messages</span>
+            <div className="console a-card" aria-label="Sample of PlayerPulse tagging messages">
+              <div className="console-h mono">
+                <span>incoming · Ember Trail</span>
+                <span className="tag">sample messages</span>
+              </div>
+              <ul className="feed">
+                <li className="a-msg">
+                  <span className="lang">AZ</span>
+                  <span className="msg">ikinci körpüdən sonra daşın içindən düşürəm</span>
+                  <span className="chip bug">bug · L4</span>
+                </li>
+                <li className="a-msg">
+                  <span className="lang">RU</span>
+                  <span className="msg">после второго моста проваливаюсь сквозь камень</span>
+                  <span className="chip bug">bug · L4</span>
+                </li>
+                <li className="a-msg">
+                  <span className="lang">MIX</span>
+                  <span className="msg">Twin Bridges-da yenə düşdüm, текстура дырявая</span>
+                  <span className="chip bug">bug · L4</span>
+                </li>
+                <li className="a-msg">
+                  <span className="lang">EN</span>
+                  <span className="msg">Thorn Canyon is impossible, fix it</span>
+                  <span className="chip dif">too hard · L3</span>
+                </li>
+              </ul>
+              <div className="resolve a-resolve">
+                <span className="stamp v mini">VERIFIED · #1</span>
+                <div className="t">
+                  <b>Twin Bridges · level 4</b>
+                  <br />
+                  falls through the ledge after bridge 2
+                </div>
+                <div className="num">
+                  <span className="circ">
+                    <span data-count="2946">2,946</span>
+                    <svg className="doodle ink" viewBox="0 0 220 90" preserveAspectRatio="none" aria-hidden="true">
+                      <path
+                        pathLength={1}
+                        strokeWidth="2.4"
+                        d="M156 9 C 96 1, 22 12, 10 42 C 0 72, 64 88, 128 84 C 192 80, 216 58, 208 34 C 200 13, 158 4, 104 8"
+                      />
+                    </svg>
+                  </span>
+                  <small>players lost</small>
+                </div>
+                <div className="trace">
+                  <canvas className="dither" data-dither="cliff" aria-hidden="true" />
+                  <svg
+                    viewBox="0 0 320 64"
+                    role="img"
+                    aria-label="Completion dropped from 80% to 43% while deaths stayed flat"
+                  >
+                    <path className="draw" d="M4 14 L150 14 L170 46 L316 46" stroke="#B91C1C" strokeWidth="2" fill="none" />
+                    <path
+                      className="draw"
+                      d="M4 58 L316 58"
+                      stroke="rgba(0,0,0,.35)"
+                      strokeWidth="1.5"
+                      strokeDasharray="2 3"
+                      fill="none"
+                    />
+                    <text x="4" y="9" fontSize="9" style={{ fontFamily: "var(--mono)" }} fill="rgba(0,0,0,.6)">
+                      completion 80%
+                    </text>
+                    <text x="316" y="40" fontSize="9" style={{ fontFamily: "var(--mono)" }} fill="#B91C1C" textAnchor="end">
+                      43%
+                    </text>
+                    <text x="316" y="54" fontSize="9" style={{ fontFamily: "var(--mono)" }} fill="rgba(0,0,0,.6)" textAnchor="end">
+                      deaths 2.1 → 2.2
+                    </text>
+                  </svg>
+                </div>
+              </div>
             </div>
-            <ul className="feed">
-              <li className="a-msg">
-                <span className="lang">AZ</span>
-                <span className="msg">ikinci körpüdən sonra daşın içindən düşürəm</span>
-                <span className="chip bug">bug · L4</span>
-              </li>
-              <li className="a-msg">
-                <span className="lang">RU</span>
-                <span className="msg">после второго моста проваливаюсь сквозь камень</span>
-                <span className="chip bug">bug · L4</span>
-              </li>
-              <li className="a-msg">
-                <span className="lang">MIX</span>
-                <span className="msg">Twin Bridges-da yenə düşdüm, текстура дырявая</span>
-                <span className="chip bug">bug · L4</span>
-              </li>
-              <li className="a-msg">
-                <span className="lang">EN</span>
-                <span className="msg">Thorn Canyon is impossible, fix it</span>
-                <span className="chip dif">too hard · L3</span>
-              </li>
-            </ul>
-            <div className="resolve a-resolve">
-              <span className="stamp v mini">VERIFIED · #1</span>
-              <div className="t">
-                <b>Twin Bridges · level 4</b>
-                <br />
-                falls through the ledge after bridge 2
-              </div>
-              <div className="num">
-                <span data-count="2946">2,946</span>
-                <small>players lost</small>
-              </div>
-              <div className="trace">
-                <svg
-                  viewBox="0 0 320 64"
-                  role="img"
-                  aria-label="Completion dropped from 80% to 43% while deaths stayed flat"
-                >
-                  <path className="draw" d="M4 14 L150 14 L170 46 L316 46" stroke="#FF6B5A" strokeWidth="2" fill="none" />
-                  <path className="draw" d="M4 58 L316 58" stroke="#4A524B" strokeWidth="1.5" fill="none" />
-                  <text x="4" y="9" fontSize="9" fill="#9BA39A">
-                    completion 80%
-                  </text>
-                  <text x="316" y="40" fontSize="9" fill="#FF6B5A" textAnchor="end">
-                    43%
-                  </text>
-                  <text x="316" y="54" fontSize="9" fill="#9BA39A" textAnchor="end">
-                    deaths 2.1 → 2.2
-                  </text>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
+          </section>
+        </main>
+      </div>
 
       {/* HOW IT WORKS */}
       <section className="sec" id="how" data-anim="how">
@@ -146,7 +177,7 @@ export default function Home() {
       </section>
 
       {/* CASE FILES */}
-      <section className="sec" id="verdicts" data-anim="files">
+      <section className="sec warm" id="verdicts" data-anim="files">
         <div className="wrap">
           <div className="sec-h a-fade">
             <h2>
@@ -159,9 +190,24 @@ export default function Home() {
               <span className="stamp v">VERIFIED · #1</span>
               <div className="lvl">Twin Bridges · level 4</div>
               <h3>Players fall through the stone ledge after the second bridge</h3>
-              <div className="big">
-                <span data-count="2946">2,946</span>
-                <small>players lost at this point</small>
+              <div className="big-row">
+                <div className="big">
+                  <span data-count="2946">2,946</span>
+                  <small>players lost at this point</small>
+                </div>
+                <svg className="doodle ink bridge" viewBox="0 0 140 92" aria-hidden="true">
+                  <path pathLength={1} strokeWidth="2" d="M4 40 C 34 39, 66 41, 96 40" />
+                  <path pathLength={1} strokeWidth="1.8" d="M6 40 Q 27 22 50 40 Q 72 23 94 40" />
+                  <path pathLength={1} strokeWidth="1.6" d="M17 32 L 18 40 M38 32 L 37 40 M62 32 L 61 40 M83 32 L 84 40" />
+                  <path pathLength={1} strokeWidth="2" d="M96 40 L 104 41 M120 40 L 136 39 L 133 50 L 121 48" />
+                  <path pathLength={1} strokeWidth="1.8" d="M112 56 C 108 56, 107 62, 112 62 C 117 62, 116 56, 112 56" />
+                  <path
+                    pathLength={1}
+                    strokeWidth="1.8"
+                    d="M112 63 L 114 76 M104 64 C 108 67, 116 68, 121 66 M114 76 L 108 86 M114 76 L 121 84"
+                  />
+                  <path pathLength={1} strokeWidth="1.4" d="M101 50 L 102 58 M125 54 L 126 61" />
+                </svg>
               </div>
               <dl className="ledger">
                 <div>
@@ -180,8 +226,22 @@ export default function Home() {
             </article>
             <article className="file a-file">
               <span className="stamp d">DISMISSED</span>
+              <svg className="doodle blu arrow" viewBox="0 0 58 40" aria-hidden="true">
+                <path pathLength={1} strokeWidth="2" d="M4 36 C 18 36, 36 30, 47 9" />
+                <path pathLength={1} strokeWidth="2" d="M38 11 L 48 7 L 51 18" />
+              </svg>
               <div className="lvl">Thorn Canyon · level 3</div>
-              <h3>“This level is impossible”</h3>
+              <h3>
+                “This level is{" "}
+                <span className="x">
+                  impossible
+                  <svg className="doodle blu" viewBox="0 0 120 20" preserveAspectRatio="none" aria-hidden="true">
+                    <path pathLength={1} strokeWidth="2.4" d="M2 12 C 30 8, 66 13, 118 6" />
+                    <path pathLength={1} strokeWidth="2" d="M6 16 C 44 11, 82 14, 114 10" />
+                  </svg>
+                </span>
+                ”
+              </h3>
               <blockquote>A loud crowd in the threads. The telemetry shows nothing changed.</blockquote>
               <dl className="ledger">
                 <div>
@@ -208,6 +268,9 @@ export default function Home() {
 
       {/* RESULTS */}
       <section className="sec" id="results" data-anim="results">
+        <div className="res-band" aria-hidden="true">
+          <canvas className="dither" data-dither="fade" />
+        </div>
         <div className="wrap">
           <div className="sec-h a-fade">
             <h2>
