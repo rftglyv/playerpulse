@@ -6,6 +6,7 @@ Messages in split: 66 | real issues planted: 4
 | Baseline: keyword filter | 4/4 | 2 | 1 | no | 1/3 | 2/4 | 4.5 | 38% | 14/15 | 64% |
 | Baseline: most-mentioned levels | 3/4 | 1 | 0 | no | 2/3 | 2/3 | 6.3 | 50% | 9/15 | 64% |
 | Baseline: analytics drop-off alert only | 3/4 | 0 | 0 | yes | 3/3 | n/a | 0.0 | n/a | n/a | n/a |
+| PlayerPulse extract_v1 (with telemetry) | 4/4 | 0 | 0 | yes | 3/3 | 4/4 | 8.8 | 98% | 1/15 | 100% |
 
 ## Details (use these as failure examples)
 
@@ -34,6 +35,18 @@ Messages in split: 66 | real issues planted: 4
 
 ### Baseline: analytics drop-off alert only
 - **Missed real issues:** B-ISS-04 (Flashlight key stops working after remapping controls (Lighthouse) - no telemetry signal)
+
+### PlayerPulse extract_v1 (with telemetry)
+- **Correctly dismissed (verified as not a real issue):** '"Storm Pier (mission 6) is too hard" complaints' -> B-SKILL-06; '"Silent Warehouse (stealth) (mission 2) is too hard" complaints' -> B-SKILL-02
+- **Watch list (not counted as reported):** 'Other problem on Silent Warehouse (stealth) (mission 2)' -> B-SKILL-02
+- Messages scored: 66 (system returned 66); real-issue reports missed: 0/35
+
+| true \ predicted | bug | balance | skill_issue | noise |
+|---|---|---|---|---|
+| bug | 26 | 0 | 0 | 0 |
+| balance | 0 | 9 | 0 | 0 |
+| skill_issue | 1 | 0 | 14 | 0 |
+| noise | 0 | 0 | 0 | 16 |
 
 ## Ground truth (real issues, by priority)
 1. B-ISS-02 [balance] level 3: Ammo drops in Flooded Market reduced too much in 2.1 (est. players lost: 801)

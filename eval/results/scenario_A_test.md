@@ -6,6 +6,8 @@ Messages in split: 134 | real issues planted: 5
 | Baseline: keyword filter | 5/5 | 2 | 1 | no | 2/3 | 5/5 | 8.6 | 59% | 16/23 | 56% |
 | Baseline: most-mentioned levels | 4/5 | 1 | 0 | yes | 2/3 | 3/4 | 8.5 | 55% | 13/23 | 56% |
 | Baseline: analytics drop-off alert only | 3/5 | 0 | 0 | yes | 3/3 | n/a | 0.0 | n/a | n/a | n/a |
+| PlayerPulse extract_v1 (community-only) | 4/5 | 0 | 0 | yes | 2/3 | 4/4 | 17.2 | 89% | 0/23 | 100% |
+| PlayerPulse extract_v1 (with telemetry) | 5/5 | 0 | 0 | yes | 3/3 | 5/5 | 17.8 | 100% | 0/23 | 100% |
 
 ## Details (use these as failure examples)
 
@@ -34,6 +36,30 @@ Messages in split: 134 | real issues planted: 5
 
 ### Baseline: analytics drop-off alert only
 - **Missed real issues:** A-ISS-04 (Old Mill checkpoint shows 'saved' but progress is lost on reload); A-ISS-05 (Russian localisation text overlaps / is cut off in the Archive level)
+
+### PlayerPulse extract_v1 (community-only)
+- **Missed real issues:** A-ISS-03 (Magma Warden boss HP/damage buff in 1.4 made the fight far too hard)
+- **Watch list (not counted as reported):** '"Clocktower (level 5) is too hard" complaints' -> A-SKILL-05; '"Thorn Canyon (level 3) is too hard" complaints' -> A-SKILL-03; '"Magma Warden (boss) (level 6) is too hard" complaints' -> A-ISS-03; 'Controls problem on Thorn Canyon (level 3)' -> A-SKILL-03
+- Messages scored: 134 (system returned 134); real-issue reports missed: 15/66
+
+| true \ predicted | bug | balance | skill_issue | noise |
+|---|---|---|---|---|
+| bug | 51 | 0 | 0 | 0 |
+| balance | 0 | 0 | 15 | 0 |
+| skill_issue | 0 | 0 | 23 | 0 |
+| noise | 0 | 0 | 0 | 45 |
+
+### PlayerPulse extract_v1 (with telemetry)
+- **Correctly dismissed (verified as not a real issue):** '"Clocktower (level 5) is too hard" complaints' -> A-SKILL-05; '"Thorn Canyon (level 3) is too hard" complaints' -> A-SKILL-03
+- **Watch list (not counted as reported):** 'Controls problem on Thorn Canyon (level 3)' -> A-SKILL-03
+- Messages scored: 134 (system returned 134); real-issue reports missed: 0/66
+
+| true \ predicted | bug | balance | skill_issue | noise |
+|---|---|---|---|---|
+| bug | 51 | 0 | 0 | 0 |
+| balance | 0 | 15 | 0 | 0 |
+| skill_issue | 0 | 0 | 23 | 0 |
+| noise | 0 | 0 | 0 | 45 |
 
 ## Ground truth (real issues, by priority)
 1. A-ISS-01 [bug] level 4: Player falls through the floor after the second bridge (collision), since 1.4 (est. players lost: 2946)
