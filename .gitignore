@@ -44,3 +44,4 @@ next-env.d.ts
 .env
 .turbo/
 node_modules/
+!.env.example
