@@ -1,27 +1,12 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { InboxIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuBadge,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarRail,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/site-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { api, fmt, type RunDetail, type RunResult, type RunRow } from "@/lib/api";
@@ -32,11 +17,10 @@ import { OverviewView } from "./overview-view";
 import { PatchCompareView } from "./patch-compare-view";
 import { VoicesView } from "./voices-view";
 import { NewRunButton } from "./new-run-dialog";
-import { SidebarUserMenu } from "@/components/auth/user-menu";
 import { CardsSkeleton, EmptyState, ErrorState } from "./states";
 import { TasksView } from "./tasks-view";
 import { Reveal } from "./case-file";
-import { SECTION_GROUPS, SECTIONS, isSection, sectionHref, type Section } from "./sections";
+import { SECTIONS, isSection, sectionHref, type Section } from "./sections";
 
 function counts(r: RunResult | null | undefined): Partial<Record<Section, number>> {
   if (!r) return {};
@@ -146,66 +130,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     <Ctx.Provider value={ctx}>
       <TooltipProvider>
         <SidebarProvider>
-          <Sidebar collapsible="icon">
-            <SidebarHeader>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton size="lg" tooltip="PlayerPulse" render={<Link href="/" />}>
-                    <span className="flex size-8 shrink-0 items-center justify-center">
-                      <span className="size-2 rounded-full bg-watch shadow-[0_0_0_3px_#DBEAFE]" />
-                    </span>
-                    <span className="grid min-w-0 flex-1 text-left leading-tight">
-                      <span className="truncate font-serif text-[19px] font-semibold tracking-[-0.01em]">PlayerPulse</span>
-                      <span className="truncate font-mono text-[11px] text-muted-foreground">
-                        {result?.game ?? run?.game ?? "No run selected"}
-                      </span>
-                    </span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarHeader>
-            <SidebarContent>
-              {SECTION_GROUPS.map((g) => (
-                <SidebarGroup key={g}>
-                  <SidebarGroupLabel>{g}</SidebarGroupLabel>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {SECTIONS.filter((s) => s.group === g).map((s) => (
-                        <SidebarMenuItem key={s.id}>
-                          <SidebarMenuButton
-                            isActive={section === s.id}
-                            tooltip={s.label}
-                            render={<Link href={sectionHref(s.id, runId)} />}
-                          >
-                            <s.icon />
-                            <span>{s.label}</span>
-                          </SidebarMenuButton>
-                          {c[s.id] != null && (
-                            <SidebarMenuBadge className="font-mono tabular-nums">{c[s.id]}</SidebarMenuBadge>
-                          )}
-                        </SidebarMenuItem>
-                      ))}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
-              ))}
-            </SidebarContent>
-            <SidebarFooter className="gap-3 pb-3">
-              <p className="px-2 font-serif text-sm leading-relaxed text-muted-foreground italic group-data-[collapsible=icon]:hidden">
-                Telemetry knows where. Players know why.
-              </p>
-              <SidebarUserMenu />
-            </SidebarFooter>
-            <SidebarRail />
-          </Sidebar>
+          <AppSidebar section={section} runId={runId} counts={c} game={result?.game ?? run?.game} />
 
           <SidebarInset className="min-h-svh">
-            <header className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-border bg-[rgba(255,255,255,0.72)] px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.03),0_12px_32px_-20px_rgba(0,0,0,0.18)] backdrop-blur-xl backdrop-saturate-[1.4] sm:px-6">
-              <SidebarTrigger />
-              <div className="min-w-0 flex-1">
-                <h1 className="truncate font-serif text-[22px] leading-tight font-medium tracking-[-0.02em]">{current.label}</h1>
-                <p className="truncate font-mono text-[11.5px] text-muted-foreground">{current.blurb}</p>
-              </div>
+            <SiteHeader title={current.label} description={current.blurb}>
               {runs && runs.length > 0 && (
                 <Select items={runItems} value={runId} onValueChange={(v) => v && selectRun(v as string)}>
                   <SelectTrigger size="sm" className="max-w-[22rem]" aria-label="Select run">
@@ -226,7 +154,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   selectRun(id);
                 }}
               />
-            </header>
+            </SiteHeader>
 
             <Reveal deps={[section, run]} className="mx-auto w-full max-w-6xl flex-1 px-4 pt-8 pb-16 sm:px-6">
               {children}

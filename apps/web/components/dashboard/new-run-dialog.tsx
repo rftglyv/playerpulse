@@ -23,8 +23,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api, ApiError, type ModelsResponse } from "@/lib/api";
-import { loginHref, useSession } from "@/lib/auth-client";
-import { useCurrentPath } from "@/components/auth/user-menu";
 import { cn } from "@/lib/utils";
 
 const SCENARIOS = [
@@ -135,9 +133,6 @@ function FileField({
 
 export function NewRunButton({ onCreated }: { onCreated: (id: string) => void }) {
   const router = useRouter();
-  const here = useCurrentPath();
-  const { data: session, isPending: sessionPending } = useSession();
-  const signedIn = !!session?.user;
   const [models, setModels] = useState<ModelsResponse | null>(null);
   const [modelsError, setModelsError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -207,8 +202,9 @@ export function NewRunButton({ onCreated }: { onCreated: (id: string) => void })
       onCreated(res.id);
     } catch (e) {
       if (e instanceof ApiError && e.status === 401) {
+        // Session expired mid-dialog: refresh so the auth gate shows the login card.
         setOpen(false);
-        router.push(loginHref(here));
+        router.refresh();
         return;
       }
       setError((e as Error).message);
@@ -221,18 +217,16 @@ export function NewRunButton({ onCreated }: { onCreated: (id: string) => void })
       ? "No API key configured on the server. Showing saved runs only."
       : null;
 
-  const needsSignIn = !sessionPending && !signedIn && !disabledReason;
-
   const trigger = (
     <Button
       size="sm"
       disabled={!!disabledReason || !models}
-      onClick={() => (needsSignIn ? router.push(loginHref(here)) : setOpen(true))}
+      onClick={() => setOpen(true)}
     >
       <PlusIcon /> New run
     </Button>
   );
-  const tooltip = disabledReason ?? (needsSignIn ? "Sign in to start a run" : null);
+  const tooltip = disabledReason;
 
   const modelItems = models?.models.map((m) => ({ value: m.id, label: m.id })) ?? [];
 
@@ -240,7 +234,7 @@ export function NewRunButton({ onCreated }: { onCreated: (id: string) => void })
     <>
       {tooltip ? (
         <Tooltip>
-          <TooltipTrigger render={<span tabIndex={disabledReason ? 0 : -1} />}>{trigger}</TooltipTrigger>
+          <TooltipTrigger render={<span tabIndex={0} />}>{trigger}</TooltipTrigger>
           <TooltipContent side="bottom">{tooltip}</TooltipContent>
         </Tooltip>
       ) : (
