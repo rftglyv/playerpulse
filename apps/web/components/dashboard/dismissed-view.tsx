@@ -60,12 +60,6 @@ export function DismissedView({ result }: { result: RunResult }) {
   return (
     <div className="space-y-10">
       <section className="space-y-4">
-        <div className="border-b border-border pb-3">
-          <h2 className="font-serif text-2xl font-medium tracking-[-0.02em]">Dismissed with proof</h2>
-          <p className="text-sm text-muted-foreground">
-            Loud complaints where the numbers didn&apos;t move. Technical bugs are never dismissed this way.
-          </p>
-        </div>
         {dismissed.length === 0 ? (
           <EmptyState
             title="Nothing dismissed"
