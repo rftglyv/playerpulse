@@ -1,0 +1,56 @@
+1
+00:00:01,000 --> 00:00:07,500
+After every patch, players flood Steam, Discord and in-game chat, in Azerbaijani, Russian and English.
+
+2
+00:00:07,500 --> 00:00:14,000
+PlayerPulse reads every message, checks it against your gameplay telemetry, and gives each complaint a verdict.
+
+3
+00:00:14,000 --> 00:00:20,000
+Test pack: five of five planted bugs, zero false alarms. Keyword filters? Fifty-nine percent.
+
+4
+00:00:20,000 --> 00:00:25,000
+No guesswork, no spreadsheets. Let's open the live product.
+
+5
+00:00:25,000 --> 00:00:32,000
+Every studio signs in to its own workspace. Your players' data stays yours.
+
+6
+00:00:32,000 --> 00:00:41,000
+Here's the whole patch at a glance. Look at level four: completion fell from eighty percent to forty-three, while deaths stayed flat.
+
+7
+00:00:41,000 --> 00:00:47,000
+Flat deaths with a collapsing finish rate is not a difficulty problem. That's a blocker bug.
+
+8
+00:00:47,000 --> 00:00:50,000
+Ranked by players lost, not by noise.
+
+9
+00:00:50,000 --> 00:01:02,000
+Number one: Twin Bridges, two thousand nine hundred forty-six players lost. The cause is quoted from the patch notes, and every claim links back to the player's own words, translated.
+
+10
+00:01:02,000 --> 00:01:07,500
+The 'level three is impossible' crowd? Completion eighty-five to eighty-four. Dismissed, with proof.
+
+11
+00:01:07,500 --> 00:01:13,000
+Real issues become tasks, tagged P-zero to P-two, ready for your board.
+
+12
+00:01:13,000 --> 00:01:20,000
+Every player still heard, grouped by what they're talking about. About twenty cents per hundred messages.
+
+13
+00:01:20,000 --> 00:01:21,300
+Thirty seconds a run.
+
+14
+00:01:21,300 --> 00:01:27,300
+Player complaints in. Real bugs out. This is PlayerPulse.
+
