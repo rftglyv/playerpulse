@@ -1,0 +1,8 @@
+**/node_modules
+**/.next
+.git
+.cache
+.turbo
+.env
+eval/answer_key
+out
