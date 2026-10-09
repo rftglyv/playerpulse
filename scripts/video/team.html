@@ -23,13 +23,13 @@
   .t2 .bar { position: absolute; inset: 0; background: var(--yellow); transform-origin: left center; transform: scaleX(0); }
   .t2 .txt { position: relative; font-family: "Anton", Impact, sans-serif; font-size: 72px; line-height: 1.1; color: var(--ink); opacity: 0; text-transform: uppercase; }
   .sub { position: absolute; left: 187px; top: 330px; font-size: 30px; font-weight: 600; color: #e9eafb; opacity: 0; transform: translateY(14px); }
-  .cards { position: absolute; left: 107px; top: 455px; display: flex; gap: 31px; }
-  .card { width: 403px; height: 345px; background: var(--card); border-radius: 18px; padding: 33px 34px; opacity: 0; transform: translateY(60px); }
-  .av { width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; font-family: "Anton", Impact, sans-serif; font-size: 46px; color: var(--ink); transform: scale(0); }
-  .name { margin-top: 26px; font-size: 30px; font-weight: 800; color: var(--ink); opacity: 0; }
+  .cards { position: absolute; left: 107px; top: 465px; display: flex; gap: 31px; }
+  .card { width: 403px; height: 379px; background: var(--card); border-radius: 18px; padding: 31px 34px; opacity: 0; transform: translateY(60px); }
+  .av { display: block; width: 148px; height: 148px; border-radius: 50%; transform: scale(0); }
+  .name { margin-top: 22px; font-size: 30px; font-weight: 800; color: var(--ink); opacity: 0; }
   .role { margin-top: 4px; font-size: 21px; font-weight: 700; color: var(--ink); opacity: 0; }
   .desc { margin-top: 12px; font-size: 18px; line-height: 1.4; font-weight: 500; color: var(--muted); opacity: 0; }
-  .bottom { position: absolute; left: 107px; top: 862px; width: 1706px; height: 112px; background: var(--deep); border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 22px;
+  .bottom { position: absolute; left: 107px; top: 894px; width: 1706px; height: 112px; background: var(--deep); border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 22px;
     font-family: "Anton", Impact, sans-serif; font-size: 50px; color: #fff; text-transform: uppercase; transform: translateY(300px); }
   .bottom .w { display: inline-block; opacity: 0; transform: translateY(24px); }
   .bottom .hl { position: relative; padding: 2px 16px; }
@@ -66,10 +66,10 @@
   <div class="sub" id="sub">Combining AI, Game Development, Software Engineering, and Product Design.</div>
 
   <div class="cards">
-    <div class="card"><div class="av" style="background:var(--yellow)">KG</div><div class="name">Kanan Gafarov</div><div class="role">Tech Lead and Project Manager</div><div class="desc">Technical strategy, system architecture and project coordination.</div></div>
-    <div class="card"><div class="av" style="background:var(--coral)">FU</div><div class="name">Fateh Umarov</div><div class="role">Lead Game Developer</div><div class="desc">Gameplay environments, Unity development and AI testing integration.</div></div>
-    <div class="card"><div class="av" style="background:var(--purple);color:#fff">RG</div><div class="name">Rufat Guliyev</div><div class="role">AI/ML Software Engineer</div><div class="desc">Feedback clustering, issue-prioritization models and the AI gameplay agent.</div></div>
-    <div class="card"><div class="av" style="background:var(--green)">EG</div><div class="name">Elchin Gulizade</div><div class="role">Web Developer</div><div class="desc">Frontend development and dashboard implementation.</div></div>
+    <div class="card"><img class="av" src="__ASSETS__/team-kenan.png" alt=""><div class="name">Kenan Gafarov</div><div class="role">Tech Lead and Project Manager</div><div class="desc">Technical strategy, system architecture and project coordination.</div></div>
+    <div class="card"><img class="av" src="__ASSETS__/team-fateh.png" alt=""><div class="name">Fateh Umarov</div><div class="role">Lead Game Developer</div><div class="desc">Gameplay environments, Unity development and AI testing integration.</div></div>
+    <div class="card"><img class="av" src="__ASSETS__/team-rufat.png" alt=""><div class="name">Rufat Guliyev</div><div class="role">AI/ML Software Engineer</div><div class="desc">Feedback clustering, issue-prioritization models and the AI gameplay agent.</div></div>
+    <div class="card"><img class="av" src="__ASSETS__/team-elchin.png" alt=""><div class="name">Elchin Guluzade</div><div class="role">Web Developer</div><div class="desc">Frontend development and dashboard implementation.</div></div>
   </div>
 
   <div class="bottom" id="bottom">
