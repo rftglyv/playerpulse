@@ -9,11 +9,41 @@ real bugs are never silenced, only ranked.
 
 Built at the hackathon by team EnthuZone (AI Gaming track). See `AUDIT.md` and `DISCLOSURE.md`.
 
+## Results (synthetic test pack, see `TESTING.md`)
+
+| | Issues found | False alarms | Message accuracy | "Too hard" wrongly flagged |
+|---|---|---|---|---|
+| Best baseline, scenario A test | 5/5 (keyword) | 2 | 59% | 16/23 |
+| **PlayerPulse, scenario A test** | **5/5** | **0** | **100%** | **0/23** |
+| **PlayerPulse, scenario B held out** | **4/4** | **0** | **98%** | **1/15** |
+
+≈ $0.21 per 100 messages, ~30 s per run (`anthropic/claude-sonnet-5.5` via OpenRouter).
+
+## Layout
+
+```
+apps/api        Elysia + Zod API (runs, issues, tasks), OpenAPI at /api/docs
+apps/web        Next.js + shadcn dashboard
+packages/pipeline  extraction → grouping → verification → priority → tickets
+packages/db     Postgres + Drizzle schema and migrations
+packages/api-schemas  shared Zod contracts
+eval/           test pack + evaluate.py (the app never reads eval/answer_key)
+demo/           precomputed runs, auto-loaded into an empty database
+```
+
 ## Run locally
 
 ```bash
-bun install
-bun dev
+cp .env.example .env          # DATABASE_URL, OPENROUTER_API_KEY
+bun install && bun run --filter @playerpulse/db db:migrate
+bun run dev                   # web :3000, api :4000
 ```
 
-Evaluation instructions land with the pipeline PR.
+Deploy: `docker compose up -d --build` (api + web; Postgres is external via `DATABASE_URL`).
+
+## Reproduce the evaluation
+
+```bash
+bun run pipeline --scenario eval/data/scenario_A --telemetry on --out out/pp_A.json
+cd eval && python3 evaluate.py --scenario A --pred ../out/pp_A.json
+```
