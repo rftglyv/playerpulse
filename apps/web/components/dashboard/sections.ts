@@ -62,3 +62,8 @@ export const SECTION_GROUPS = ["Insights", "Triage", "Players"] as const;
 export function sectionHref(section: Section, runId?: string | null) {
   return `/dashboard/${section}${runId ? `?run=${encodeURIComponent(runId)}` : ""}`;
 }
+
+/** Detail page for an issue; `n` is the 1-based index into run.result.issues. */
+export function issueHref(n: number, runId?: string | null) {
+  return `/dashboard/issues/${n}${runId ? `?run=${encodeURIComponent(runId)}` : ""}`;
+}

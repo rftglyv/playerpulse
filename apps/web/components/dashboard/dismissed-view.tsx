@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { EyeIcon, GavelIcon } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -8,6 +9,7 @@ import { fmt } from "@/lib/api";
 import { CategoryBadge, LanguageChips, ViewEmpty, whereLabel } from "./issues-view";
 import { ChartLegendInline, TelemetryChart } from "./telemetry-chart";
 import { Stamp } from "./case-file";
+import { issueHref } from "./sections";
 
 function headline(issue: Issue, unit: string) {
   const n = issue.distinct_players;
@@ -21,7 +23,17 @@ function headline(issue: Issue, unit: string) {
   return issue.title;
 }
 
-function VerdictCard({ issue, result, tone }: { issue: Issue; result: RunResult; tone: "proof" | "watch" }) {
+function VerdictCard({
+  issue,
+  result,
+  tone,
+  href,
+}: {
+  issue: Issue;
+  result: RunResult;
+  tone: "proof" | "watch";
+  href: string;
+}) {
   return (
     <Card
       data-card
@@ -35,7 +47,9 @@ function VerdictCard({ issue, result, tone }: { issue: Issue; result: RunResult;
           aria-level={3}
           className="pr-24 text-xl leading-tight font-semibold tracking-tight text-balance lg:pr-0"
         >
-          {headline(issue, result.unit)}
+          <Link href={href} className="underline-offset-4 hover:underline">
+            {headline(issue, result.unit)}
+          </Link>
         </CardTitle>
         <div className="flex flex-wrap items-center gap-1.5">
           <CategoryBadge category={issue.category} />
@@ -60,7 +74,8 @@ function VerdictCard({ issue, result, tone }: { issue: Issue; result: RunResult;
   );
 }
 
-export function DismissedView({ result }: { result: RunResult }) {
+export function DismissedView({ result, runId }: { result: RunResult; runId: string | null }) {
+  const hrefOf = (i: Issue) => issueHref(result.issues.indexOf(i) + 1, runId);
   const dismissed = result.issues.filter((i) => i.status === "dismissed");
   const watch = result.issues.filter((i) => i.status === "watch");
   return (
@@ -77,7 +92,7 @@ export function DismissedView({ result }: { result: RunResult }) {
             }
           />
         ) : (
-          dismissed.map((i, idx) => <VerdictCard key={idx} issue={i} result={result} tone="proof" />)
+          dismissed.map((i, idx) => <VerdictCard key={idx} issue={i} result={result} tone="proof" href={hrefOf(i)} />)
         )}
       </section>
       <section className="space-y-4">
@@ -91,7 +106,7 @@ export function DismissedView({ result }: { result: RunResult }) {
         {watch.length === 0 ? (
           <ViewEmpty icon={EyeIcon} title="Watch list is empty" />
         ) : (
-          watch.map((i, idx) => <VerdictCard key={idx} issue={i} result={result} tone="watch" />)
+          watch.map((i, idx) => <VerdictCard key={idx} issue={i} result={result} tone="watch" href={hrefOf(i)} />)
         )}
       </section>
     </div>

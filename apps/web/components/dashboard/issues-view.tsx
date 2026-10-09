@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { CheckIcon, CopyIcon, InboxIcon, LayoutGridIcon, ListIcon, SearchIcon, SearchXIcon } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowRightIcon, CheckIcon, CopyIcon, InboxIcon, LayoutGridIcon, ListIcon, SearchIcon, SearchXIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +19,7 @@ import { fmt, langLabel } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { ChartLegendInline, TelemetryChart } from "./telemetry-chart";
 import { Stamp } from "./case-file";
+import { issueHref } from "./sections";
 
 export const CATEGORY_LABEL: Record<string, string> = {
   bug: "Bug",
@@ -102,7 +105,7 @@ export function whereLabel(issue: Pick<Issue, "level" | "level_name">, unit = "l
   return issue.level_name ? `${issue.level_name} · ${unit} ${issue.level}` : `${unit} ${issue.level}`;
 }
 
-function toMarkdown(issue: Issue, result: RunResult) {
+export function issueMarkdown(issue: Issue, result: RunResult) {
   const t = issue.ticket;
   const lines: string[] = [];
   lines.push(`## ${t?.title ?? issue.title}`, "");
@@ -148,7 +151,7 @@ function toMarkdown(issue: Issue, result: RunResult) {
   return lines.join("\n");
 }
 
-function CopyButton({ issue, result }: { issue: Issue; result: RunResult }) {
+export function CopyButton({ issue, result }: { issue: Issue; result: RunResult }) {
   const [copied, setCopied] = useState(false);
   return (
     <Button
@@ -156,7 +159,7 @@ function CopyButton({ issue, result }: { issue: Issue; result: RunResult }) {
       size="sm"
       onClick={async () => {
         try {
-          await navigator.clipboard.writeText(toMarkdown(issue, result));
+          await navigator.clipboard.writeText(issueMarkdown(issue, result));
           setCopied(true);
           setTimeout(() => setCopied(false), 1800);
         } catch {
@@ -170,7 +173,7 @@ function CopyButton({ issue, result }: { issue: Issue; result: RunResult }) {
   );
 }
 
-function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
+function IssueCard({ issue, result, href }: { issue: Issue; result: RunResult; href: string }) {
   const t = issue.ticket;
   const steps = t?.repro_steps ?? issue.repro_steps ?? [];
   return (
@@ -184,7 +187,9 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
             aria-level={3}
             className="max-w-[34ch] pr-28 text-xl leading-tight font-semibold tracking-tight text-balance sm:pr-0"
           >
-            {t?.title ?? issue.title}
+            <Link href={href} className="underline-offset-4 hover:underline">
+              {t?.title ?? issue.title}
+            </Link>
           </CardTitle>
           <div className="flex flex-wrap items-center gap-1.5">
             <CategoryBadge category={issue.category} />
@@ -263,8 +268,11 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
         </>
       )}
 
-      <CardFooter className="justify-end bg-transparent px-6 py-3">
+      <CardFooter className="justify-end gap-2 bg-transparent px-6 py-3">
         <CopyButton issue={issue} result={result} />
+        <Button variant="outline" size="sm" nativeButton={false} render={<Link href={href} />}>
+          View details <ArrowRightIcon />
+        </Button>
       </CardFooter>
     </Card>
   );
@@ -272,7 +280,9 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
 
 const ALL = "all";
 
-export function IssuesView({ result }: { result: RunResult }) {
+export function IssuesView({ result, runId }: { result: RunResult; runId: string | null }) {
+  // Detail routes use the 1-based index into result.issues (unfiltered, unsorted).
+  const hrefOf = (i: Issue) => issueHref(result.issues.indexOf(i) + 1, runId);
   const [q, setQ] = useState("");
   const [category, setCategory] = useState<string>(ALL);
   const [severity, setSeverity] = useState<string>(ALL);
@@ -375,9 +385,9 @@ export function IssuesView({ result }: { result: RunResult }) {
       ) : issues.length === 0 ? (
         <ViewEmpty title="No issues match these filters" icon={SearchXIcon} />
       ) : view === "table" ? (
-        <IssuesTable issues={issues} result={result} />
+        <IssuesTable issues={issues} result={result} hrefOf={hrefOf} />
       ) : (
-        issues.map((i, idx) => <IssueCard key={`${i.title}-${idx}`} issue={i} result={result} />)
+        issues.map((i, idx) => <IssueCard key={`${i.title}-${idx}`} issue={i} result={result} href={hrefOf(i)} />)
       )}
       <p className="text-xs text-muted-foreground">
         Priority = players who started the level on the new patch × drop in completion rate
@@ -413,7 +423,8 @@ function FilterSelect({
   );
 }
 
-function IssuesTable({ issues, result }: { issues: Issue[]; result: RunResult }) {
+function IssuesTable({ issues, result, hrefOf }: { issues: Issue[]; result: RunResult; hrefOf: (i: Issue) => string }) {
+  const router = useRouter();
   return (
     <Card data-card className="gap-0 rounded-[10px] py-0">
       <Table>
@@ -429,9 +440,13 @@ function IssuesTable({ issues, result }: { issues: Issue[]; result: RunResult })
         </TableHeader>
         <TableBody>
           {issues.map((i, idx) => (
-            <TableRow key={idx}>
+            <TableRow key={idx} className="cursor-pointer" onClick={() => router.push(hrefOf(i))}>
               <TableCell className="pl-5 text-xs tabular-nums text-muted-foreground">{i.priority ?? "–"}</TableCell>
-              <TableCell className="max-w-md font-medium whitespace-normal">{i.ticket?.title ?? i.title}</TableCell>
+              <TableCell className="max-w-md font-medium whitespace-normal">
+                <Link href={hrefOf(i)} className="underline-offset-4 hover:underline" onClick={(e) => e.stopPropagation()}>
+                  {i.ticket?.title ?? i.title}
+                </Link>
+              </TableCell>
               <TableCell className="text-muted-foreground">{whereLabel(i, result.unit)}</TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1">

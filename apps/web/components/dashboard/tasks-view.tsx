@@ -56,7 +56,7 @@ import {
 import { CategoryBadge, SeverityBadge } from "./issues-view";
 import { EmptyState, ErrorState } from "./states";
 
-const STATES: { value: TaskState; label: string }[] = [
+export const TASK_STATES: { value: TaskState; label: string }[] = [
   { value: "todo", label: "To do" },
   { value: "in_progress", label: "In progress" },
   { value: "done", label: "Done" },
@@ -126,7 +126,7 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
   async function commitBoard(next: Record<TaskState, Task[]>) {
     if (!tasks) return;
     const moved: { task: Task; state: TaskState }[] = [];
-    for (const col of STATES)
+    for (const col of TASK_STATES)
       for (const t of next[col.value])
         if (t.state !== col.value) moved.push({ task: t, state: col.value });
     await Promise.all(moved.map((m) => setState(m.task, m.state)));
@@ -323,7 +323,7 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Select
-                          items={STATES}
+                          items={TASK_STATES}
                           value={t.state}
                           onValueChange={(v) =>
                             v && setState(t, v as TaskState)
@@ -333,7 +333,7 @@ export function TasksView({ runId, unit }: { runId: string; unit: string }) {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {STATES.map((s) => (
+                            {TASK_STATES.map((s) => (
                               <SelectItem key={s.value} value={s.value}>
                                 {s.label}
                               </SelectItem>
@@ -365,7 +365,7 @@ function groupByState(tasks: Task[]): Columns {
       (b.playersLost ?? 0) - (a.playersLost ?? 0),
   );
   const cols = Object.fromEntries(
-    STATES.map((s) => [s.value, [] as Task[]]),
+    TASK_STATES.map((s) => [s.value, [] as Task[]]),
   ) as Columns;
   for (const t of sorted) cols[t.state]?.push(t);
   return cols;
@@ -388,7 +388,7 @@ function TaskBoard({
   if (synced !== signature) {
     setSynced(signature);
     const placed = new Map<string, TaskState>();
-    for (const col of STATES)
+    for (const col of TASK_STATES)
       for (const t of columns[col.value]) placed.set(t.id, col.value);
     // Only regroup if the board disagrees with the data (keeps manual ordering after a successful drop).
     if (tasks.some((t) => placed.get(t.id) !== t.state))
@@ -406,7 +406,7 @@ function TaskBoard({
       restoreOnCancel
     >
       <KanbanBoard className="grid auto-rows-auto items-start gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {STATES.map((col) => (
+        {TASK_STATES.map((col) => (
           <KanbanColumn
             key={col.value}
             value={col.value}

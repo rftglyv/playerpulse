@@ -13,6 +13,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { api, fmt, type RunDetail, type RunResult, type RunRow } from "@/lib/api";
 import { DismissedView } from "./dismissed-view";
 import { IssuesView } from "./issues-view";
+import { IssueDetail } from "./issue-detail";
 import { ReviewView } from "./messages-view";
 import { OverviewView } from "./overview-view";
 import { PatchCompareView } from "./patch-compare-view";
@@ -53,7 +54,7 @@ const cache: { runs: RunRow[] | null; run: Map<string, RunDetail> } = { runs: nu
 
 const Ctx = createContext<DashboardCtx | null>(null);
 
-function useDashboard() {
+export function useDashboard() {
   const c = useContext(Ctx);
   if (!c) throw new Error("useDashboard must be used inside DashboardShell");
   return c;
@@ -121,6 +122,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const result = run?.id === runId ? (run?.result ?? null) : null;
   const c = counts(result);
   const current = SECTIONS.find((s) => s.id === section)!;
+  // /dashboard/issues/<n>: header shows the issue instead of the section.
+  const item = section === "issues" ? pathname.split("/")[3] : undefined;
+  const itemIssue = item ? result?.issues[Number(item) - 1] : undefined;
+  const headerTitle = item ? (itemIssue ? (itemIssue.ticket?.title ?? itemIssue.title) : `Issue #${item}`) : current.label;
+  const headerBlurb = item ? (itemIssue ? `Issue #${itemIssue.priority ?? item} · ${current.label}` : current.label) : current.blurb;
   const runItems = runs?.map((r) => ({ value: r.id, label: runLabel(r) })) ?? [];
   const ctx = useMemo<DashboardCtx>(
     () => ({ runs, runsError, loadRuns, runId, run: run?.id === runId ? run : null, runError, loadRun }),
@@ -139,8 +145,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             status={<RunStatusCard run={run?.id === runId ? run : null} runs={runs} />}
           />
 
-          <SidebarInset className="min-h-svh">
-            <SiteHeader title={current.label} description={current.blurb}>
+          <SidebarInset className="min-h-svh min-w-0">
+            <SiteHeader title={headerTitle} description={headerBlurb}>
               {runs && runs.length > 0 && (
                 <Select items={runItems} value={runId} onValueChange={(v) => v && selectRun(v as string)}>
                   <SelectTrigger size="sm" className="max-w-[22rem]" aria-label="Select run">
@@ -163,7 +169,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               />
             </SiteHeader>
 
-            <Reveal deps={[section, run]} className="mx-auto w-full max-w-6xl flex-1 px-4 pt-8 pb-16 sm:px-6">
+            <Reveal deps={[section, run]} className="mx-auto w-full min-w-0 max-w-6xl flex-1 px-4 pt-8 pb-16 sm:px-6">
               {children}
             </Reveal>
 
@@ -175,37 +181,50 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function SectionBody({ section }: { section: Section }) {
+/** Loading / error / empty states shared by every view that needs a finished run. */
+function useRunGate() {
   const { runs, runsError, loadRuns, run, runError, loadRun, runId } = useDashboard();
   const result = run?.result ?? null;
-
-  if (runsError) return <ErrorState message={runsError} onRetry={loadRuns} />;
-  if (!runs) return <CardsSkeleton />;
-  if (runs.length === 0)
-    return (
+  let gate: React.ReactNode = null;
+  if (runsError) gate = <ErrorState message={runsError} onRetry={loadRuns} />;
+  else if (!runs) gate = <CardsSkeleton />;
+  else if (runs.length === 0)
+    gate = (
       <EmptyState
         title="No runs yet"
         body="Start a run to analyse player messages for a scenario. Results show up here when it finishes."
       />
     );
-  if (runError) return <ErrorState message={runError} onRetry={() => loadRun(true)} />;
-  if (!run) return <CardsSkeleton />;
-  if (!result)
-    return (
+  else if (runError) gate = <ErrorState message={runError} onRetry={() => loadRun(true)} />;
+  else if (!run) gate = <CardsSkeleton />;
+  else if (!result)
+    gate = (
       <EmptyState
         title={run.status === "failed" ? "This run failed" : "This run has no results yet"}
         body={`Status: ${run.status}. Pick another run or start a new one.`}
       />
     );
+  return { gate, run, result, runId };
+}
+
+export function IssueDetailBody({ item }: { item: number }) {
+  const { gate, run, result, runId } = useRunGate();
+  if (gate || !run || !result) return gate;
+  return <IssueDetail result={result} index={item - 1} runId={runId ?? run.id} />;
+}
+
+export function SectionBody({ section }: { section: Section }) {
+  const { gate, run, result, runId } = useRunGate();
+  if (gate || !run || !result) return gate;
   switch (section) {
     case "overview":
       return <OverviewView result={result} issuesHref={sectionHref("issues", runId)} />;
     case "patch-compare":
       return <PatchCompareView result={result} />;
     case "issues":
-      return <IssuesView result={result} />;
+      return <IssuesView result={result} runId={runId} />;
     case "dismissed":
-      return <DismissedView result={result} />;
+      return <DismissedView result={result} runId={runId} />;
     case "tasks":
       return <TasksView runId={run.id} unit={result.unit} />;
     case "review":
