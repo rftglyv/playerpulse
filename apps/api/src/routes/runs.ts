@@ -3,6 +3,7 @@ import { db, runs } from "@playerpulse/db";
 import { DEFAULT_MODEL, MODELS } from "@playerpulse/pipeline";
 import { desc, eq } from "drizzle-orm";
 import { Elysia } from "elysia";
+import { acquireRun, clientIp, demoReadonly } from "../limits";
 import { buildScenario, InputError, runPipeline, saveRun } from "../service";
 
 export const runRoutes = new Elysia({ prefix: "/runs", tags: ["runs"] })
@@ -26,7 +27,8 @@ export const runRoutes = new Elysia({ prefix: "/runs", tags: ["runs"] })
   )
   .post(
     "/",
-    async ({ body, status }) => {
+    async ({ body, status, request, server, set }) => {
+      if (demoReadonly()) return status(403, { error: "live runs are disabled on this demo" });
       if (!process.env.OPENROUTER_API_KEY) {
         return status(503, { error: "live runs are disabled: no OPENROUTER_API_KEY; demo results are loaded" });
       }
@@ -39,9 +41,18 @@ export const runRoutes = new Elysia({ prefix: "/runs", tags: ["runs"] })
         if (err instanceof InputError) return status(422, { error: err.message });
         throw err;
       }
-      const result = await runPipeline(scenario, { model });
-      const id = await saveRun(result, body.name ?? `${scenario.name} · ${body.telemetry ? "telemetry" : "community-only"} · ${model}`);
-      return { id, meta: result.meta };
+      const slot = acquireRun(clientIp(request, server));
+      if ("denied" in slot) {
+        set.headers["retry-after"] = String(slot.denied.retry_after_s);
+        return status(429, slot.denied);
+      }
+      try {
+        const result = await runPipeline(scenario, { model });
+        const id = await saveRun(result, body.name ?? `${scenario.name} · ${body.telemetry ? "telemetry" : "community-only"} · ${model}`);
+        return { id, meta: result.meta };
+      } finally {
+        slot.release();
+      }
     },
     { body: RunCreate },
   );
