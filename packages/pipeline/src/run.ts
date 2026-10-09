@@ -14,8 +14,14 @@ export interface RunResult {
   model: string;
   prompt_version: string;
   telemetry: boolean;
+  /** full per-level telemetry (both patches), for funnel and patch-compare views */
+  telemetry_table: import("./types").TelemetryRow[] | null;
+  previous_patch: string;
+  current_patch: string;
+  levels: Record<string, string>;
   messages: {
     id: string;
+    timestamp: string;
     category: MessageCategory;
     level: number | null;
     mechanic: string | null;
@@ -110,10 +116,15 @@ export async function runPipeline(
     model,
     prompt_version: PROMPT_VERSION,
     telemetry: telemetryMode,
+    telemetry_table: telemetry,
+    previous_patch: game.previous_patch,
+    current_patch: game.current_patch,
+    levels: game.levels,
     messages: messages.map((m) => {
       const e = exById.get(m.id) as Extraction;
       return {
         id: m.id,
+        timestamp: m.timestamp,
         category: messageCategory(e, groupOf.get(m.id)),
         level: e.level,
         mechanic: e.mechanic,

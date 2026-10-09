@@ -19,7 +19,8 @@
       "english_translation": "Mission 6 difficulty spike is unfair.",
       "text": "Mission 6 difficulty spike is unfair.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-01T10:53"
     },
     {
       "id": "B002",
@@ -33,7 +34,8 @@
       "english_translation": "Storm Pier is way too hard.",
       "text": "Storm Pier is way too hard.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-01T14:08"
     },
     {
       "id": "B003",
@@ -47,7 +49,8 @@
       "english_translation": "Co-op is broken on Cargo Lift: desync and disconnect on the lift.",
       "text": "Кооп сломан на Cargo Lift: на лифте рассинхрон и дисконнект.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-01T17:56"
     },
     {
       "id": "B004",
@@ -61,7 +64,8 @@
       "english_translation": "On mission 3 after 2.1 there is almost no ammo.",
       "text": "На 3 миссии после 2.1 патронов почти нет.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-01T18:53"
     },
     {
       "id": "B005",
@@ -75,7 +79,8 @@
       "english_translation": "In the Lighthouse mission the flashlight doesn't work after rebind.",
       "text": "Lighthouse missiyasında fənər rebind-dən sonra не работает",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-01T19:11"
     },
     {
       "id": "B006",
@@ -89,7 +94,8 @@
       "english_translation": "On mission 5, on the lift, your teammate gets thrown out of the game.",
       "text": "На 5 миссии на лифте напарника выкидывает из игры.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-01T20:07"
     },
     {
       "id": "B007",
@@ -103,7 +109,8 @@
       "english_translation": "In the Harbor Master mission the required key doesn't spawn at all.",
       "text": "Harbor Master missiyasında lazım olan açar ümumiyyətlə yaranmır.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-01T20:51"
     },
     {
       "id": "B008",
@@ -117,7 +124,8 @@
       "english_translation": "Flooded Market has become impossible — ammo runs out halfway through.",
       "text": "Flooded Market стал невозможным — патроны кончаются на середине.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-01T22:23"
     },
     {
       "id": "B009",
@@ -131,7 +139,8 @@
       "english_translation": "mission 2 too hard",
       "text": "mission 2 too hard",
       "channel": "in_game",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T00:26"
     },
     {
       "id": "B010",
@@ -145,7 +154,8 @@
       "english_translation": "mission 3 not enough ammo",
       "text": "mission 3 not enough ammo",
       "channel": "in_game",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T00:47"
     },
     {
       "id": "B011",
@@ -159,7 +169,8 @@
       "english_translation": "trash",
       "text": "zibil",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T05:20"
     },
     {
       "id": "B012",
@@ -173,7 +184,8 @@
       "english_translation": "In Flooded Market after 2.1 there aren't enough bullets, we die every time.",
       "text": "Flooded Market-də 2.1-dən sonra güllə çatmır, hər dəfə ölürük.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T07:03"
     },
     {
       "id": "B013",
@@ -187,7 +199,8 @@
       "english_translation": "Storm Pier is very hard, impossible.",
       "text": "Storm Pier çox çətin, impossible",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T08:37"
     },
     {
       "id": "B014",
@@ -201,7 +214,8 @@
       "english_translation": "After remapping controls the flashlight key does nothing in the Lighthouse mission. Default keys work.",
       "text": "After remapping controls the flashlight key does nothing in the Lighthouse mission. Default keys work.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T12:06"
     },
     {
       "id": "B015",
@@ -215,7 +229,8 @@
       "english_translation": "Mission 2 detection is broken, I get spotted instantly.",
       "text": "Mission 2 detection is broken, I get spotted instantly.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T14:20"
     },
     {
       "id": "B016",
@@ -229,7 +244,8 @@
       "english_translation": "the ferry ending was great",
       "text": "the ferry ending was great",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T15:03"
     },
     {
       "id": "B017",
@@ -243,7 +259,8 @@
       "english_translation": "In mission 3 ammo almost never drops, it runs out halfway.",
       "text": "3-cü missiyada patron demək olar ki, düşmür, yarıda bitir.",
       "channel": "discord",
-      "needs_review": true
+      "needs_review": true,
+      "timestamp": "2026-10-02T15:41"
     },
     {
       "id": "B018",
@@ -257,7 +274,8 @@
       "english_translation": "the price is expensive",
       "text": "qiymət bahadır",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T20:53"
     },
     {
       "id": "B019",
@@ -271,7 +289,8 @@
       "english_translation": "Mission 3 became a slog, the ammo nerf went too far.",
       "text": "Mission 3 became a slog, the ammo nerf went too far.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T22:27"
     },
     {
       "id": "B020",
@@ -285,7 +304,8 @@
       "english_translation": "Mission 6 is too hard.",
       "text": "Миссия 6 слишком сложная.",
       "channel": "in_game",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-02T22:49"
     },
     {
       "id": "B021",
@@ -299,7 +319,8 @@
       "english_translation": "Mission 7, no key",
       "text": "Missiya 7, açar yoxdur",
       "channel": "in_game",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T03:17"
     },
     {
       "id": "B022",
@@ -313,7 +334,8 @@
       "english_translation": "Mission 2 stealth is impossible, very hard",
       "text": "mission 2 stealth невозможно, çox çətindir",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T04:13"
     },
     {
       "id": "B023",
@@ -327,7 +349,8 @@
       "english_translation": "Storm Pier is too difficult.",
       "text": "Шторм на пирсе слишком сложный.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T05:48"
     },
     {
       "id": "B024",
@@ -341,7 +364,8 @@
       "english_translation": "lots of bugs",
       "text": "много багов",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T06:13"
     },
     {
       "id": "B025",
@@ -355,7 +379,8 @@
       "english_translation": "In mission 5 on the lift my friend gets kicked, since 2.1",
       "text": "mission 5 lift-də dostumu кикает, 2.1-dən sonra",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T08:39"
     },
     {
       "id": "B026",
@@ -369,7 +394,8 @@
       "english_translation": "Silent Warehouse is very hard.",
       "text": "Silent Warehouse çox çətindir.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T17:15"
     },
     {
       "id": "B027",
@@ -383,7 +409,8 @@
       "english_translation": "Every time we take the cargo lift in mission 5 my friend gets disconnected.",
       "text": "Every time we take the cargo lift in mission 5 my friend gets disconnected.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T19:47"
     },
     {
       "id": "B028",
@@ -397,7 +424,8 @@
       "english_translation": "Silent Warehouse — broken stealth.",
       "text": "Silent Warehouse — сломанный стелс.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T19:52"
     },
     {
       "id": "B029",
@@ -411,7 +439,8 @@
       "english_translation": "lots of bugs lol",
       "text": "lots of bugs lol",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T20:30"
     },
     {
       "id": "B030",
@@ -425,7 +454,8 @@
       "english_translation": "Co-op doesn't work on the Cargo Lift; as soon as the lift moves the second player disconnects.",
       "text": "Cargo Lift-də co-op işləmir, lift hərəkət edən kimi ikinci oyunçu disconnect olur.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-03T22:15"
     },
     {
       "id": "B031",
@@ -439,7 +469,8 @@
       "english_translation": "Love how the 2.1 elevator is a solo-only experience now. Co-op game btw",
       "text": "Love how the 2.1 elevator is a solo-only experience now. Co-op game btw",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T04:49"
     },
     {
       "id": "B032",
@@ -453,7 +484,8 @@
       "english_translation": "Stealth in mission 2 is impossible, guards see through walls.",
       "text": "Стелс на 2 миссии невозможный, охрана видит сквозь стены.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T05:13"
     },
     {
       "id": "B033",
@@ -467,7 +499,8 @@
       "english_translation": "In mission 2 it's impossible to hide, the guards see everything.",
       "text": "2-ci missiyada gizlənmək mümkün deyil, mühafizəçilər hər şeyi görür.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T05:30"
     },
     {
       "id": "B034",
@@ -481,7 +514,8 @@
       "english_translation": "Harbor Master, no key, the key doesn't appear",
       "text": "Harbor Master açar yoxdur, ключ не появляется",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T06:16"
     },
     {
       "id": "B035",
@@ -495,7 +529,8 @@
       "english_translation": "Downvote because of the forced account.",
       "text": "Downvote because of the forced account.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T07:39"
     },
     {
       "id": "B036",
@@ -509,7 +544,8 @@
       "english_translation": "In mission 7 the key doesn't appear, can't open the door, can't progress.",
       "text": "7-ci missiyada açar çıxmır, qapını açmaq olmur, irəli getmək mümkün deyil.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T12:17"
     },
     {
       "id": "B037",
@@ -523,7 +559,8 @@
       "english_translation": "Tried reloading 3 times, the mission 7 key is just not there",
       "text": "Tried reloading 3 times, the mission 7 key is just not there",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T12:24"
     },
     {
       "id": "B038",
@@ -537,7 +574,8 @@
       "english_translation": "guards in mission 2 are psychic lol",
       "text": "guards in mission 2 are psychic lol",
       "channel": "discord",
-      "needs_review": true
+      "needs_review": true,
+      "timestamp": "2026-10-04T15:06"
     },
     {
       "id": "B039",
@@ -551,7 +589,8 @@
       "english_translation": "LFG mission 8, who's with me?",
       "text": "LFG mission 8, кто со мной?",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T15:20"
     },
     {
       "id": "B040",
@@ -565,7 +604,8 @@
       "english_translation": "Ammo drops in Flooded Market are way too low after 2.1, running dry halfway.",
       "text": "Ammo drops in Flooded Market are way too low after 2.1, running dry halfway.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T20:55"
     },
     {
       "id": "B041",
@@ -579,7 +619,8 @@
       "english_translation": "When is the new map?",
       "text": "когда новая карта?",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-04T23:52"
     },
     {
       "id": "B042",
@@ -593,7 +634,8 @@
       "english_translation": "After remapping keys the flashlight doesn't turn on in mission 4.",
       "text": "После переназначения клавиш фонарик на 4 миссии не включается.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-05T03:12"
     },
     {
       "id": "B043",
@@ -607,7 +649,8 @@
       "english_translation": "In mission 5, when stepping onto the lift, my friend gets kicked out of the game.",
       "text": "5-ci missiyada liftə minəndə dostum oyundan atılır.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-05T07:28"
     },
     {
       "id": "B044",
@@ -621,7 +664,8 @@
       "english_translation": "add crossplay pls",
       "text": "add crossplay pls",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-05T07:45"
     },
     {
       "id": "B045",
@@ -635,7 +679,8 @@
       "english_translation": "The game is great, we play with friends.",
       "text": "oyun əladır, dostlarla oynayırıq",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-05T08:20"
     },
     {
       "id": "B046",
@@ -649,7 +694,8 @@
       "english_translation": "Devs did a great job.",
       "text": "разрабы молодцы",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-05T16:00"
     },
     {
       "id": "B047",
@@ -663,7 +709,8 @@
       "english_translation": "Mission 6 is very difficult.",
       "text": "6-cı missiya çox çətindir",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-05T17:54"
     },
     {
       "id": "B048",
@@ -677,7 +724,8 @@
       "english_translation": "Lighthouse (mission 4): flashlight doesn't work after changing controls.",
       "text": "Маяк (миссия 4): фонарик не работает после смены управления.",
       "channel": "in_game",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-05T18:14"
     },
     {
       "id": "B049",
@@ -691,7 +739,8 @@
       "english_translation": "Silent Warehouse stealth is impossible, guards see through walls.",
       "text": "Silent Warehouse stealth is impossible, guards see through walls.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-06T09:11"
     },
     {
       "id": "B050",
@@ -705,7 +754,8 @@
       "english_translation": "The harbor master's key never spawns in mission 7, can't open the gate. Soft locked.",
       "text": "The harbor master's key never spawns in mission 7, can't open the gate. Soft locked.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-06T13:13"
     },
     {
       "id": "B051",
@@ -719,7 +769,8 @@
       "english_translation": "love the soundtrack",
       "text": "love the soundtrack",
       "channel": "in_game",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-06T20:21"
     },
     {
       "id": "B052",
@@ -733,7 +784,8 @@
       "english_translation": "devs please add a hard mode",
       "text": "devs please add a hard mode",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-06T21:52"
     },
     {
       "id": "B053",
@@ -747,7 +799,8 @@
       "english_translation": "key missing mission 7 stuck",
       "text": "key missing mission 7 stuck",
       "channel": "in_game",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-07T00:58"
     },
     {
       "id": "B054",
@@ -761,7 +814,8 @@
       "english_translation": "Mission 7 is impassable: the key doesn't spawn after the cutscene.",
       "text": "Миссия 7 непроходима: ключ после катсцены не спавнится.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-07T05:21"
     },
     {
       "id": "B055",
@@ -775,7 +829,8 @@
       "english_translation": "Mission 7 is unbeatable right now: the key item doesn't appear after the cutscene.",
       "text": "Mission 7 is unbeatable right now: the key item doesn't appear after the cutscene.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-07T08:57"
     },
     {
       "id": "B056",
@@ -789,7 +844,8 @@
       "english_translation": "Flooded Market, no ammo, the ammo nerf is very bad.",
       "text": "Flooded Market патронов нет, ammo nerf çox pisdir",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-07T12:00"
     },
     {
       "id": "B057",
@@ -803,7 +859,8 @@
       "english_translation": "Remapped my keys and now I can't turn on the flashlight in mission 4. Had to reset all bindings.",
       "text": "Remapped my keys and now I can't turn on the flashlight in mission 4. Had to reset all bindings.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-07T12:45"
     },
     {
       "id": "B058",
@@ -817,7 +874,8 @@
       "english_translation": "Overpriced for the content.",
       "text": "Overpriced for the content.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-07T18:30"
     },
     {
       "id": "B059",
@@ -831,7 +889,8 @@
       "english_translation": "In mission 7 the harbor master's key doesn't appear, can't progress further.",
       "text": "На 7 миссии не появляется ключ начальника порта, дальше не пройти.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-07T20:38"
     },
     {
       "id": "B060",
@@ -845,7 +904,8 @@
       "english_translation": "Bring back the ammo on mission 3, we die every time.",
       "text": "верните патроны на 3 миссии, умираем каждый раз",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-07T23:54"
     },
     {
       "id": "B061",
@@ -859,7 +919,8 @@
       "english_translation": "Great co-op fun with friends.",
       "text": "Great co-op fun with friends.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-07T23:58"
     },
     {
       "id": "B062",
@@ -873,7 +934,8 @@
       "english_translation": "Co-op is broken on Cargo Lift since 2.1. Partner desyncs at the elevator and drops from the session.",
       "text": "Co-op is broken on Cargo Lift since 2.1. Partner desyncs at the elevator and drops from the session.",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-08T04:26"
     },
     {
       "id": "B063",
@@ -887,7 +949,8 @@
       "english_translation": "Mission 5, elevator — partner disconnect.",
       "text": "Миссия 5, лифт — дисконнект напарника.",
       "channel": "in_game",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-08T04:30"
     },
     {
       "id": "B064",
@@ -901,7 +964,8 @@
       "english_translation": "Great game.",
       "text": "отличная игра",
       "channel": "steam_review",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-08T05:34"
     },
     {
       "id": "B065",
@@ -915,7 +979,8 @@
       "english_translation": "After changing the keys, the flashlight doesn't light up in mission 4. It works with the default keys.",
       "text": "Düymələri dəyişəndən sonra 4-cü missiyada fənər yanmır. Standart düymələrlə işləyir.",
       "channel": "discord",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-08T06:33"
     },
     {
       "id": "B066",
@@ -929,7 +994,8 @@
       "english_translation": "partner disconnected at elevator mission 5",
       "text": "partner disconnected at elevator mission 5",
       "channel": "in_game",
-      "needs_review": false
+      "needs_review": false,
+      "timestamp": "2026-10-08T09:10"
     }
   ],
   "issues": [
@@ -1501,5 +1567,195 @@
     "seconds": 27.8,
     "llm_calls": 8,
     "cache_hits": 0
+  },
+  "telemetry_table": [
+    {
+      "patch": "2.0",
+      "level": 1,
+      "players_started": 5900,
+      "players_completed": 5605,
+      "completion_rate": 0.95,
+      "deaths_per_player": 0.8,
+      "restarts_per_player": 1.0,
+      "error_reports": 5,
+      "median_minutes": 8.0
+    },
+    {
+      "patch": "2.0",
+      "level": 2,
+      "players_started": 5381,
+      "players_completed": 4466,
+      "completion_rate": 0.83,
+      "deaths_per_player": 2.9,
+      "restarts_per_player": 1.5,
+      "error_reports": 3,
+      "median_minutes": 15.0
+    },
+    {
+      "patch": "2.0",
+      "level": 3,
+      "players_started": 4287,
+      "players_completed": 3515,
+      "completion_rate": 0.82,
+      "deaths_per_player": 3.0,
+      "restarts_per_player": 1.4,
+      "error_reports": 4,
+      "median_minutes": 17.0
+    },
+    {
+      "patch": "2.0",
+      "level": 4,
+      "players_started": 3374,
+      "players_completed": 2902,
+      "completion_rate": 0.86,
+      "deaths_per_player": 1.7,
+      "restarts_per_player": 1.1,
+      "error_reports": 2,
+      "median_minutes": 12.0
+    },
+    {
+      "patch": "2.0",
+      "level": 5,
+      "players_started": 2786,
+      "players_completed": 2340,
+      "completion_rate": 0.84,
+      "deaths_per_player": 1.6,
+      "restarts_per_player": 1.2,
+      "error_reports": 9,
+      "median_minutes": 10.0
+    },
+    {
+      "patch": "2.0",
+      "level": 6,
+      "players_started": 2246,
+      "players_completed": 1595,
+      "completion_rate": 0.71,
+      "deaths_per_player": 4.4,
+      "restarts_per_player": 1.7,
+      "error_reports": 3,
+      "median_minutes": 19.0
+    },
+    {
+      "patch": "2.0",
+      "level": 7,
+      "players_started": 1531,
+      "players_completed": 1164,
+      "completion_rate": 0.76,
+      "deaths_per_player": 1.9,
+      "restarts_per_player": 1.3,
+      "error_reports": 4,
+      "median_minutes": 14.0
+    },
+    {
+      "patch": "2.0",
+      "level": 8,
+      "players_started": 1117,
+      "players_completed": 894,
+      "completion_rate": 0.8,
+      "deaths_per_player": 2.6,
+      "restarts_per_player": 1.4,
+      "error_reports": 3,
+      "median_minutes": 21.0
+    },
+    {
+      "patch": "2.1",
+      "level": 1,
+      "players_started": 6200,
+      "players_completed": 5890,
+      "completion_rate": 0.95,
+      "deaths_per_player": 0.8,
+      "restarts_per_player": 1.0,
+      "error_reports": 6,
+      "median_minutes": 8.0
+    },
+    {
+      "patch": "2.1",
+      "level": 2,
+      "players_started": 5654,
+      "players_completed": 4636,
+      "completion_rate": 0.82,
+      "deaths_per_player": 3.0,
+      "restarts_per_player": 1.5,
+      "error_reports": 3,
+      "median_minutes": 15.0
+    },
+    {
+      "patch": "2.1",
+      "level": 3,
+      "players_started": 4451,
+      "players_completed": 2849,
+      "completion_rate": 0.64,
+      "deaths_per_player": 5.7,
+      "restarts_per_player": 2.3,
+      "error_reports": 4,
+      "median_minutes": 24.0
+    },
+    {
+      "patch": "2.1",
+      "level": 4,
+      "players_started": 2735,
+      "players_completed": 2352,
+      "completion_rate": 0.86,
+      "deaths_per_player": 1.7,
+      "restarts_per_player": 1.1,
+      "error_reports": 2,
+      "median_minutes": 12.0
+    },
+    {
+      "patch": "2.1",
+      "level": 5,
+      "players_started": 2258,
+      "players_completed": 1310,
+      "completion_rate": 0.58,
+      "deaths_per_player": 1.6,
+      "restarts_per_player": 2.1,
+      "error_reports": 388,
+      "median_minutes": 10.0
+    },
+    {
+      "patch": "2.1",
+      "level": 6,
+      "players_started": 1258,
+      "players_completed": 881,
+      "completion_rate": 0.7,
+      "deaths_per_player": 4.5,
+      "restarts_per_player": 1.7,
+      "error_reports": 3,
+      "median_minutes": 19.0
+    },
+    {
+      "patch": "2.1",
+      "level": 7,
+      "players_started": 846,
+      "players_completed": 161,
+      "completion_rate": 0.19,
+      "deaths_per_player": 1.8,
+      "restarts_per_player": 3.4,
+      "error_reports": 5,
+      "median_minutes": 26.0
+    },
+    {
+      "patch": "2.1",
+      "level": 8,
+      "players_started": 155,
+      "players_completed": 122,
+      "completion_rate": 0.79,
+      "deaths_per_player": 2.6,
+      "restarts_per_player": 1.4,
+      "error_reports": 3,
+      "median_minutes": 21.0
+    }
+  ],
+  "previous_patch": "2.0",
+  "current_patch": "2.1",
+  "levels": {
+    "1": "Dockside",
+    "2": "Silent Warehouse (stealth)",
+    "3": "Flooded Market",
+    "4": "Lighthouse",
+    "5": "Cargo Lift",
+    "6": "Storm Pier",
+    "7": "Harbor Master",
+    "8": "Last Ferry"
   }
 }

@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { CheckIcon, CopyIcon, LayoutGridIcon, ListIcon, SearchIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Issue, RunResult } from "@/lib/api";
 import { fmt, langLabel } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -228,20 +231,170 @@ function IssueCard({ issue, result }: { issue: Issue; result: RunResult }) {
   );
 }
 
+const ALL = "all";
+
 export function IssuesView({ result }: { result: RunResult }) {
-  const issues = result.issues
+  const [q, setQ] = useState("");
+  const [category, setCategory] = useState<string>(ALL);
+  const [severity, setSeverity] = useState<string>(ALL);
+  const [level, setLevel] = useState<string>(ALL);
+  const [view, setView] = useState<"cards" | "table">("cards");
+
+  const all = result.issues
     .filter((i) => i.status === "reported")
     .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
+  const needle = q.trim().toLowerCase();
+  const issues = all.filter(
+    (i) =>
+      (category === ALL || i.category === category) &&
+      (severity === ALL || i.ticket?.severity === severity) &&
+      (level === ALL || String(i.level) === level) &&
+      (!needle ||
+        [i.title, i.ticket?.title, i.ticket?.summary, i.mechanic, i.level_name]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase()
+          .includes(needle)),
+  );
+
+  const catItems = [{ value: ALL, label: "All categories" }, ...["bug", "balance"].map((c) => ({ value: c, label: CATEGORY_LABEL[c] }))];
+  const sevItems = [
+    { value: ALL, label: "Any severity" },
+    ...[...new Set(all.map((i) => i.ticket?.severity).filter(Boolean) as string[])].map((s) => ({
+      value: s,
+      label: s[0].toUpperCase() + s.slice(1),
+    })),
+  ];
+  const lvlItems = [
+    { value: ALL, label: `Any ${result.unit}` },
+    ...[...new Set(all.map((i) => i.level).filter((l): l is number => l != null))]
+      .sort((a, b) => a - b)
+      .map((l) => ({ value: String(l), label: `${l} · ${result.levels?.[String(l)] ?? result.unit}` })),
+  ];
+  const filtered = issues.length !== all.length;
+
   return (
     <div className="space-y-5">
-      {issues.length === 0 ? (
+      {all.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative min-w-48 flex-1">
+            <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search issues"
+              aria-label="Search issues"
+              className="h-8 pl-8"
+            />
+          </div>
+          <FilterSelect items={catItems} value={category} onChange={setCategory} label="Category" />
+          <FilterSelect items={sevItems} value={severity} onChange={setSeverity} label="Severity" />
+          <FilterSelect items={lvlItems} value={level} onChange={setLevel} label={result.unit} />
+          <div className="flex rounded-lg bg-muted p-[3px]" role="group" aria-label="View">
+            {(
+              [
+                ["cards", LayoutGridIcon, "Card view"],
+                ["table", ListIcon, "Table view"],
+              ] as const
+            ).map(([v, Icon, label]) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                aria-label={label}
+                aria-pressed={view === v}
+                className={cn(
+                  "rounded-md px-2 py-1 text-muted-foreground",
+                  view === v && "bg-background text-foreground shadow-sm",
+                )}
+              >
+                <Icon className="size-4" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {filtered && (
+        <p className="font-mono text-xs text-muted-foreground">
+          Showing {issues.length} of {all.length} issues
+        </p>
+      )}
+      {all.length === 0 ? (
         <EmptyState title="No verified issues in this run" body="Nothing players reported was confirmed as a real problem." />
+      ) : issues.length === 0 ? (
+        <EmptyState title="No issues match these filters" />
+      ) : view === "table" ? (
+        <IssuesTable issues={issues} result={result} />
       ) : (
         issues.map((i, idx) => <IssueCard key={`${i.title}-${idx}`} issue={i} result={result} />)
       )}
       <p className="font-mono text-xs text-muted-foreground">
         Priority = players who started the level on the new patch × drop in completion rate
       </p>
+    </div>
+  );
+}
+
+function FilterSelect({
+  items,
+  value,
+  onChange,
+  label,
+}: {
+  items: { value: string; label: string }[];
+  value: string;
+  onChange: (v: string) => void;
+  label: string;
+}) {
+  return (
+    <Select items={items} value={value} onValueChange={(v) => v && onChange(v as string)}>
+      <SelectTrigger size="sm" className="min-w-36" aria-label={label}>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent alignItemWithTrigger={false}>
+        {items.map((i) => (
+          <SelectItem key={i.value} value={i.value}>
+            {i.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+function IssuesTable({ issues, result }: { issues: Issue[]; result: RunResult }) {
+  return (
+    <div data-card className="overflow-hidden rounded-[10px] border border-border bg-card">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-12 pl-5">#</TableHead>
+            <TableHead>Issue</TableHead>
+            <TableHead className="w-44">Where</TableHead>
+            <TableHead className="w-40">Type</TableHead>
+            <TableHead className="w-20 text-right">Reports</TableHead>
+            <TableHead className="w-28 pr-5 text-right">Players lost</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {issues.map((i, idx) => (
+            <TableRow key={idx}>
+              <TableCell className="pl-5 font-mono text-xs text-muted-foreground">{i.priority ?? "–"}</TableCell>
+              <TableCell className="max-w-md font-medium whitespace-normal">{i.ticket?.title ?? i.title}</TableCell>
+              <TableCell className="text-muted-foreground">{whereLabel(i, result.unit)}</TableCell>
+              <TableCell>
+                <div className="flex flex-wrap gap-1">
+                  <CategoryBadge category={i.category} />
+                  <SeverityBadge severity={i.ticket?.severity} />
+                </div>
+              </TableCell>
+              <TableCell className="text-right font-mono tabular-nums">{i.message_ids.length}</TableCell>
+              <TableCell className="pr-5 text-right font-mono text-loss tabular-nums">
+                {fmt.int(i.players_lost_estimate)}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }
