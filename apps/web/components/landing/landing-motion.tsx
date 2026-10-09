@@ -327,7 +327,7 @@ export function LandingMotion() {
   if (!canAnimate) return null;
   return (
     <button className="replay" type="button" onClick={() => replayRef.current()}>
-      ↻ Replay animation
+      <span aria-hidden="true">↻</span> Replay animation
     </button>
   );
 }

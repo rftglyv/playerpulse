@@ -83,7 +83,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="console a-card" aria-label="Sample of PlayerPulse tagging messages">
+            <div className="console a-card" role="figure" aria-label="Sample of PlayerPulse tagging messages">
               <div className="console-h mono">
                 <span>incoming · Ember Trail</span>
                 <span className="tag">sample messages</span>
