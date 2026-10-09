@@ -10,6 +10,16 @@
         "typescript": "^5.9.3",
       },
     },
+    "apps/api": {
+      "name": "@playerpulse/api",
+      "dependencies": {
+        "@playerpulse/db": "workspace:*",
+        "@playerpulse/pipeline": "workspace:*",
+        "drizzle-orm": "^0.44.2",
+        "elysia": "^1.4.0",
+        "zod": "^4.6.5",
+      },
+    },
     "apps/web": {
       "name": "@playerpulse/web",
       "version": "0.1.0",
@@ -37,16 +47,6 @@
         "eslint-config-next": "16.4.0",
         "tailwindcss": "^4",
         "typescript": "^5",
-      },
-    },
-    "packages/api": {
-      "name": "@playerpulse/api",
-      "dependencies": {
-        "@playerpulse/db": "workspace:*",
-        "@playerpulse/pipeline": "workspace:*",
-        "drizzle-orm": "^0.44.2",
-        "elysia": "^1.4.0",
-        "zod": "^4.6.5",
       },
     },
     "packages/db": {
@@ -340,7 +340,7 @@
 
     "@nolyfill/is-core-module": ["@nolyfill/is-core-module@1.0.39", "", {}, "sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA=="],
 
-    "@playerpulse/api": ["@playerpulse/api@workspace:packages/api"],
+    "@playerpulse/api": ["@playerpulse/api@workspace:apps/api"],
 
     "@playerpulse/db": ["@playerpulse/db@workspace:packages/db"],
 
