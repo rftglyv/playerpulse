@@ -1,0 +1,33 @@
+1:"$Sreact.fragment"
+2:"/_next/static/chunks/2-5hhcqyvvkl3.js"
+3:I[84352,["$2"],"default"]
+4:I[67583,["$2"],"default"]
+9:"/_next/static/chunks/3dixt02e_xl-a.js"
+a:I[89960,["$2","$9"],""]
+b:I[40522,["$2"],"OutletBoundary"]
+c:"$Sreact.suspense"
+10:"ViewportBoundary"
+11:I[40522,["$2"],"$10"]
+12:"MetadataBoundary"
+13:I[40522,["$2"],"$12"]
+14:I[93728,["$2"],"IconMark"]
+:HL["/_next/static/chunks/0hyuvgleeaq-y.css","style"]
+6:X
+6:C
+7:X
+7:300
+7:C
+f:X
+f:C
+8:[["children",{"s":"__PAGE__","h":49314,"d":{"r":["$","$1","c",{"children":[["$","main",null,{"className":"flex flex-1 flex-col justify-center px-8 py-24 sm:px-16","children":["$","div",null,{"className":"mx-auto w-full max-w-3xl","children":[["$","p",null,{"className":"text-sm font-medium text-loss","children":"PlayerPulse"}],["$","h1",null,{"className":"mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-6xl","children":"Telemetry knows where. Players know why. PlayerPulse settles it."}],["$","p",null,{"className":"mt-6 max-w-xl text-lg text-muted-foreground","children":"Multilingual player complaints and gameplay telemetry, turned into verified, prioritised issues."}],["$","$La",null,{"href":"/dashboard","className":"mt-10 inline-flex h-11 items-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90","children":"Open the dashboard"}]]}]}],[["$","script","script-0",{"src":"/_next/static/chunks/3dixt02e_xl-a.js","async":true}]],["$","$Lb",null,{"children":["$","$c",null,{"name":"Next.MetadataOutlet","children":"$@d"}]}]]}],"p":"$@e","v":"$f","s":"$7"}}]]
+16:X
+16:C
+19:X
+19:C
+0:{"t":{"t":{"s":"","h":49234,"d":{"r":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/0hyuvgleeaq-y.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/2-5hhcqyvvkl3.js","async":true}]],["$","html",null,{"lang":"en","className":"dark T19VSG_variable _8Li5zG_variable h-full antialiased","children":["$","body",null,{"className":"min-h-full flex flex-col","children":["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}],"notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]]}]}]}]]}],"p":"$@5","v":"$6","s":"$7"},"c":"$Q8"},"h":{"r":["$","$1","h",{"children":[null,["$","$L11",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","$L13",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$c",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"PlayerPulse"}],["$","meta","1",{"name":"description","content":"Telemetry knows where. Players know why. PlayerPulse settles it."}],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.117ezoe8m31dk.ico","sizes":"48x48","type":"image/x-icon"}],["$","$L14","3",{}]]}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":"$@15","v":"$16","s":"$7"}},"a":"$@17","u":"$@18","b":"s5haHkwe80UJb_XVZ0MUe","r":"$19"}
+d:null
+18:false
+17:null
+5:"$undefined"
+15:"$undefined"
+e:"$undefined"
