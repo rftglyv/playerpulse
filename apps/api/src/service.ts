@@ -82,7 +82,7 @@ export async function saveRun(result: RunResult, name: string) {
 export async function seedDemo() {
   const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(runs);
   if (n > 0 || !existsSync(DEMO_DIR)) return 0;
-  const files = readdirSync(DEMO_DIR).filter((f) => f.endsWith(".json")).sort();
+  const files = readdirSync(DEMO_DIR).filter((f) => f.endsWith(".json")).sort().reverse(); // scenario A seeds last = newest = default view
   for (const f of files) await saveRun(JSON.parse(readFileSync(join(DEMO_DIR, f), "utf8")), `demo: ${f.replace(".json", "")}`);
   return files.length;
 }
